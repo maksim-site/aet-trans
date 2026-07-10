@@ -2662,3 +2662,23 @@ img {
     font-size: 12px;
   }
 }
+
+/* ============================================================
+   Hero на всю высоту экрана (референс — lider-vino).
+   Перекрывает все ранние фиксированные min-height (660/620/580/480).
+   ============================================================ */
+
+.hero-grid,
+.hero-copy,
+.hero-media {
+  min-height: calc(100vh - var(--header-height));
+}
+
+/* svh: честная высота на мобильных (без прыжка адресной строки) */
+@supports (height: 100svh) {
+  .hero-grid,
+  .hero-copy,
+  .hero-media {
+    min-height: calc(100svh - var(--header-height));
+  }
+}
