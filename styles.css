@@ -2761,3 +2761,17 @@ body.menu-open .site-header {
 body.menu-open .site-header .brand-color { display: none; }
 body.menu-open .site-header .brand-light { display: block; }
 body.menu-open .site-header .menu-toggle span { background: #eef4f9; }
+
+/* Логотипы в одной ячейке (перекрываются, а не в столбик) + плавная шапка */
+.brand {
+  display: grid;
+  align-items: center;
+}
+
+.brand img {
+  grid-area: 1 / 1;
+}
+
+.site-header {
+  transition: background-color 200ms ease, border-color 200ms ease, box-shadow 180ms ease;
+}
