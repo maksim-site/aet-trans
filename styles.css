@@ -179,12 +179,12 @@ img {
 }
 
 .brand {
-  width: 190px;
-  flex: 0 0 190px;
+  width: 214px;
+  flex: 0 0 214px;
 }
 
 .brand img {
-  width: 188px;
+  width: 212px;
   height: auto;
 }
 
@@ -1356,12 +1356,12 @@ img {
   }
 
   .brand {
-    width: 150px;
-    flex-basis: 150px;
+    width: 178px;
+    flex-basis: 178px;
   }
 
   .brand img {
-    width: 148px;
+    width: 176px;
   }
 
   .header-phone,
@@ -1653,12 +1653,12 @@ img {
   }
 
   .brand {
-    width: 138px;
-    flex-basis: 138px;
+    width: 178px;
+    flex-basis: 178px;
   }
 
   .brand img {
-    width: 136px;
+    width: 176px;
   }
 
   .hero-copy {
