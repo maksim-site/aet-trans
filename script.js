@@ -2,6 +2,7 @@ const header = document.getElementById("siteHeader");
 const hero = document.querySelector(".hero");
 const menuToggle = document.getElementById("menuToggle");
 const mobileMenu = document.getElementById("mobileMenu");
+const menuBackdrop = document.getElementById("menuBackdrop");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 document.getElementById("currentYear").textContent = new Date().getFullYear();
@@ -10,6 +11,8 @@ const closeMenu = () => {
   menuToggle.setAttribute("aria-expanded", "false");
   menuToggle.setAttribute("aria-label", "Открыть меню");
   mobileMenu.classList.remove("is-open");
+  menuBackdrop.classList.remove("is-open");
+  menuBackdrop.setAttribute("aria-hidden", "true");
   document.body.classList.remove("menu-open");
 };
 
@@ -18,9 +21,12 @@ menuToggle.addEventListener("click", () => {
   menuToggle.setAttribute("aria-expanded", String(willOpen));
   menuToggle.setAttribute("aria-label", willOpen ? "Закрыть меню" : "Открыть меню");
   mobileMenu.classList.toggle("is-open", willOpen);
+  menuBackdrop.classList.toggle("is-open", willOpen);
+  menuBackdrop.setAttribute("aria-hidden", String(!willOpen));
   document.body.classList.toggle("menu-open", willOpen);
 });
 
+menuBackdrop.addEventListener("click", closeMenu);
 mobileMenu.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
 
 window.addEventListener("keydown", (event) => {
