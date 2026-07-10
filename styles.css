@@ -3049,3 +3049,27 @@ body.menu-open .site-header .menu-toggle span { background: #eef4f9; }
     bottom: 24px;
   }
 }
+
+/* Compact navigation trigger on tablet and narrow desktop widths */
+@media (min-width: 721px) and (max-width: 1220px) {
+  .menu-toggle {
+    width: 44px;
+    height: 44px;
+    gap: 4px;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .menu-toggle span {
+    width: 24px;
+  }
+
+  .menu-toggle[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  .menu-toggle[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+}
