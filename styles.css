@@ -2682,3 +2682,82 @@ img {
     min-height: calc(100svh - var(--header-height));
   }
 }
+
+/* ============================================================
+   Шапка поверх героя (как у Лидера): прозрачная fixed-шапка,
+   герой на весь экран целиком, белая подложка после прокрутки.
+   ============================================================ */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  background: transparent;
+  border-bottom-color: transparent;
+}
+
+/* герой на полный экран, контент не ныряет под шапку */
+.hero-grid,
+.hero-copy,
+.hero-media {
+  min-height: 100vh;
+}
+
+@supports (height: 100svh) {
+  .hero-grid,
+  .hero-copy,
+  .hero-media {
+    min-height: 100svh;
+  }
+}
+
+.hero-copy {
+  padding-top: calc(var(--header-height) + 30px);
+}
+
+/* лёгкое затемнение верха фото — чтобы шапка читалась */
+.hero-media::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  height: 150px;
+  background: linear-gradient(180deg, rgba(7, 20, 32, 0.55), rgba(7, 20, 32, 0));
+  pointer-events: none;
+}
+
+/* два варианта логотипа: светлый на фото, цветной на белом */
+.brand .brand-color { display: none; }
+.brand .brand-light { display: block; }
+
+/* элементы шапки на прозрачном фоне — светлые */
+.site-header .desktop-nav a { color: #eef4f9; }
+.site-header .desktop-nav a:hover { color: #fff; }
+.site-header .header-phone { color: #eef4f9; }
+.site-header .menu-toggle span { background: #eef4f9; }
+
+/* после прокрутки — белая шапка, тёмные элементы, цветной логотип */
+.site-header.is-scrolled {
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom-color: var(--line);
+}
+
+.site-header.is-scrolled .brand-color { display: block; }
+.site-header.is-scrolled .brand-light { display: none; }
+.site-header.is-scrolled .desktop-nav a { color: #2d3842; }
+.site-header.is-scrolled .desktop-nav a:hover { color: var(--navy); }
+.site-header.is-scrolled .header-phone { color: #2d3842; }
+.site-header.is-scrolled .menu-toggle span { background: var(--navy); }
+
+/* открытое мобильное меню: шапка в цвет дровера */
+body.menu-open .site-header {
+  background: var(--navy);
+  border-bottom-color: transparent;
+}
+
+body.menu-open .site-header .brand-color { display: none; }
+body.menu-open .site-header .brand-light { display: block; }
+body.menu-open .site-header .menu-toggle span { background: #eef4f9; }

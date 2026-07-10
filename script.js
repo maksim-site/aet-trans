@@ -40,7 +40,7 @@ window.addEventListener("resize", () => {
 if ("IntersectionObserver" in window) {
   const headerObserver = new IntersectionObserver(
     ([entry]) => header.classList.toggle("is-scrolled", !entry.isIntersecting),
-    { threshold: 0.08 }
+    { rootMargin: "-88px 0px 0px 0px", threshold: 0 }
   );
   headerObserver.observe(hero);
 }
