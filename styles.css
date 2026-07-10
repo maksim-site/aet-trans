@@ -2859,19 +2859,19 @@ body.menu-open .site-header .menu-toggle span { background: #eef4f9; }
 
   .hero-copy {
     justify-content: flex-start;
-    padding: 53vh 20px 24px;
+    padding: 47vh 20px 24px;
   }
 
   @supports (height: 100svh) {
     .hero-copy {
-      padding-top: 53svh;
+      padding-top: 47svh;
     }
   }
 
   .hero-media::after {
     background:
-      linear-gradient(180deg, rgba(7, 20, 32, 0.38) 0%, rgba(7, 20, 32, 0.08) 30%, rgba(7, 20, 32, 0.42) 48%, rgba(7, 20, 32, 0.9) 72%, rgba(7, 20, 32, 0.98) 100%),
-      linear-gradient(90deg, rgba(7, 20, 32, 0.4) 0%, rgba(7, 20, 32, 0.06) 100%);
+      linear-gradient(180deg, rgba(7, 20, 32, 0.34) 0%, rgba(7, 20, 32, 0.07) 28%, rgba(7, 20, 32, 0.3) 38%, rgba(7, 20, 32, 0.7) 45%, rgba(7, 20, 32, 0.92) 60%, rgba(7, 20, 32, 0.99) 100%),
+      linear-gradient(90deg, rgba(7, 20, 32, 0.44) 0%, rgba(7, 20, 32, 0.08) 100%);
   }
 
   .hero-media img {
