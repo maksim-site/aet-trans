@@ -428,7 +428,7 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 60% center;
+  object-position: center 24%;
 }
 
 .services {
@@ -1401,7 +1401,7 @@ img {
   }
 
   .hero-media img {
-    object-position: 66% center;
+    object-position: 80% 24%;
   }
 
   .hero h1 {
