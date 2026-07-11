@@ -2782,6 +2782,40 @@ body.menu-open .site-header .menu-toggle span { background: #eef4f9; }
 
 /* Canonical AET hero composition */
 @media (min-width: 721px) {
+  .site-header,
+  .site-header:not(.is-scrolled) {
+    border-bottom: 1px solid rgba(11, 27, 43, 0.1);
+    background: rgba(248, 250, 251, 0.88);
+    box-shadow: 0 8px 28px rgba(11, 27, 43, 0.08);
+    -webkit-backdrop-filter: saturate(130%) blur(18px);
+    backdrop-filter: saturate(130%) blur(18px);
+  }
+
+  .site-header.is-scrolled {
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .site-header .brand-color {
+    display: block;
+  }
+
+  .site-header .brand-light {
+    display: none;
+  }
+
+  .site-header .desktop-nav a,
+  .site-header .header-phone {
+    color: #2d3842;
+  }
+
+  .site-header .desktop-nav a:hover {
+    color: var(--navy);
+  }
+
+  .site-header .menu-toggle span {
+    background: var(--navy);
+  }
+
   .hero-copy {
     justify-content: center;
     padding-top: calc(var(--header-height) + 36px);
