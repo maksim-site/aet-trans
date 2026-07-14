@@ -1,11 +1,12 @@
 const header = document.getElementById("siteHeader");
-const hero = document.querySelector(".hero");
+const hero = document.querySelector(".hero, .page-hero, .article-header, .legal-header, .not-found");
 const menuToggle = document.getElementById("menuToggle");
 const mobileMenu = document.getElementById("mobileMenu");
 const menuBackdrop = document.getElementById("menuBackdrop");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-document.getElementById("currentYear").textContent = new Date().getFullYear();
+const currentYear = document.getElementById("currentYear");
+if (currentYear) currentYear.textContent = new Date().getFullYear();
 
 const closeMenu = () => {
   menuToggle.setAttribute("aria-expanded", "false");
@@ -37,7 +38,7 @@ window.addEventListener("resize", () => {
   if (window.innerWidth > 1220) closeMenu();
 });
 
-if ("IntersectionObserver" in window) {
+if (header && hero && "IntersectionObserver" in window) {
   const headerObserver = new IntersectionObserver(
     ([entry]) => header.classList.toggle("is-scrolled", !entry.isIntersecting),
     { rootMargin: "-88px 0px 0px 0px", threshold: 0 }
@@ -45,18 +46,75 @@ if ("IntersectionObserver" in window) {
   headerObserver.observe(hero);
 }
 
-document.querySelectorAll(".demo-form").forEach((form) => {
+document.querySelectorAll(".lead-form, .demo-form").forEach((form) => {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!form.reportValidity()) return;
 
-    const button = form.querySelector("button[type='submit']");
     const status = form.querySelector(".form-status");
-    button.disabled = true;
-    button.textContent = "Заявка принята";
-    status.textContent = "В рабочей версии заявка будет отправлена менеджеру.";
+    const data = new FormData(form);
+    const recipient = form.dataset.recipient || "info@aet-trans.ru";
+    const subject = "Заявка с сайта АЕТ Транс";
+    const body = [
+      `Имя: ${data.get("name") || "Не указано"}`,
+      `Телефон: ${data.get("phone") || "Не указан"}`,
+      "",
+      `Задача: ${data.get("cargo") || "Не указана"}`,
+    ].join("\n");
+
+    if (status) status.textContent = "Открываем письмо для отправки менеджеру.";
+    window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   });
 });
+
+const newsArchive = document.querySelector("[data-news-archive]");
+
+if (newsArchive) {
+  const items = Array.from(newsArchive.querySelectorAll("[data-news-item]"));
+  const search = newsArchive.querySelector("[data-news-search]");
+  const year = newsArchive.querySelector("[data-news-year]");
+  const more = newsArchive.querySelector("[data-news-more]");
+  const count = newsArchive.querySelector("[data-news-count]");
+  const empty = newsArchive.querySelector("[data-news-empty]");
+  const pageSize = 18;
+  let limit = pageSize;
+
+  const updateNews = () => {
+    const query = search.value.trim().toLocaleLowerCase("ru");
+    const selectedYear = year.value;
+    const matches = [];
+
+    items.forEach((item) => {
+      const matchesSearch = !query || item.dataset.search.includes(query);
+      const matchesYear = !selectedYear || item.dataset.year === selectedYear;
+      const matchesFilter = matchesSearch && matchesYear;
+      item.classList.toggle("is-filtered-out", !matchesFilter);
+      if (matchesFilter) matches.push(item);
+    });
+
+    matches.forEach((item, index) => item.classList.toggle("is-hidden", index >= limit));
+    if (count) count.textContent = String(matches.length);
+    if (more) more.hidden = matches.length <= limit;
+    if (empty) empty.hidden = matches.length !== 0;
+  };
+
+  search.addEventListener("input", () => {
+    limit = pageSize;
+    updateNews();
+  });
+
+  year.addEventListener("change", () => {
+    limit = pageSize;
+    updateNews();
+  });
+
+  more.addEventListener("click", () => {
+    limit += pageSize;
+    updateNews();
+  });
+
+  updateNews();
+}
 
 const revealItems = document.querySelectorAll(".reveal");
 
