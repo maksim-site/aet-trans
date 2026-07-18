@@ -46,27 +46,6 @@ if (header && hero && "IntersectionObserver" in window) {
   headerObserver.observe(hero);
 }
 
-document.querySelectorAll(".lead-form, .demo-form").forEach((form) => {
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    if (!form.reportValidity()) return;
-
-    const status = form.querySelector(".form-status");
-    const data = new FormData(form);
-    const recipient = form.dataset.recipient || "info@aet-trans.ru";
-    const subject = "Заявка с сайта АЕТ Транс";
-    const body = [
-      `Имя: ${data.get("name") || "Не указано"}`,
-      `Телефон: ${data.get("phone") || "Не указан"}`,
-      "",
-      `Задача: ${data.get("cargo") || "Не указана"}`,
-    ].join("\n");
-
-    if (status) status.textContent = "Открываем письмо для отправки менеджеру.";
-    window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  });
-});
-
 const newsArchive = document.querySelector("[data-news-archive]");
 
 if (newsArchive) {

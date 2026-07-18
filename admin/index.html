@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Новости | Админка АЕТ Транс</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="admin-shell">
+    <aside class="sidebar">
+      <a class="admin-brand" href="/" target="_blank" rel="noopener" aria-label="Открыть сайт АЕТ Транс">
+        <img src="../assets/logo-wordmark-light.svg" alt="АЕТ Транс">
+      </a>
+      <nav class="admin-nav" aria-label="Разделы админки">
+        <a href="/admin/" aria-current="page"><span class="nav-mark" aria-hidden="true"></span>Новости</a>
+      </nav>
+      <div class="sidebar-footer">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Локальный режим</span>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="topbar">
+        <div>
+          <p class="section-label">Контент сайта</p>
+          <h1>Новости</h1>
+        </div>
+        <div class="topbar-actions">
+          <a class="button button-secondary" href="/novosti/" target="_blank" rel="noopener">Открыть сайт</a>
+          <button class="button button-primary" id="newPostButton" type="button">Добавить новость</button>
+        </div>
+      </header>
+
+      <section class="toolbar" aria-label="Фильтры новостей">
+        <label class="search-field">
+          <span>Поиск</span>
+          <input id="searchInput" type="search" placeholder="Название или текст" autocomplete="off">
+        </label>
+        <label>
+          <span>Год</span>
+          <select id="yearFilter">
+            <option value="">Все годы</option>
+          </select>
+        </label>
+        <p class="result-count"><strong id="resultCount">0</strong> публикаций</p>
+      </section>
+
+      <div class="workspace">
+        <section class="posts-panel" aria-label="Список новостей">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Заголовок</th>
+                  <th><span class="visually-hidden">Открыть</span></th>
+                </tr>
+              </thead>
+              <tbody id="newsTable"></tbody>
+            </table>
+          </div>
+          <div class="panel-state" id="listState" hidden></div>
+        </section>
+
+        <aside class="editor-panel" id="editorPanel" aria-label="Редактор новости">
+          <div class="editor-empty" id="editorEmpty">
+            <span class="empty-index">191</span>
+            <h2>Выберите новость</h2>
+            <p>Или добавьте новую публикацию.</p>
+          </div>
+
+          <div class="editor-content" id="editorContent" hidden>
+            <header class="editor-header">
+              <div>
+                <p class="section-label" id="editorMode">Редактирование</p>
+                <h2 id="editorHeading">Новость</h2>
+              </div>
+              <button class="icon-button" id="closeEditorButton" type="button" aria-label="Закрыть редактор">×</button>
+            </header>
+
+            <form id="newsForm">
+              <input id="originalSlug" type="hidden">
+              <label class="field field-wide">
+                <span>Заголовок</span>
+                <input id="titleInput" name="title" type="text" maxlength="220" required>
+              </label>
+
+              <div class="field-row">
+                <label class="field">
+                  <span>Дата публикации</span>
+                  <input id="dateInput" name="date" type="date" required>
+                </label>
+                <label class="field">
+                  <span>Адрес страницы</span>
+                  <input id="slugInput" name="slug" type="text" maxlength="190" pattern="[a-z0-9-]+" required>
+                </label>
+              </div>
+
+              <label class="field field-wide">
+                <span>Краткое описание</span>
+                <textarea id="summaryInput" name="summary" rows="3" maxlength="1000"></textarea>
+              </label>
+
+              <label class="field field-wide">
+                <span>Текст публикации</span>
+                <textarea id="bodyInput" name="body" rows="13" required></textarea>
+              </label>
+
+              <div class="field field-wide image-field">
+                <span>Основное изображение</span>
+                <div class="image-preview" id="imagePreview" hidden>
+                  <img id="previewImage" alt="Предпросмотр изображения">
+                  <button class="image-remove" id="removeImageButton" type="button">Убрать</button>
+                </div>
+                <label class="upload-control">
+                  <input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp">
+                  <span>Выбрать изображение</span>
+                  <small>JPG, PNG или WebP, до 8 МБ</small>
+                </label>
+              </div>
+
+              <div class="form-actions">
+                <button class="button button-danger" id="deleteButton" type="button">Удалить</button>
+                <div>
+                  <button class="button button-secondary" id="cancelButton" type="button">Отмена</button>
+                  <button class="button button-primary" id="saveButton" type="submit">Сохранить</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="deleteDialog">
+    <form method="dialog">
+      <p class="section-label">Подтверждение</p>
+      <h2>Удалить новость?</h2>
+      <p id="deleteMessage"></p>
+      <div class="dialog-actions">
+        <button class="button button-secondary" value="cancel">Отмена</button>
+        <button class="button button-danger" id="confirmDeleteButton" value="confirm">Удалить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

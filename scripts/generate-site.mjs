@@ -22,13 +22,6 @@ if (outputDirectory === ".") {
   await copyFile(join(versionRoot, "data/news.json"), join(projectRoot, "data/news.json"));
   await copyFile(join(versionRoot, "styles.css"), join(projectRoot, "styles.css"));
   await copyFile(join(versionRoot, "script.js"), join(projectRoot, "script.js"));
-
-  const versionHome = await readFile(join(versionRoot, "index.html"), "utf8");
-  await writeFile(
-    join(projectRoot, "index.html"),
-    versionHome.replaceAll("../assets/", "assets/"),
-    "utf8",
-  );
 }
 
 const newsData = JSON.parse(await readFile(join(versionRoot, "data/news.json"), "utf8"));
@@ -54,10 +47,8 @@ const rootPrefix = (depth) => "../".repeat(depth);
 const assetPrefix = (depth) => "../".repeat(depth + assetDepthOffset) + "assets/";
 
 const navItems = [
-  ["services", "Услуги", "uslugi/"],
-  ["oversized", "Негабарит", "negabaritnye-perevozki/"],
-  ["projects", "Проекты", "proekty/"],
   ["about", "О компании", "o-kompanii/"],
+  ["services", "Услуги", "uslugi/"],
   ["news", "Новости", "novosti/"],
   ["contacts", "Контакты", "kontakty/"],
 ];
@@ -66,6 +57,35 @@ const postRoute = (post) => {
   const [year, month, day] = post.date.split("-");
   return `${year}/${month}/${day}/${post.slug}/`;
 };
+
+const postCoverImage = (post) =>
+  post.coverImage || (localNewsImages[post.slug] ? `news/${localNewsImages[post.slug]}` : "");
+
+const homeNewsMarkup = posts
+  .slice(0, 3)
+  .map(
+    (post) =>
+      `          <a class="news-item reveal" href="${postRoute(post)}"><time datetime="${post.date}">${formatDate(post.date)}</time><h3>${escapeHtml(post.title)}</h3><span aria-hidden="true">→</span></a>`,
+  )
+  .join("\n");
+const homeNewsPattern = /(?<=<!-- HOME_NEWS_START -->\n)[\s\S]*?(?=\n\s*<!-- HOME_NEWS_END -->)/;
+const versionHomePath = join(versionRoot, "index.html");
+const versionHome = await readFile(versionHomePath, "utf8");
+
+if (!homeNewsPattern.test(versionHome)) {
+  throw new Error("Homepage news markers are missing in v3/index.html");
+}
+
+const updatedVersionHome = versionHome.replace(homeNewsPattern, homeNewsMarkup);
+await writeFile(versionHomePath, updatedVersionHome, "utf8");
+
+if (outputDirectory === ".") {
+  await writeFile(
+    join(projectRoot, "index.html"),
+    updatedVersionHome.replaceAll("../assets/", "assets/"),
+    "utf8",
+  );
+}
 
 function header(depth, active) {
   const root = rootPrefix(depth);
@@ -90,7 +110,6 @@ function header(depth, active) {
       <nav class="desktop-nav" aria-label="Основная навигация">${links}</nav>
       <div class="header-actions">
         <a class="header-phone" href="tel:+78123094625">+7 (812) 309-46-25</a>
-        <a class="button button-primary header-cta" href="${root}#request"><span class="header-cta-full">Оставить заявку</span><span class="header-cta-short">Заявка</span></a>
         <button class="menu-toggle" id="menuToggle" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
       </div>
     </div>
@@ -99,7 +118,6 @@ function header(depth, active) {
   <nav class="mobile-menu" id="mobileMenu" aria-label="Мобильная навигация">
     <div class="container mobile-menu-inner">
       ${mobileLinks}
-      <a class="button button-primary mobile-menu-cta" href="${root}#request">Оставить заявку</a>
       <div class="mobile-menu-contacts">
         <a href="tel:+78123094625">+7 (812) 309-46-25</a>
         <a href="mailto:info@aet-trans.ru">info@aet-trans.ru</a>
@@ -116,7 +134,7 @@ function footer(depth) {
     <div class="container footer-main">
       <a class="footer-brand" href="${root}" aria-label="АЕТ Транс, на главную"><img src="${assets}logo-wordmark-light.svg" alt="АЕТ Транс"></a>
       <nav class="footer-nav" aria-label="Навигация в подвале">
-        <a href="${root}uslugi/">Услуги</a><a href="${root}negabaritnye-perevozki/">Негабарит</a><a href="${root}proekty/">Проекты</a><a href="${root}o-kompanii/">О компании</a><a href="${root}klienty/">Клиенты</a><a href="${root}testimonial/">Отзывы</a><a href="${root}novosti/">Новости</a><a href="${root}kontakty/">Контакты</a>
+        <a href="${root}o-kompanii/">О компании</a><a href="${root}uslugi/">Услуги</a><a href="${root}novosti/">Новости</a><a href="${root}kontakty/">Контакты</a><a href="${root}proekty/">Проекты</a><a href="${root}klienty/">Клиенты</a><a href="${root}testimonial/">Отзывы</a>
       </nav>
     </div>
     <div class="container footer-bottom">
@@ -130,26 +148,25 @@ function footer(depth) {
 function pageHero({ depth, eyebrow, title, intro, image, imageAlt = "" }) {
   const assets = assetPrefix(depth);
   return `
-    <section class="page-hero">
+    <section class="page-hero${image ? "" : " page-hero-no-media"}">
       <div class="container page-hero-grid">
         <div class="page-hero-copy reveal">
           <p class="context-line">${escapeHtml(eyebrow)}</p>
           <h1>${escapeHtml(title)}</h1>
           <p>${escapeHtml(intro)}</p>
-        </div>
-        ${image ? `<figure class="page-hero-media reveal"><img src="${assets}${image}" alt="${escapeHtml(imageAlt)}"></figure>` : ""}
+        </div>${image ? `
+        <figure class="page-hero-media reveal"><img src="${assets}${image}" alt="${escapeHtml(imageAlt)}"></figure>` : ""}
       </div>
     </section>`;
 }
 
 function ctaBand(depth, title = "Обсудим вашу перевозку") {
-  const root = rootPrefix(depth);
   return `
     <section class="inner-cta">
       <div class="container inner-cta-grid">
-        <div><p class="section-label">Следующий шаг</p><h2>${escapeHtml(title)}</h2></div>
-        <p>Расскажите о грузе, маршруте и сроках. Мы уточним детали и предложим рабочий вариант перевозки.</p>
-        <div class="inner-cta-actions"><a class="button button-primary" href="${root}#request">Оставить заявку</a><a class="button button-secondary" href="tel:+78123094625">Позвонить</a></div>
+        <div><p class="section-label">Контакты</p><h2>${escapeHtml(title)}</h2></div>
+        <p>Позвоните или напишите на почту. Уточним груз, маршрут и сроки, после чего предложим рабочий вариант перевозки.</p>
+        <div class="inner-cta-actions"><a class="button button-primary" href="tel:+78123094625">Позвонить</a><a class="button button-secondary" href="mailto:info@aet-trans.ru">Написать</a></div>
       </div>
     </section>`;
 }
@@ -198,7 +215,7 @@ function servicesPage() {
           <span class="service-row-number">${service.number}</span>
           <div class="service-row-copy"><h2>${escapeHtml(service.title)}</h2><p>${escapeHtml(service.description)}</p></div>
           <ul>${service.details.map((detail) => `<li>${escapeHtml(detail)}</li>`).join("")}</ul>
-          <a href="${service.href ? root + service.href : root + "#request"}" aria-label="Подробнее: ${escapeHtml(service.title)}">Подробнее <span aria-hidden="true">→</span></a>
+          <a href="${service.href ? root + service.href : root + "kontakty/"}" aria-label="${service.href ? "Подробнее" : "Связаться"}: ${escapeHtml(service.title)}">${service.href ? "Подробнее" : "Связаться"} <span aria-hidden="true">→</span></a>
         </article>`,
     )
     .join("");
@@ -327,9 +344,9 @@ function newsPage() {
   const years = [...new Set(posts.map((post) => post.year))];
   const yearOptions = years.map((year) => `<option value="${year}">${year}</option>`).join("");
   const items = posts.map((post) => {
-    const image = localNewsImages[post.slug];
+    const image = postCoverImage(post);
     const media = image
-      ? `\n      <a class="news-archive-media" href="${root}${postRoute(post)}"><img src="${assets}news/${image}" alt="${escapeHtml(post.title)}" loading="lazy"></a>`
+      ? `\n      <a class="news-archive-media" href="${root}${postRoute(post)}"><img src="${assets}${image}" alt="${escapeHtml(post.title)}" loading="lazy"></a>`
       : "";
     return `<article class="news-archive-item${image ? " has-media" : ""}" data-news-item data-year="${post.year}" data-search="${escapeHtml(`${post.title} ${post.summary}`.toLowerCase())}">${media}
       <div><time datetime="${post.date}">${formatDate(post.date)}</time><h2><a href="${root}${postRoute(post)}">${escapeHtml(post.title)}</a></h2>${post.summary ? `<p>${escapeHtml(post.summary)}</p>` : ""}<a class="text-link" href="${root}${postRoute(post)}">Читать <span aria-hidden="true">→</span></a></div>
@@ -370,15 +387,18 @@ function articlePage(post, index) {
   const depth = 4;
   const root = rootPrefix(depth);
   const assets = assetPrefix(depth);
-  const localImage = localNewsImages[post.slug];
+  const coverImage = postCoverImage(post);
   const availableImages = (post.images || []).filter((image) =>
     existsSync(join(projectRoot, "assets", newsImageRelativePath(image))),
   );
-  const gallery = availableImages.length
-    ? availableImages.map((image) => `${assets}${newsImageWebPath(image)}`)
-    : localImage
-      ? [`${assets}news/${localImage}`]
-      : [];
+  const archivedGallery = availableImages.map((image) => `${assets}${newsImageWebPath(image)}`);
+  const gallery = post.coverImage
+    ? [`${assets}${post.coverImage}`, ...archivedGallery]
+    : archivedGallery.length
+      ? archivedGallery
+      : coverImage
+        ? [`${assets}${coverImage}`]
+        : [];
   const newer = posts[index - 1];
   const older = posts[index + 1];
   const articleNavigation = `<nav class="article-navigation" aria-label="Соседние публикации">${newer ? `<a href="${root}${postRoute(newer)}"><span>Новая публикация</span><strong>${escapeHtml(newer.title)}</strong></a>` : "<span></span>"}${older ? `<a href="${root}${postRoute(older)}"><span>Предыдущая публикация</span><strong>${escapeHtml(older.title)}</strong></a>` : ""}</nav>`;
@@ -388,26 +408,24 @@ function articlePage(post, index) {
       <div class="container article-layout"><div class="article-content">${renderArticleBlocks(post)}</div>${gallery.length ? `<div class="article-gallery">${gallery.map((image, imageIndex) => `<figure><img src="${image}" alt="${escapeHtml(post.title)}${imageIndex ? `, фотография ${imageIndex + 1}` : ""}" loading="lazy"></figure>`).join("")}</div>` : ""}${articleNavigation}</div>
     </article>
 ${ctaBand(depth)}`;
-  return documentPage({depth, active: "news", title: `${post.title} | АЕТ Транс`, description: post.summary || post.title, canonicalPath: postRoute(post), main, image: localImage ? `news/${localImage}` : "images/oversize.jpg"});
+  return documentPage({depth, active: "news", title: `${post.title} | АЕТ Транс`, description: post.summary || post.title, canonicalPath: postRoute(post), main, image: coverImage || "images/oversize.jpg"});
 }
 
 function contactsPage() {
   const depth = 1;
-  const root = rootPrefix(depth);
   const main = `
-${pageHero({depth, eyebrow: "Санкт-Петербург", title: "Свяжитесь с нами", intro: "Обсудим груз, маршрут, сроки и документы. Можно позвонить, написать на почту или оставить заявку.", image: "images/hero-port.jpg", imageAlt: "Порт Санкт-Петербурга"})}
-    <section class="section contact-page"><div class="container contact-page-grid"><div class="contact-details"><a href="tel:+78123094625"><span>Телефон</span><strong>+7 (812) 309-46-25</strong></a><a href="mailto:info@aet-trans.ru"><span>Email</span><strong>info@aet-trans.ru</strong></a><div><span>Офис</span><strong>198035, Санкт-Петербург,<br>Межевой Канал, д. 5, лит. АХ, офис 406</strong></div><div><span>Юридический, почтовый и фактический адрес</span><strong>Совпадают</strong></div></div><form class="request-form lead-form" data-recipient="info@aet-trans.ru"><div class="field"><label for="contactName">Ваше имя</label><input id="contactName" name="name" autocomplete="name" required></div><div class="field"><label for="contactPhone">Телефон</label><input id="contactPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required></div><div class="field field-full"><label for="contactCargo">Задача</label><textarea id="contactCargo" name="cargo" placeholder="Груз, маршрут и желаемые сроки"></textarea></div><div class="form-footer"><button class="button button-primary" type="submit">Отправить заявку</button><p>Нажимая кнопку, вы соглашаетесь с <a href="${root}privacy/">политикой обработки данных</a>.</p></div><p class="form-status" aria-live="polite"></p></form></div></section>
-    <section class="map-section"><iframe title="Офис АЕТ Транс на карте" src="https://yandex.ru/map-widget/v1/?ll=30.248474%2C59.911503&amp;z=16&amp;pt=30.248474%2C59.911503,pm2blm" loading="lazy"></iframe></section>`;
+${pageHero({depth, eyebrow: "Санкт-Петербург", title: "Свяжитесь с нами", intro: "Обсудим груз, маршрут, сроки и документы. Можно позвонить или написать на почту."})}
+    <section class="section contact-page"><div class="container contact-page-grid"><div class="contact-details"><a href="tel:+78123094625"><span>Телефон</span><strong>+7 (812) 309-46-25</strong></a><a href="mailto:info@aet-trans.ru"><span>Email</span><strong>info@aet-trans.ru</strong></a><div><span>Офис</span><strong>198035, Санкт-Петербург,<br>Межевой Канал, д. 5, лит. АХ, офис 406</strong></div><div><span>Юридический, почтовый и фактический адрес</span><strong>Совпадают</strong></div></div><div class="contact-page-map"><iframe title="Офис АЕТ Транс на карте" src="https://yandex.ru/map-widget/v1/?ll=30.248474%2C59.911503&amp;z=16&amp;pt=30.248474%2C59.911503,pm2blm" loading="lazy" allowfullscreen></iframe></div></div></section>`;
   return documentPage({depth, active: "contacts", title: "Контакты | АЕТ Транс", description: "Контакты АЕТ Транс: телефон, email и адрес офиса в Санкт-Петербурге.", canonicalPath: "kontakty/", main, image: "images/hero-port.jpg"});
 }
 
 function privacyPage() {
   const depth = 1;
   const main = `
-    <section class="legal-header"><div class="container"><p class="context-line">Документы</p><h1>Политика обработки персональных данных</h1><p>Правила работы с данными, которые пользователь передает через формы сайта.</p></div></section>
+    <section class="legal-header"><div class="container"><p class="context-line">Документы</p><h1>Политика обработки персональных данных</h1><p>Правила работы с данными, которые пользователь передает при обращении в компанию.</p></div></section>
     <section class="section legal-page"><div class="container legal-content">
       <h2>1. Общие положения</h2><p>Оператором персональных данных является ООО «АЕТ Транс». Для вопросов об обработке данных можно использовать адрес info@aet-trans.ru.</p>
-      <h2>2. Какие данные обрабатываются</h2><p>Через формы сайта могут передаваться имя, номер телефона, адрес электронной почты и описание логистической задачи. Сайт также может получать стандартные технические данные браузера и сведения о посещении страниц.</p>
+      <h2>2. Какие данные обрабатываются</h2><p>При обращении по телефону или электронной почте пользователь может добровольно передать имя, номер телефона, адрес электронной почты и описание логистической задачи. Сайт также может получать стандартные технические данные браузера и сведения о посещении страниц.</p>
       <h2>3. Цели обработки</h2><p>Данные используются для ответа на обращение, подготовки предложения, связи с пользователем и анализа работы сайта.</p>
       <h2>4. Основание и срок обработки</h2><p>Данные обрабатываются с согласия пользователя и хранятся не дольше, чем это требуется для ответа и выполнения договорных обязательств, если иной срок не установлен законом.</p>
       <h2>5. Передача данных</h2><p>Данные не передаются третьим лицам без законного основания. Для работы сайта могут использоваться подрядчики по хостингу, почте, аналитике и защите форм, которые получают только необходимый объем данных.</p>
