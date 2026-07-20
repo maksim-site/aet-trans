@@ -4,6 +4,14 @@ const menuToggle = document.getElementById("menuToggle");
 const mobileMenu = document.getElementById("mobileMenu");
 const menuBackdrop = document.getElementById("menuBackdrop");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const heroMedia = document.querySelector(".hero-media");
+const heroImage = heroMedia?.querySelector("img");
+
+if (reduceMotion) {
+  document.body.classList.add("motion-ready");
+} else {
+  requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("motion-ready")));
+}
 
 const currentYear = document.getElementById("currentYear");
 if (currentYear) currentYear.textContent = new Date().getFullYear();
@@ -36,6 +44,8 @@ window.addEventListener("keydown", (event) => {
 
 window.addEventListener("resize", () => {
   if (window.innerWidth > 1220) closeMenu();
+  if (window.innerWidth <= 720) heroImage?.style.removeProperty("transform");
+  else updateHeroParallax();
 });
 
 if (header && hero && "IntersectionObserver" in window) {
@@ -45,6 +55,29 @@ if (header && hero && "IntersectionObserver" in window) {
   );
   headerObserver.observe(hero);
 }
+
+const updateHeaderOffset = () => {
+  if (header) header.classList.toggle("has-offset", window.scrollY > 12);
+};
+
+let parallaxFrame = 0;
+const updateHeroParallax = () => {
+  parallaxFrame = 0;
+  if (!heroMedia || reduceMotion || window.innerWidth <= 720) return;
+  const heroRect = heroMedia.getBoundingClientRect();
+  if (heroRect.bottom <= 0 || heroRect.top >= window.innerHeight) return;
+  const progress = Math.max(0, Math.min(1, -heroRect.top / heroRect.height));
+  heroImage.style.transform = `translate3d(0, ${Math.round(progress * 22)}px, 0) scale(1.06)`;
+};
+
+const handlePageScroll = () => {
+  updateHeaderOffset();
+  if (!parallaxFrame) parallaxFrame = requestAnimationFrame(updateHeroParallax);
+};
+
+updateHeaderOffset();
+updateHeroParallax();
+window.addEventListener("scroll", handlePageScroll, { passive: true });
 
 const newsArchive = document.querySelector("[data-news-archive]");
 
@@ -96,6 +129,12 @@ if (newsArchive) {
 }
 
 const revealItems = document.querySelectorAll(".reveal");
+
+document.querySelectorAll(".service-directory, .process-list, .projects-grid").forEach((group) => {
+  group.querySelectorAll(":scope > .reveal").forEach((item, index) => {
+    item.style.setProperty("--reveal-delay", `${index * 75}ms`);
+  });
+});
 
 if (reduceMotion || !("IntersectionObserver" in window)) {
   revealItems.forEach((item) => item.classList.add("is-visible"));
