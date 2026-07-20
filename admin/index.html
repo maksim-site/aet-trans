@@ -100,10 +100,18 @@
                 </label>
               </div>
 
-              <label class="field field-wide">
-                <span>Краткое описание</span>
+              <div class="field field-wide">
+                <div class="field-heading-row">
+                  <label for="summaryInput">Краткое описание</label>
+                  <label class="visibility-toggle">
+                    <input id="showSummaryInput" type="checkbox">
+                    <span class="toggle-track" aria-hidden="true"><span></span></span>
+                    <span>Показывать под заголовком</span>
+                  </label>
+                </div>
                 <textarea class="auto-grow" id="summaryInput" name="summary" rows="3" maxlength="1000"></textarea>
-              </label>
+                <small>Описание используется в списке новостей. На странице его можно скрыть, чтобы не дублировать основной текст.</small>
+              </div>
 
               <label class="field field-wide">
                 <span>Текст публикации</span>

@@ -402,10 +402,13 @@ function articlePage(post, index) {
   );
   const newer = posts[index - 1];
   const older = posts[index + 1];
-  const articleNavigation = `<nav class="article-navigation" aria-label="Соседние публикации">${newer ? `<a href="${root}${postRoute(newer)}"><span>Новая публикация</span><strong>${escapeHtml(newer.title)}</strong></a>` : "<span></span>"}${older ? `<a href="${root}${postRoute(older)}"><span>Предыдущая публикация</span><strong>${escapeHtml(older.title)}</strong></a>` : ""}</nav>`;
+  const articleNavigation = newer || older
+    ? `<nav class="article-navigation${newer && older ? "" : " is-single"}" aria-label="Соседние публикации">${newer ? `<a href="${root}${postRoute(newer)}"><span>Новая публикация</span><strong>${escapeHtml(newer.title)}</strong></a>` : ""}${older ? `<a href="${root}${postRoute(older)}"><span>Предыдущая публикация</span><strong>${escapeHtml(older.title)}</strong></a>` : ""}</nav>`
+    : "";
+  const showSummaryInArticle = post.showSummaryInArticle !== false;
   const main = `
     <article class="article-page">
-      <header class="article-header"><div class="container"><a class="article-back" href="${root}novosti/">← Все новости</a><time datetime="${post.date}">${formatDate(post.date)}</time><h1>${escapeHtml(post.title)}</h1>${post.summary ? `<p>${escapeHtml(post.summary)}</p>` : ""}</div></header>
+      <header class="article-header"><div class="container"><a class="article-back" href="${root}novosti/">← Все новости</a><time datetime="${post.date}">${formatDate(post.date)}</time><h1>${escapeHtml(post.title)}</h1>${post.summary && showSummaryInArticle ? `<p>${escapeHtml(post.summary)}</p>` : ""}</div></header>
       <div class="container article-layout"><div class="article-content">${renderArticleBlocks(post)}</div>${gallery.length ? `<div class="article-gallery">${gallery.map((image, imageIndex) => `<figure><img src="${image}" alt="${escapeHtml(post.title)}${imageIndex ? `, фотография ${imageIndex + 1}` : ""}" loading="lazy"></figure>`).join("")}</div>` : ""}${articleNavigation}</div>
     </article>
 ${ctaBand(depth)}`;

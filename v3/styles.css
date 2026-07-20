@@ -4295,6 +4295,14 @@ body.menu-open .site-header .menu-toggle span { background: #eef4f9; }
   text-align: right;
 }
 
+.article-navigation.is-single {
+  grid-template-columns: 1fr;
+}
+
+.article-navigation.is-single a {
+  text-align: left;
+}
+
 .article-navigation span {
   display: block;
   color: var(--green-dark);

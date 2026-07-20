@@ -268,6 +268,88 @@ h2 {
   font-weight: 750;
 }
 
+.field-heading-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.field-heading-row > label:first-child {
+  color: #536476;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.field > small {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.visibility-toggle {
+  display: inline-flex;
+  width: auto;
+  align-items: center;
+  gap: 8px;
+  color: #536476;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 650;
+  user-select: none;
+}
+
+.visibility-toggle input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-track {
+  position: relative;
+  width: 34px;
+  height: 19px;
+  flex: 0 0 auto;
+  border: 1px solid #aebbc6;
+  border-radius: 10px;
+  background: #dbe2e8;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.toggle-track > span {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(5, 24, 42, 0.2);
+  transition: transform 160ms ease;
+}
+
+.visibility-toggle input:checked + .toggle-track {
+  border-color: var(--blue-600);
+  background: var(--blue-600);
+}
+
+.visibility-toggle input:checked + .toggle-track > span {
+  transform: translateX(15px);
+}
+
+.visibility-toggle input:focus-visible + .toggle-track {
+  outline: 3px solid rgba(22, 132, 188, 0.18);
+  outline-offset: 2px;
+}
+
+.visibility-toggle input:disabled + .toggle-track {
+  opacity: 0.58;
+}
+
 input,
 select,
 textarea {
@@ -1046,6 +1128,12 @@ dialog p:not(.section-label) {
 
   .field-row {
     grid-template-columns: 1fr;
+  }
+
+  .field-heading-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
   }
 
   .upload-control {

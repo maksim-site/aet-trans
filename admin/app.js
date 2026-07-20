@@ -35,6 +35,7 @@ const elements = {
   dateInput: document.querySelector("#dateInput"),
   slugInput: document.querySelector("#slugInput"),
   summaryInput: document.querySelector("#summaryInput"),
+  showSummaryInput: document.querySelector("#showSummaryInput"),
   bodyInput: document.querySelector("#bodyInput"),
   imageInput: document.querySelector("#imageInput"),
   imagePreview: document.querySelector("#imagePreview"),
@@ -151,6 +152,7 @@ function setBusy(value, label = "Сохранение...") {
   elements.cancelButton.disabled = value;
   elements.newPostButton.disabled = value;
   elements.imageInput.disabled = value;
+  elements.showSummaryInput.disabled = value;
   elements.saveButton.textContent = value ? label : "Сохранить";
 }
 
@@ -348,6 +350,7 @@ function openEditor(post, isNew = false) {
   elements.dateInput.value = post.date || "";
   elements.slugInput.value = post.slug || "";
   elements.summaryInput.value = post.summary || "";
+  elements.showSummaryInput.checked = post.showSummaryInArticle !== false;
   elements.bodyInput.value = post.body || "";
   elements.imageInput.value = "";
   elements.deleteButton.hidden = isNew;
@@ -400,6 +403,7 @@ function newPost() {
     date: localDateValue(),
     slug: "",
     summary: "",
+    showSummaryInArticle: false,
     body: "",
     coverPath: "",
     inheritedCover: "",
@@ -454,6 +458,7 @@ async function savePost(event) {
       date: elements.dateInput.value,
       slug: elements.slugInput.value.trim(),
       summary: elements.summaryInput.value.trim(),
+      showSummaryInArticle: elements.showSummaryInput.checked,
       body: elements.bodyInput.value.trim(),
       coverImage,
       galleryImages: [...new Set(galleryImages)],
@@ -542,6 +547,10 @@ elements.slugInput.addEventListener("input", () => {
 });
 
 elements.dateInput.addEventListener("input", () => {
+  state.dirty = true;
+});
+
+elements.showSummaryInput.addEventListener("change", () => {
   state.dirty = true;
 });
 

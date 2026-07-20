@@ -253,6 +253,7 @@ function serializePost(post, includeBody = false) {
     slug: post.slug,
     title: post.title,
     summary: post.summary || "",
+    showSummaryInArticle: post.showSummaryInArticle !== false,
     coverImage: post.coverImage || "",
     inheritedCover,
     coverPath,
@@ -282,6 +283,9 @@ function normalizePost(payload, existingPost, posts) {
   const suppliedSummary = String(payload.summary || "").trim();
   if (suppliedSummary.length > 1000) throw httpError(400, "Краткое описание слишком длинное");
   const summary = suppliedSummary || summarize(blocks);
+  const showSummaryInArticle = payload.showSummaryInArticle === undefined
+    ? existingPost?.showSummaryInArticle !== false
+    : Boolean(payload.showSummaryInArticle);
   const coverImage = normalizeCoverImage(payload.coverImage);
   const galleryImages = normalizeGalleryImages(payload.galleryImages, existingPost?.galleryImages || []);
   const nextId = posts.reduce((maximum, post) => Math.max(maximum, Number(post.id) || 0), 0) + 1;
@@ -294,6 +298,7 @@ function normalizePost(payload, existingPost, posts) {
     slug,
     title,
     summary,
+    showSummaryInArticle,
     blocks,
     images: existingPost?.images || [],
   };
