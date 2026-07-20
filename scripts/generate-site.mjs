@@ -9,7 +9,7 @@ import {
   reviews,
   services,
 } from "./site-content.mjs";
-import { newsImageRelativePath, newsImageWebPath } from "./news-assets.mjs";
+import { newsImageRelativePath } from "./news-assets.mjs";
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const outputDirectory = process.argv[2] || ".";
@@ -391,14 +391,15 @@ function articlePage(post, index) {
   const availableImages = (post.images || []).filter((image) =>
     existsSync(join(projectRoot, "assets", newsImageRelativePath(image))),
   );
-  const archivedGallery = availableImages.map((image) => `${assets}${newsImageWebPath(image)}`);
-  const gallery = post.coverImage
-    ? [`${assets}${post.coverImage}`, ...archivedGallery]
-    : archivedGallery.length
-      ? archivedGallery
-      : coverImage
-        ? [`${assets}${coverImage}`]
-        : [];
+  const galleryPaths = [
+    ...(post.coverImage ? [post.coverImage] : []),
+    ...availableImages.map(newsImageRelativePath),
+    ...(post.galleryImages || []).filter((image) => existsSync(join(projectRoot, "assets", image))),
+  ];
+  if (!galleryPaths.length && coverImage) galleryPaths.push(coverImage);
+  const gallery = [...new Set(galleryPaths)].map((image) =>
+    `${assets}${image.startsWith("news/archive/") ? image.split("/").map(encodeURIComponent).join("/") : image}`,
+  );
   const newer = posts[index - 1];
   const older = posts[index + 1];
   const articleNavigation = `<nav class="article-navigation" aria-label="Соседние публикации">${newer ? `<a href="${root}${postRoute(newer)}"><span>Новая публикация</span><strong>${escapeHtml(newer.title)}</strong></a>` : "<span></span>"}${older ? `<a href="${root}${postRoute(older)}"><span>Предыдущая публикация</span><strong>${escapeHtml(older.title)}</strong></a>` : ""}</nav>`;

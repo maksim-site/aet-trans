@@ -102,26 +102,35 @@
 
               <label class="field field-wide">
                 <span>Краткое описание</span>
-                <textarea id="summaryInput" name="summary" rows="3" maxlength="1000"></textarea>
+                <textarea class="auto-grow" id="summaryInput" name="summary" rows="3" maxlength="1000"></textarea>
               </label>
 
               <label class="field field-wide">
                 <span>Текст публикации</span>
-                <textarea id="bodyInput" name="body" rows="13" required></textarea>
+                <textarea class="auto-grow body-editor" id="bodyInput" name="body" rows="10" required></textarea>
               </label>
 
-              <div class="field field-wide image-field">
-                <span>Основное изображение</span>
+              <section class="field field-wide image-field" aria-labelledby="imagesHeading">
+                <div class="image-field-heading">
+                  <div>
+                    <span id="imagesHeading">Фотографии</span>
+                    <small>Главное фото используется в списке новостей, остальные показываются внутри публикации.</small>
+                  </div>
+                  <strong id="imageCount">0 фото</strong>
+                </div>
                 <div class="image-preview" id="imagePreview" hidden>
                   <img id="previewImage" alt="Предпросмотр изображения">
-                  <button class="image-remove" id="removeImageButton" type="button">Убрать</button>
+                  <div class="image-preview-meta"><span>Главное фото</span><strong id="coverSourceLabel"></strong></div>
+                  <button class="image-remove" id="removeImageButton" type="button">Сбросить выбор</button>
                 </div>
+                <p class="gallery-empty" id="galleryEmpty">В публикации пока нет фотографий.</p>
+                <div class="image-gallery" id="imageGallery" aria-label="Фотографии публикации"></div>
                 <label class="upload-control">
-                  <input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp">
-                  <span>Выбрать изображение</span>
-                  <small>JPG, PNG или WebP, до 8 МБ</small>
+                  <input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp" multiple>
+                  <span>Добавить фотографии</span>
+                  <small>Можно выбрать несколько файлов. JPG, PNG или WebP, каждый до 8 МБ.</small>
                 </label>
-              </div>
+              </section>
 
               <div class="form-actions">
                 <button class="button button-danger" id="deleteButton" type="button">Удалить</button>

@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { localNewsImages } from "./site-content.mjs";
+import { newsImageRelativePath } from "./news-assets.mjs";
 
 const execFileAsync = promisify(execFile);
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -129,6 +130,37 @@ function normalizeCoverImage(value) {
   return coverImage;
 }
 
+function normalizeGalleryImages(value, fallback = []) {
+  if (value === undefined) return [...fallback];
+  if (!Array.isArray(value)) throw httpError(400, "Некорректный список изображений");
+  if (value.length > 60) throw httpError(400, "В одной новости может быть не больше 60 изображений");
+  return [...new Set(value.map(normalizeCoverImage).filter(Boolean))];
+}
+
+function assetUrl(relativePath) {
+  return `/assets/${relativePath.split("/").map(encodeURIComponent).join("/")}`;
+}
+
+function availableArchiveImages(post) {
+  const images = [];
+  for (const source of post.images || []) {
+    try {
+      const path = newsImageRelativePath(source);
+      if (existsSync(join(projectRoot, "assets", path))) images.push({ path, source });
+    } catch {
+      // Unsupported legacy image URLs are left in the source data and omitted from the editor.
+    }
+  }
+  return images;
+}
+
+function imageKind(path, inheritedCover) {
+  if (path === inheritedCover) return "inherited";
+  if (path.startsWith("news/archive/")) return "archive";
+  if (path.startsWith("news/uploads/")) return "upload";
+  return "asset";
+}
+
 function bodyFromBlocks(blocks = []) {
   const sections = [];
   let list = [];
@@ -188,9 +220,32 @@ function postRoute(post) {
 }
 
 function serializePost(post, includeBody = false) {
-  const inheritedCover = !post.coverImage && localNewsImages[post.slug]
+  const inheritedCover = localNewsImages[post.slug]
     ? `news/${localNewsImages[post.slug]}`
     : "";
+  const coverPath = post.coverImage || inheritedCover;
+  const persistedGallery = new Set(post.galleryImages || []);
+  const archiveImages = availableArchiveImages(post);
+  const galleryByPath = new Map();
+  const addGalleryImage = (path, source = "") => {
+    if (!path || !existsSync(join(projectRoot, "assets", path))) return;
+    const previous = galleryByPath.get(path);
+    galleryByPath.set(path, {
+      path,
+      url: assetUrl(path),
+      source: source || previous?.source || "",
+      kind: imageKind(path, inheritedCover),
+      isCover: path === coverPath,
+      removable: path.startsWith("news/uploads/"),
+      persistInGallery: persistedGallery.has(path),
+    });
+  };
+
+  addGalleryImage(coverPath);
+  addGalleryImage(inheritedCover);
+  for (const image of archiveImages) addGalleryImage(image.path, image.source);
+  for (const image of post.galleryImages || []) addGalleryImage(image);
+
   const result = {
     id: post.id,
     date: post.date,
@@ -199,11 +254,11 @@ function serializePost(post, includeBody = false) {
     title: post.title,
     summary: post.summary || "",
     coverImage: post.coverImage || "",
-    coverUrl: post.coverImage
-      ? `/assets/${post.coverImage}`
-      : inheritedCover
-        ? `/assets/${inheritedCover}`
-        : "",
+    inheritedCover,
+    coverPath,
+    coverUrl: coverPath ? assetUrl(coverPath) : "",
+    galleryImages: post.galleryImages || [],
+    gallery: [...galleryByPath.values()],
     url: `/${postRoute(post)}/`,
   };
   if (includeBody) result.body = bodyFromBlocks(post.blocks);
@@ -228,6 +283,7 @@ function normalizePost(payload, existingPost, posts) {
   if (suppliedSummary.length > 1000) throw httpError(400, "Краткое описание слишком длинное");
   const summary = suppliedSummary || summarize(blocks);
   const coverImage = normalizeCoverImage(payload.coverImage);
+  const galleryImages = normalizeGalleryImages(payload.galleryImages, existingPost?.galleryImages || []);
   const nextId = posts.reduce((maximum, post) => Math.max(maximum, Number(post.id) || 0), 0) + 1;
 
   const post = {
@@ -244,6 +300,8 @@ function normalizePost(payload, existingPost, posts) {
 
   if (coverImage) post.coverImage = coverImage;
   else delete post.coverImage;
+  if (galleryImages.length) post.galleryImages = galleryImages;
+  else delete post.galleryImages;
 
   if (!existingPost) post.legacyUrl = `https://aet-trans.ru/${postRoute(post)}/`;
   return post;
@@ -279,10 +337,15 @@ async function removeGeneratedPost(post) {
   ]);
 }
 
-async function removeUnusedUploadedImage(coverImage, posts) {
-  if (!coverImage?.startsWith("news/uploads/")) return;
-  if (posts.some((post) => post.coverImage === coverImage)) return;
-  const target = resolve(projectRoot, "assets", coverImage);
+function uploadedImagesForPost(post) {
+  if (!post) return [];
+  return [...new Set([post.coverImage, ...(post.galleryImages || [])].filter((image) => image?.startsWith("news/uploads/")))];
+}
+
+async function removeUnusedUploadedImage(imagePath, posts) {
+  if (!imagePath?.startsWith("news/uploads/")) return;
+  if (posts.some((post) => post.coverImage === imagePath || post.galleryImages?.includes(imagePath))) return;
+  const target = resolve(projectRoot, "assets", imagePath);
   if (!target.startsWith(`${uploadDirectory}${sep}`)) return;
   await rm(target, { force: true });
 }
@@ -322,10 +385,10 @@ async function mutateNews(mutator) {
 
   try {
     await generateAndValidate(staleOnSuccess);
-    const replacedCover = result.previousPost?.coverImage !== result.post?.coverImage
-      ? result.previousPost?.coverImage
-      : "";
-    await removeUnusedUploadedImage(result.deletedPost?.coverImage || replacedCover, nextDocument.posts);
+    const previousImages = uploadedImagesForPost(result.deletedPost || result.previousPost);
+    const nextImages = new Set(uploadedImagesForPost(result.post));
+    const removedImages = previousImages.filter((image) => !nextImages.has(image));
+    await Promise.all(removedImages.map((image) => removeUnusedUploadedImage(image, nextDocument.posts)));
     return result;
   } catch (error) {
     await writeFile(newsPath, previousRaw, "utf8");
@@ -391,6 +454,7 @@ async function handleApi(request, response, pathname) {
     await writeFile(join(uploadDirectory, filename), buffer);
     sendJson(response, 201, {
       coverImage: `news/uploads/${filename}`,
+      imagePath: `news/uploads/${filename}`,
       url: `/assets/news/uploads/${filename}`,
     });
     return;
