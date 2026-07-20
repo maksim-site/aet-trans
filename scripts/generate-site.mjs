@@ -134,7 +134,7 @@ function footer(depth) {
     <div class="container footer-main">
       <a class="footer-brand" href="${root}" aria-label="АЕТ Транс, на главную"><img src="${assets}logo-wordmark-light.svg" alt="АЕТ Транс"></a>
       <nav class="footer-nav" aria-label="Навигация в подвале">
-        <a href="${root}o-kompanii/">О компании</a><a href="${root}uslugi/">Услуги</a><a href="${root}novosti/">Новости</a><a href="${root}kontakty/">Контакты</a><a href="${root}proekty/">Проекты</a><a href="${root}klienty/">Клиенты</a><a href="${root}testimonial/">Отзывы</a>
+        <a href="${root}o-kompanii/">О компании</a><a href="${root}uslugi/">Услуги</a><a href="${root}novosti/">Новости</a><a href="${root}kontakty/">Контакты</a><a href="${root}proekty/">Проекты</a><a href="${root}testimonial/">Отзывы</a>
       </nav>
     </div>
     <div class="container footer-bottom">
@@ -171,7 +171,7 @@ function ctaBand(depth, title = "Обсудим вашу перевозку") {
     </section>`;
 }
 
-function documentPage({ depth = 1, active, title, description, canonicalPath, main, image = "images/oversize.jpg" }) {
+function documentPage({ depth = 1, active, title, description, canonicalPath, main, afterMain = "", bodyClass = "", image = "images/oversize.jpg" }) {
   const root = rootPrefix(depth);
   const assets = assetPrefix(depth);
   const canonical = `https://aet-trans.ru/${canonicalPath}`;
@@ -195,9 +195,9 @@ function documentPage({ depth = 1, active, title, description, canonicalPath, ma
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="${root}styles.css?v=3">
 </head>
-<body class="theme-blue-v3 inner-page">
+<body class="theme-blue-v3 inner-page${bodyClass ? ` ${bodyClass}` : ""}">
 ${header(depth, active)}
-  <main>${main}</main>
+  <main>${main}</main>${afterMain ? `\n${afterMain}` : ""}
 ${footer(depth)}
   <script src="${root}script.js?v=2"></script>
 </body>
@@ -213,9 +213,8 @@ function servicesPage() {
       (service) => `
         <article class="service-row reveal">
           <span class="service-row-number">${service.number}</span>
-          <div class="service-row-copy"><h2>${escapeHtml(service.title)}</h2><p>${escapeHtml(service.description)}</p></div>
-          <ul>${service.details.map((detail) => `<li>${escapeHtml(detail)}</li>`).join("")}</ul>
-          <a href="${service.href ? root + service.href : root + "kontakty/"}" aria-label="${service.href ? "Подробнее" : "Связаться"}: ${escapeHtml(service.title)}">${service.href ? "Подробнее" : "Связаться"} <span aria-hidden="true">→</span></a>
+          <div class="service-row-copy"><h2>${escapeHtml(service.title)}</h2></div>
+${service.href ? `          <a href="${root}${service.href}" aria-label="Подробнее: ${escapeHtml(service.title)}">Подробнее <span aria-hidden="true">→</span></a>\n` : ""}
         </article>`,
     )
     .join("");
@@ -223,22 +222,21 @@ function servicesPage() {
   const main = `
 ${pageHero({
     depth,
-    eyebrow: "Полный комплекс логистических услуг",
-    title: "Перевозка под контролем одной команды",
-    intro: "Подключаемся к отдельному этапу или полностью организуем доставку от подготовки маршрута до выгрузки.",
+    eyebrow: "Услуги",
+    title: "Полный комплекс логистических услуг",
+    intro: "Компания ООО «АЕТ Транс» оказывает полный комплекс логистических услуг с использованием различных видов транспорта.",
     image: "images/project-2.jpg",
     imageAlt: "Перегрузка промышленного оборудования",
   })}
-    <section class="section inner-intro"><div class="container split-intro"><h2>Что берем на себя</h2><p>Транспортно-экспедиторская компания «АЕТ Транс» работает с промышленными грузами по России и за рубежом. В одном проекте объединяем перевозку, документы, таможню, страхование, хранение и сопровождение.</p></div></section>
     <section class="service-directory"><div class="container">${serviceItems}</div></section>
-    <section class="transport-modes"><div class="container"><header><p class="section-label">Виды транспорта</p><h2>Выбираем схему под груз и маршрут</h2></header><div class="mode-grid"><div><strong>Авто</strong><span>Гибкие маршруты и доставка до площадки</span></div><div><strong>Море</strong><span>Международные и проектные отправки</span></div><div><strong>Авиа</strong><span>Срочные и ценные грузы</span></div><div><strong>Железная дорога</strong><span>Крупные партии и дальние расстояния</span></div></div></div></section>
+    <section class="transport-modes"><div class="container"><header><p class="section-label">Виды транспорта</p><h2>Железнодорожный, автомобильный, водный и авиационный транспорт</h2></header><div class="mode-grid"><div><strong>Автомобильный</strong></div><div><strong>Железнодорожный</strong></div><div><strong>Водный</strong></div><div><strong>Авиационный</strong></div></div></div></section>
 ${ctaBand(depth)}`;
 
   return documentPage({
     depth,
     active: "services",
     title: "Услуги | АЕТ Транс",
-    description: "Негабаритные, международные и мультимодальные перевозки, таможенное оформление, экспедирование, хранение и страхование грузов.",
+    description: "Полный комплекс логистических услуг с использованием железнодорожного, автомобильного, водного и авиационного транспорта.",
     canonicalPath: "uslugi/",
     main,
     image: "images/project-2.jpg",
@@ -250,25 +248,19 @@ function oversizedPage() {
   const main = `
 ${pageHero({
     depth,
-    eyebrow: "Проектная логистика",
-    title: "Негабаритные и тяжеловесные грузы",
-    intro: "Инженерная подготовка, согласованный маршрут и точная координация каждого этапа перевозки.",
+    eyebrow: "Приоритетное направление",
+    title: "Крупногабаритные и тяжеловесные грузы",
+    intro: "Организация перевозок крупногабаритных и тяжеловесных грузов в России и за рубежом.",
     image: "images/oversize.jpg",
     imageAlt: "Крупногабаритное оборудование на судне",
   })}
-    <section class="section inner-intro"><div class="container split-intro"><h2>Сложная перевозка начинается до погрузки</h2><p>Изучаем характеристики груза и площадок, проверяем ограничения маршрута, подбираем транспорт и заранее определяем порядок перегрузок. Это позволяет видеть критические точки проекта до выхода груза в путь.</p></div></section>
-    <section class="technical-stages"><div class="container technical-stages-grid">
-      <div class="technical-stage reveal"><span>01</span><h3>Исходные данные</h3><p>Размеры, масса, центр тяжести, точки крепления, сроки и требования площадки.</p></div>
-      <div class="technical-stage reveal"><span>02</span><h3>Маршрут</h3><p>Обследование дорог, мостов, портов, терминалов и мест перегрузки.</p></div>
-      <div class="technical-stage reveal"><span>03</span><h3>Технология</h3><p>Транспорт, схемы погрузки, крепление, разрешения и такелаж.</p></div>
-      <div class="technical-stage reveal"><span>04</span><h3>Реализация</h3><p>Координация участников, контроль сроков, документов и состояния груза.</p></div>
-    </div></section>
-    <section class="section media-story"><div class="container media-story-grid"><figure class="reveal"><img src="${assetPrefix(depth)}images/specialization.jpg" alt="Погрузка крупногабаритного оборудования" loading="lazy"></figure><div class="reveal"><p class="section-label">Ответственность за результат</p><h2>Один план для всех участников</h2><p>Перевозчик, терминал, порт, таможня, страховая компания и площадка заказчика работают по общей последовательности действий. Клиент получает один контакт и статус по контрольным точкам.</p><ul><li>Проверка документов до старта</li><li>Контроль погрузки и крепления</li><li>Согласование перегрузок</li><li>Закрывающие документы после доставки</li></ul></div></div></section>
-${ctaBand(depth, "Разберем параметры сложного груза")}`;
+    <section class="section inner-intro"><div class="container split-intro"><h2>Перевозки по России и за рубежом</h2><p>Приоритетным направлением деятельности компании «АЕТ Транс» является организация перевозок крупногабаритных и тяжеловесных грузов в России и за рубежом.</p></div></section>
+    <section class="section media-story"><div class="container media-story-grid"><figure class="reveal"><img src="${assetPrefix(depth)}images/specialization.jpg" alt="Погрузка крупногабаритного оборудования" loading="lazy"></figure><div class="reveal"><p class="section-label">АЕТ Транс</p><h2>Полный комплекс логистических услуг</h2><p>Компания осуществляет перевозки с использованием железнодорожного, автомобильного, водного и авиационного транспорта.</p></div></div></section>
+${ctaBand(depth, "Связаться с АЕТ Транс")}`;
   return documentPage({
     depth,
     active: "oversized",
-    title: "Негабаритные перевозки | АЕТ Транс",
+    title: "Крупногабаритные перевозки | АЕТ Транс",
     description: "Организация перевозок крупногабаритных и тяжеловесных грузов по России и за рубежом.",
     canonicalPath: "negabaritnye-perevozki/",
     main,
@@ -307,34 +299,33 @@ function aboutPage() {
   const main = `
 ${pageHero({depth, eyebrow: "Работаем с 2004 года", title: "Логистика для промышленности и энергетики", intro: "Организуем перевозки по России и за рубежом, включая сложные крупногабаритные и тяжеловесные грузы.", image: "images/hero-port.jpg", imageAlt: "Грузовой порт Санкт-Петербурга"})}
     <section class="section inner-intro"><div class="container split-intro"><h2>АЕТ Транс</h2><div><p>Компания оказывает полный комплекс логистических услуг с использованием автомобильного, морского, авиационного и железнодорожного транспорта.</p><p>Берем на себя работы, связанные с отправкой и перевозкой груза, страхованием, таможенным оформлением, хранением и документальным сопровождением.</p></div></div></section>
-    <section class="company-metrics"><div class="container company-metrics-grid"><div><strong>2004</strong><span>год основания</span></div><div><strong>Россия и зарубежье</strong><span>география перевозок</span></div><div><strong>Одна команда</strong><span>маршрут, документы и контроль</span></div></div></section>
-    <section class="section media-story"><div class="container media-story-grid"><figure class="reveal"><img src="${assets}images/project-2.jpg" alt="Погрузка промышленного оборудования" loading="lazy"></figure><div class="reveal"><p class="section-label">Основная специализация</p><h2>Проекты, где важна подготовка</h2><p>Приоритетное направление компании: перевозки крупногабаритных и тяжеловесных грузов по России и за рубежом. За годы работы команда выполнила проекты от стандартных отправок до уникального промышленного оборудования.</p><blockquote>Наша задача: сократить транспортные издержки клиента и держать его в курсе на всех стадиях доставки.</blockquote><p class="quote-author"><strong>Александр Торгашов</strong><span>Руководитель АЕТ Транс</span></p></div></div></section>
-    <section class="section proof-preview"><div class="container"><header class="section-heading"><h2>Опыт, подтвержденный работой с отраслью</h2><p>В архиве компании сохранены проекты и отзывы предприятий машиностроительного и энергетического комплекса.</p></header><div class="client-preview-grid">${previewLogos}</div><div class="proof-preview-actions"><a class="button button-dark" href="../klienty/">Все клиенты</a><a class="button button-light" href="../testimonial/">Отзывы и письма</a></div></div></section>
+    <section class="company-metrics"><div class="container company-metrics-grid"><div><strong>2004</strong><span>работаем с 2004 года</span></div><div><strong>Россия и зарубежье</strong><span>география перевозок</span></div><div><strong>Авто, ж/д, вода и авиа</strong><span>используемые виды транспорта</span></div></div></section>
+    <section class="section media-story"><div class="container media-story-grid"><figure class="reveal"><img src="${assets}images/project-2.jpg" alt="Погрузка промышленного оборудования" loading="lazy"></figure><div class="reveal"><p class="section-label">Основная специализация</p><h2>Крупногабаритные и тяжеловесные грузы</h2><p>Приоритетным направлением деятельности компании «АЕТ Транс» является организация перевозок крупногабаритных и тяжеловесных грузов в России и за рубежом.</p><p>За годы работы компания реализовала перевозки разного уровня сложности: от стандартных до уникальных проектов.</p></div></div></section>
+    <section class="section proof-preview"><div class="container"><header class="section-heading"><h2>Опыт работы с промышленными предприятиями</h2><p>Клиентами компании являются крупнейшие предприятия машиностроительного и энергетического комплекса Российской Федерации.</p></header><div class="client-preview-grid">${previewLogos}</div><div class="proof-preview-actions"><a class="button button-dark" href="../testimonial/">Отзывы и письма</a></div></div></section>
 ${ctaBand(depth)}`;
   return documentPage({depth, active: "about", title: "О компании | АЕТ Транс", description: "АЕТ Транс работает с 2004 года и организует промышленную, международную и проектную логистику.", canonicalPath: "o-kompanii/", main, image: "images/hero-port.jpg"});
-}
-
-function clientsPage() {
-  const depth = 1;
-  const assets = assetPrefix(depth);
-  const items = clients.map((client) => `<article class="client-logo-item reveal"><img src="${assets}clients/${client.logo}" alt="${escapeHtml(client.name)}" loading="lazy"><h2>${escapeHtml(client.name)}</h2></article>`).join("");
-  const main = `
-${pageHero({depth, eyebrow: "Отраслевой опыт", title: "Клиенты компании", intro: "Предприятия машиностроительного и энергетического комплекса, для которых АЕТ Транс выполняла логистические задачи.", image: "images/project-2.jpg", imageAlt: "Промышленное оборудование"})}
-    <section class="section clients-directory"><div class="container"><div class="client-logo-grid">${items}</div></div></section>
-    <section class="industry-band"><div class="container industry-band-grid"><h2>Работаем там, где цена ошибки особенно высока</h2><div><span>Атомная энергетика</span><span>Тяжелое машиностроение</span><span>Промышленное оборудование</span><span>Инфраструктурные проекты</span></div></div></section>
-${ctaBand(depth)}`;
-  return documentPage({depth, active: "about", title: "Клиенты | АЕТ Транс", description: "Клиенты АЕТ Транс из машиностроительного и энергетического комплекса.", canonicalPath: "klienty/", main, image: "images/project-2.jpg"});
 }
 
 function reviewsPage() {
   const depth = 1;
   const assets = assetPrefix(depth);
-  const items = reviews.map((review, index) => `<article class="review-item reveal"><div class="review-copy"><span class="review-number">${String(index + 1).padStart(2, "0")}</span><blockquote>${escapeHtml(review.text)}</blockquote><h2>${escapeHtml(review.company)}</h2></div><a class="review-scan" href="${assets}reviews/${review.image}" target="_blank" rel="noopener" aria-label="Открыть письмо: ${escapeHtml(review.company)}"><img src="${assets}reviews/${review.image}" alt="Скан отзыва ${escapeHtml(review.company)}" loading="lazy"><span>Открыть письмо</span></a></article>`).join("");
+  const lowResolutionScans = new Set(["ganz.jpg", "sovfraht.jpg", "charity.jpg"]);
+  const items = reviews.map((review) => `<a class="review-card reveal" href="${assets}reviews/${review.image}" data-document-viewer data-caption="${escapeHtml(review.company)}" data-transcript="${escapeHtml(review.text)}"${lowResolutionScans.has(review.image) ? " data-low-resolution=\"true\"" : ""} aria-label="Открыть письмо: ${escapeHtml(review.company)}"><span class="review-card-media"><img src="${assets}reviews/${review.image}" alt="Скан отзыва ${escapeHtml(review.company)}" loading="lazy"></span><span class="review-card-copy"><strong>${escapeHtml(review.company)}</strong><span class="review-card-quote">${escapeHtml(review.text)}</span><span class="review-card-action">Открыть письмо <span aria-hidden="true">↗</span></span></span></a>`).join("");
   const main = `
-${pageHero({depth, eyebrow: "Рекомендации заказчиков", title: "Отзывы о работе АЕТ Транс", intro: "Письма предприятий, для которых компания организовывала доставку промышленного оборудования и проектных грузов.", image: "images/project-3.jpg", imageAlt: "Зона таможенного контроля"})}
-    <section class="section reviews-directory"><div class="container">${items}</div></section>
+${pageHero({depth, eyebrow: "Отзывы", title: "Отзывы наших клиентов", intro: "Рекомендательные письма и благодарности клиентов АЕТ Транс.", image: "images/project-3.jpg", imageAlt: "Зона таможенного контроля"})}
+    <section class="section reviews-directory"><div class="container"><div class="review-grid">${items}</div></div></section>
 ${ctaBand(depth)}`;
-  return documentPage({depth, active: "about", title: "Отзывы | АЕТ Транс", description: "Отзывы клиентов АЕТ Транс и сканы рекомендательных писем.", canonicalPath: "testimonial/", main, image: "images/project-3.jpg"});
+  const afterMain = `
+  <div class="document-lightbox" id="documentLightbox" aria-hidden="true">
+    <div class="document-lightbox-dialog" role="dialog" aria-modal="true" aria-label="Просмотр рекомендательного письма" aria-describedby="documentLightboxCaption">
+      <button class="document-lightbox-close" type="button" aria-label="Закрыть">×</button>
+      <button class="document-lightbox-nav document-lightbox-prev" type="button" aria-label="Предыдущее письмо">‹</button>
+      <div class="document-lightbox-stage"><img class="document-lightbox-image" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt=""></div>
+      <button class="document-lightbox-nav document-lightbox-next" type="button" aria-label="Следующее письмо">›</button>
+      <div class="document-lightbox-footer"><div><p id="documentLightboxCaption"></p><p class="document-lightbox-transcript" hidden></p></div><span class="document-lightbox-count" aria-live="polite"></span></div>
+    </div>
+  </div>`;
+  return documentPage({depth, active: "about", title: "Отзывы | АЕТ Транс", description: "Отзывы клиентов АЕТ Транс и сканы рекомендательных писем.", canonicalPath: "testimonial/", main, afterMain, bodyClass: "reviews-page", image: "images/project-3.jpg"});
 }
 
 function newsPage() {
@@ -471,7 +462,7 @@ await Promise.all([
   writeOutput("negabaritnye-perevozki/index.html", oversizedPage()),
   writeOutput("proekty/index.html", projectsPage()),
   writeOutput("o-kompanii/index.html", aboutPage()),
-  writeOutput("klienty/index.html", clientsPage()),
+  writeOutput("klienty/index.html", redirectPage("../#clients")),
   writeOutput("testimonial/index.html", reviewsPage()),
   writeOutput("novosti/index.html", newsPage()),
   writeOutput("kontakty/index.html", contactsPage()),
@@ -481,7 +472,7 @@ await Promise.all([
   writeOutput("oversized/index.html", redirectPage("../negabaritnye-perevozki/")),
   writeOutput("projects/index.html", redirectPage("../proekty/")),
   writeOutput("about/index.html", redirectPage("../o-kompanii/")),
-  writeOutput("clients/index.html", redirectPage("../klienty/")),
+  writeOutput("clients/index.html", redirectPage("../#clients")),
   writeOutput("reviews/index.html", redirectPage("../testimonial/")),
   writeOutput("news/index.html", redirectPage("../novosti/")),
   writeOutput("contacts/index.html", redirectPage("../kontakty/")),
@@ -495,7 +486,6 @@ const sitemapPaths = [
   "negabaritnye-perevozki/",
   "proekty/",
   "o-kompanii/",
-  "klienty/",
   "testimonial/",
   "novosti/",
   "kontakty/",
@@ -507,4 +497,4 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://w
 await writeOutput("sitemap.xml", sitemap);
 await writeOutput("robots.txt", "User-agent: *\nAllow: /\nSitemap: https://aet-trans.ru/sitemap.xml\n");
 
-console.log(`Generated 10 sections and ${posts.length} news pages in ${outputDirectory}.`);
+console.log(`Generated 9 sections and ${posts.length} news pages in ${outputDirectory}.`);

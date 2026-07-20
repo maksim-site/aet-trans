@@ -128,6 +128,101 @@ if (newsArchive) {
   updateNews();
 }
 
+const documentLightbox = document.getElementById("documentLightbox");
+const documentLinks = Array.from(document.querySelectorAll("[data-document-viewer]"));
+
+if (documentLightbox && documentLinks.length) {
+  const dialog = documentLightbox.querySelector(".document-lightbox-dialog");
+  const image = documentLightbox.querySelector(".document-lightbox-image");
+  const caption = documentLightbox.querySelector("#documentLightboxCaption");
+  const transcript = documentLightbox.querySelector(".document-lightbox-transcript");
+  const count = documentLightbox.querySelector(".document-lightbox-count");
+  const closeButton = documentLightbox.querySelector(".document-lightbox-close");
+  const previousButton = documentLightbox.querySelector(".document-lightbox-prev");
+  const nextButton = documentLightbox.querySelector(".document-lightbox-next");
+  const pageRegions = [header, document.querySelector("main"), document.querySelector(".site-footer")].filter(Boolean);
+  const blankImage = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+  let activeIndex = 0;
+  let returnFocus = null;
+  let swipeStartX = null;
+
+  const showDocument = (index) => {
+    activeIndex = (index + documentLinks.length) % documentLinks.length;
+    const link = documentLinks[activeIndex];
+    const label = link.dataset.caption || link.querySelector("strong")?.textContent || "Рекомендательное письмо";
+    image.src = link.href;
+    image.alt = `Рекомендательное письмо: ${label}`;
+    caption.textContent = label;
+    const isLowResolution = link.dataset.lowResolution === "true";
+    documentLightbox.classList.toggle("is-low-resolution", isLowResolution);
+    transcript.hidden = !isLowResolution;
+    transcript.textContent = isLowResolution ? link.dataset.transcript || "" : "";
+    count.textContent = `${activeIndex + 1} / ${documentLinks.length}`;
+  };
+
+  const closeDocument = () => {
+    if (!documentLightbox.classList.contains("is-open")) return;
+    documentLightbox.classList.remove("is-open");
+    documentLightbox.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("document-lightbox-open");
+    pageRegions.forEach((region) => { region.inert = false; });
+    window.setTimeout(() => {
+      if (!documentLightbox.classList.contains("is-open")) image.src = blankImage;
+    }, 180);
+    returnFocus?.focus();
+  };
+
+  const openDocument = (index, trigger) => {
+    returnFocus = trigger;
+    showDocument(index);
+    documentLightbox.classList.add("is-open");
+    documentLightbox.setAttribute("aria-hidden", "false");
+    document.body.classList.add("document-lightbox-open");
+    pageRegions.forEach((region) => { region.inert = true; });
+    requestAnimationFrame(() => closeButton.focus());
+  };
+
+  documentLinks.forEach((link, index) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      openDocument(index, link);
+    });
+  });
+
+  closeButton.addEventListener("click", closeDocument);
+  previousButton.addEventListener("click", () => showDocument(activeIndex - 1));
+  nextButton.addEventListener("click", () => showDocument(activeIndex + 1));
+  documentLightbox.addEventListener("click", (event) => {
+    if (event.target === documentLightbox) closeDocument();
+  });
+
+  dialog.addEventListener("touchstart", (event) => {
+    swipeStartX = event.changedTouches[0]?.clientX ?? null;
+  }, { passive: true });
+
+  dialog.addEventListener("touchend", (event) => {
+    if (swipeStartX === null) return;
+    const distance = (event.changedTouches[0]?.clientX ?? swipeStartX) - swipeStartX;
+    swipeStartX = null;
+    if (Math.abs(distance) < 48) return;
+    showDocument(activeIndex + (distance < 0 ? 1 : -1));
+  }, { passive: true });
+
+  window.addEventListener("keydown", (event) => {
+    if (!documentLightbox.classList.contains("is-open")) return;
+    if (event.key === "Escape") closeDocument();
+    if (event.key === "ArrowLeft") showDocument(activeIndex - 1);
+    if (event.key === "ArrowRight") showDocument(activeIndex + 1);
+    if (event.key !== "Tab") return;
+
+    const focusable = [closeButton, previousButton, nextButton];
+    const currentIndex = focusable.indexOf(document.activeElement);
+    event.preventDefault();
+    const step = event.shiftKey ? -1 : 1;
+    focusable[(currentIndex + step + focusable.length) % focusable.length].focus();
+  });
+}
+
 const revealItems = document.querySelectorAll(".reveal");
 
 document.querySelectorAll(".service-directory, .process-list, .projects-grid").forEach((group) => {
