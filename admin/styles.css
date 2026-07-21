@@ -155,6 +155,30 @@ a {
   border-bottom: 1px solid var(--line);
 }
 
+.demo-banner {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 32px;
+  color: #5d4b1f;
+  background: #fff8e5;
+  border-bottom: 1px solid #ead9a9;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.demo-banner strong {
+  flex: 0 0 auto;
+  color: #3f3216;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+body.demo-mode .status-dot {
+  background: #e6ad32;
+}
+
 .section-label {
   margin: 0 0 5px;
   color: var(--blue-700);
@@ -409,6 +433,10 @@ textarea:focus {
   display: grid;
   grid-template-columns: minmax(430px, 0.82fr) minmax(540px, 1.18fr);
   overflow: hidden;
+}
+
+body.demo-mode .workspace {
+  height: calc(100vh - var(--topbar) - 84px - 48px);
 }
 
 .posts-panel {
@@ -1080,7 +1108,8 @@ dialog p:not(.section-label) {
   }
 
   .topbar,
-  .toolbar {
+  .toolbar,
+  .demo-banner {
     padding-inline: 24px;
   }
 
@@ -1140,6 +1169,10 @@ dialog p:not(.section-label) {
     height: auto;
     display: block;
     overflow: visible;
+  }
+
+  body.demo-mode .workspace {
+    height: auto;
   }
 
   .posts-panel {
@@ -1218,6 +1251,13 @@ dialog p:not(.section-label) {
     grid-template-columns: minmax(0, 1fr) 116px;
     gap: 10px;
     padding: 14px 16px;
+  }
+
+  .demo-banner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+    padding: 10px 16px;
   }
 
   .result-count {

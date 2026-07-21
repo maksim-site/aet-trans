@@ -11,7 +11,7 @@
 <body>
   <main class="auth-screen" id="authScreen" aria-labelledby="loginHeading">
     <section class="login-card">
-      <a class="login-brand" href="/" target="_blank" rel="noopener" aria-label="Открыть сайт АЕТ Транс">
+      <a class="login-brand" href="../" target="_blank" rel="noopener" aria-label="Открыть сайт АЕТ Транс">
         <img src="../assets/logo-wordmark.svg" alt="АЕТ Транс">
       </a>
       <div class="auth-loading" id="authLoading" role="status">Проверяем доступ...</div>
@@ -38,15 +38,15 @@
 
   <div class="admin-shell" id="adminShell" hidden>
     <aside class="sidebar">
-      <a class="admin-brand" href="/" target="_blank" rel="noopener" aria-label="Открыть сайт АЕТ Транс">
+      <a class="admin-brand" href="../" target="_blank" rel="noopener" aria-label="Открыть сайт АЕТ Транс">
         <img src="../assets/logo-wordmark-light.svg" alt="АЕТ Транс">
       </a>
       <nav class="admin-nav" aria-label="Разделы админки">
-        <a href="/admin/" aria-current="page"><span class="nav-mark" aria-hidden="true"></span>Новости</a>
+        <a href="./" aria-current="page"><span class="nav-mark" aria-hidden="true"></span>Новости</a>
       </nav>
       <div class="sidebar-footer">
         <span class="status-dot" aria-hidden="true"></span>
-        <span>Защищенный режим</span>
+        <span id="modeLabel">Защищенный режим</span>
       </div>
     </aside>
 
@@ -57,11 +57,16 @@
           <h1>Новости</h1>
         </div>
         <div class="topbar-actions">
-          <a class="button button-secondary open-site-button" href="/novosti/" target="_blank" rel="noopener">Открыть сайт</a>
+          <a class="button button-secondary open-site-button" href="../novosti/" target="_blank" rel="noopener">Открыть сайт</a>
           <button class="button button-secondary button-logout" id="logoutButton" type="button">Выйти</button>
           <button class="button button-primary" id="newPostButton" type="button">Добавить новость</button>
         </div>
       </header>
+
+      <aside class="demo-banner" id="demoBanner" aria-label="Режим демонстрации" hidden>
+        <strong>Демонстрация</strong>
+        <span>Можно открыть редактор и попробовать изменения. После обновления страницы они сбросятся.</span>
+      </aside>
 
       <section class="toolbar" aria-label="Фильтры новостей">
         <label class="search-field">

@@ -3,6 +3,8 @@ const maxImageSize = 8 * 1024 * 1024;
 
 const state = {
   authenticated: false,
+  demo: false,
+  demoLoaded: false,
   posts: [],
   selectedSlug: "",
   currentPost: null,
@@ -28,6 +30,8 @@ const elements = {
   loginError: document.querySelector("#loginError"),
   adminShell: document.querySelector("#adminShell"),
   logoutButton: document.querySelector("#logoutButton"),
+  demoBanner: document.querySelector("#demoBanner"),
+  modeLabel: document.querySelector("#modeLabel"),
   newPostButton: document.querySelector("#newPostButton"),
   searchInput: document.querySelector("#searchInput"),
   yearFilter: document.querySelector("#yearFilter"),
@@ -72,6 +76,19 @@ const transliteration = {
   ъ: "", ы: "y", ь: "", э: "e", ю: "yu", я: "ya",
 };
 
+const localNewsImages = {
+  "uchastie-v-konferencii-proektnaya-logistika-dlya-promyshlennosti-i-infrastruktury": "conference-2026.jpg",
+  "prodolzhaem-sotrudnichestvo-s-predpriyatiyami-rosatoma": "rosatom-2026.jpg",
+  "my-v-sporte": "sport-2026.png",
+  "zakonchen-proekt-po-dostavke-oborudovaniya-v-adres-kitajskih-aes": "china-2026.jpg",
+  "vypolnena-dostavka-oborudovaniya-dlya-stroyashhegosya-zavoda-litij-ionnyh-batarej-v-kaliningradskoj-oblasti": "kaliningrad-2026.jpg",
+  "dostavlena-partiya-nasosnogo-oborudovaniya-iz-vengrii-v-port-sankt-peterburg-dlya-dalnejshej-otpravki-v-adres-aes-kudankulam": "kudankulam-2025.jpg",
+  "dostavlena-partiya-nasosnogo-oborudovaniya-dlya-aes-kudankulam": "pumps-2025.jpg",
+  "nachalo-proekta-po-dostavke-oborudovaniya-dlya-tyanvanskoj-aes-i-aes-sjujdapu-kitaj": "china-project-2024.jpg",
+  "dostavleny-4-komplekta-oborudovaniya-gcna-dlya-tyanvanskoj-aes": "gcna-2024.jpg",
+  "oborudovanie-v-adres-aes-kudankulam": "kudankulam-2024.jpg",
+};
+
 function slugify(value) {
   return String(value)
     .toLowerCase()
@@ -113,6 +130,109 @@ function pathKey(path) {
 function keyPath(key, uploaded = new Map()) {
   if (key.startsWith("path:")) return key.slice(5);
   return uploaded.get(key) || "";
+}
+
+function isDemoLocation() {
+  const hostname = window.location.hostname.toLowerCase();
+  const localPreview = (hostname === "127.0.0.1" || hostname === "localhost")
+    && new URLSearchParams(window.location.search).get("demo") === "1";
+  return hostname.endsWith(".github.io") || localPreview;
+}
+
+function demoAssetUrl(path) {
+  return `../assets/${String(path).split("/").map((part) => encodeURIComponent(part)).join("/")}`;
+}
+
+function archiveImagePath(rawUrl) {
+  try {
+    const url = new URL(rawUrl, window.location.href);
+    const marker = "/wp-content/uploads/";
+    const markerIndex = url.pathname.indexOf(marker);
+    if (markerIndex === -1) return "";
+    const sourcePath = decodeURIComponent(url.pathname.slice(markerIndex + marker.length));
+    const safeParts = sourcePath.split("/").filter((part) => part && part !== "." && part !== "..");
+    return safeParts.length ? `news/archive/${safeParts.join("/")}` : "";
+  } catch {
+    return "";
+  }
+}
+
+function bodyFromBlocks(blocks = []) {
+  const sections = [];
+  let list = [];
+  const flushList = () => {
+    if (!list.length) return;
+    sections.push(list.map((text) => `- ${text}`).join("\n"));
+    list = [];
+  };
+
+  for (const block of blocks) {
+    const blockText = String(block.text || "").trim();
+    if (!blockText) continue;
+    if (block.type === "list-item") {
+      list.push(blockText);
+      continue;
+    }
+    flushList();
+    if (block.type === "heading") sections.push(`## ${blockText}`);
+    else if (block.type === "quote") sections.push(`> ${blockText}`);
+    else sections.push(blockText);
+  }
+  flushList();
+  return sections.join("\n\n");
+}
+
+function demoImageKind(path, inheritedCover) {
+  if (path === inheritedCover) return "inherited";
+  if (path.startsWith("news/archive/")) return "archive";
+  if (path.startsWith("news/uploads/")) return "upload";
+  return "asset";
+}
+
+function serializeDemoPost(post) {
+  const inheritedCover = localNewsImages[post.slug] ? `news/${localNewsImages[post.slug]}` : "";
+  const coverPath = post.coverImage || inheritedCover;
+  const persistedGallery = new Set(post.galleryImages || []);
+  const galleryByPath = new Map();
+  const addGalleryImage = (path, source = "") => {
+    if (!path) return;
+    const previous = galleryByPath.get(path);
+    galleryByPath.set(path, {
+      path,
+      url: demoAssetUrl(path),
+      source: source || previous?.source || "",
+      kind: demoImageKind(path, inheritedCover),
+      isCover: path === coverPath,
+      removable: path.startsWith("news/uploads/"),
+      persistInGallery: persistedGallery.has(path),
+    });
+  };
+
+  addGalleryImage(coverPath);
+  addGalleryImage(inheritedCover);
+  for (const rawImage of post.images || []) addGalleryImage(archiveImagePath(rawImage), rawImage);
+  for (const image of post.galleryImages || []) addGalleryImage(image);
+
+  return {
+    id: post.id,
+    date: post.date,
+    year: post.year || String(post.date || "").slice(0, 4),
+    slug: post.slug,
+    title: post.title,
+    summary: post.summary || "",
+    showSummaryInArticle: post.showSummaryInArticle !== false,
+    body: bodyFromBlocks(post.blocks),
+    coverImage: post.coverImage || "",
+    inheritedCover,
+    coverPath,
+    coverUrl: coverPath ? demoAssetUrl(coverPath) : "",
+    galleryImages: post.galleryImages || [],
+    gallery: [...galleryByPath.values()],
+  };
+}
+
+function sortPosts() {
+  state.posts.sort((left, right) => right.date.localeCompare(left.date) || Number(right.id) - Number(left.id));
 }
 
 function fileName(path) {
@@ -218,6 +338,17 @@ async function logout() {
 }
 
 async function initialize() {
+  if (isDemoLocation()) {
+    state.demo = true;
+    document.body.classList.add("demo-mode");
+    elements.demoBanner.hidden = false;
+    elements.logoutButton.hidden = true;
+    elements.modeLabel.textContent = "Демо-режим";
+    showAdmin();
+    await loadPosts();
+    return;
+  }
+
   try {
     const session = await api("/api/auth/session");
     if (!session.authenticated) {
@@ -485,6 +616,12 @@ function closeEditor(force = false) {
 async function selectPost(slug) {
   if (state.busy || slug === state.selectedSlug) return;
   if (!canDiscardChanges()) return;
+  if (state.demo) {
+    const post = state.posts.find((candidate) => candidate.slug === slug);
+    if (post) openEditor(post);
+    else showToast("Новость не найдена", true);
+    return;
+  }
   try {
     const { post } = await api(`/api/news/${encodeURIComponent(slug)}`);
     openEditor(post);
@@ -538,6 +675,10 @@ async function uploadPendingImages() {
 async function savePost(event) {
   event.preventDefault();
   if (state.busy || !elements.newsForm.reportValidity()) return;
+  if (state.demo) {
+    saveDemoPost();
+    return;
+  }
   const wasNew = state.isNew;
   setBusy(true, state.pendingImages.length ? "Загрузка..." : "Сохранение...");
   try {
@@ -575,9 +716,57 @@ async function savePost(event) {
   }
 }
 
+function saveDemoPost() {
+  const wasNew = state.isNew;
+  const originalSlug = elements.originalSlug.value;
+  const slug = elements.slugInput.value.trim();
+  const duplicate = state.posts.some((post) => post.slug === slug && post.slug !== originalSlug);
+  if (duplicate) {
+    showToast("Новость с таким адресом уже существует", true);
+    return;
+  }
+
+  const date = elements.dateInput.value;
+  const selectedCover = keyPath(state.coverKey);
+  const updatedPost = {
+    ...(state.currentPost || {}),
+    id: state.currentPost?.id || Date.now(),
+    title: elements.titleInput.value.trim(),
+    date,
+    year: date.slice(0, 4),
+    slug,
+    summary: elements.summaryInput.value.trim(),
+    showSummaryInArticle: elements.showSummaryInput.checked,
+    body: elements.bodyInput.value.trim(),
+    coverPath: selectedCover || state.currentPost?.coverPath || "",
+    gallery: state.gallery.map((item) => ({ ...item })),
+  };
+
+  if (wasNew) state.posts.push(updatedPost);
+  else state.posts = state.posts.map((post) => post.slug === originalSlug ? updatedPost : post);
+  sortPosts();
+  state.currentPost = updatedPost;
+  state.selectedSlug = slug;
+  state.isNew = false;
+  state.dirty = false;
+  state.slugTouched = true;
+  elements.originalSlug.value = slug;
+  elements.editorMode.textContent = "Редактирование";
+  elements.editorHeading.textContent = updatedPost.title;
+  elements.deleteButton.hidden = false;
+  document.querySelector(".empty-index").textContent = String(state.posts.length);
+  renderYears();
+  renderPosts();
+  showToast(wasNew
+    ? "Демо: новость добавлена до обновления страницы"
+    : "Демо: изменения сохранены до обновления страницы");
+}
+
 function requestDelete() {
   if (!state.currentPost || state.isNew || state.busy) return;
-  elements.deleteMessage.textContent = `«${state.currentPost.title}» будет удалена с сайта.`;
+  elements.deleteMessage.textContent = state.demo
+    ? `«${state.currentPost.title}» будет удалена только из этой демонстрации.`
+    : `«${state.currentPost.title}» будет удалена с сайта.`;
   if (typeof elements.deleteDialog.showModal === "function") {
     elements.deleteDialog.showModal();
   } else if (window.confirm("Удалить эту новость?")) {
@@ -587,6 +776,17 @@ function requestDelete() {
 
 async function deletePost() {
   if (!state.currentPost || state.isNew || state.busy) return;
+  if (state.demo) {
+    const slug = state.currentPost.slug;
+    state.posts = state.posts.filter((post) => post.slug !== slug);
+    state.dirty = false;
+    closeEditor(true);
+    document.querySelector(".empty-index").textContent = String(state.posts.length);
+    renderYears();
+    renderPosts();
+    showToast("Демо: новость удалена до обновления страницы");
+    return;
+  }
   setBusy(true, "Удаление...");
   try {
     await api(`/api/news/${encodeURIComponent(state.currentPost.slug)}`, { method: "DELETE" });
@@ -605,9 +805,20 @@ async function loadPosts(selectSlug = "") {
   elements.listState.hidden = false;
   elements.listState.textContent = "Загрузка...";
   try {
-    const data = await api("/api/news");
-    state.posts = data.posts;
-    document.querySelector(".empty-index").textContent = String(data.count);
+    if (state.demo) {
+      if (!state.demoLoaded) {
+        const response = await fetch("../v3/data/news.json", { cache: "no-cache" });
+        if (!response.ok) throw new Error("Не удалось загрузить новости для демонстрации");
+        const data = await response.json();
+        state.posts = (data.posts || []).map(serializeDemoPost);
+        sortPosts();
+        state.demoLoaded = true;
+      }
+    } else {
+      const data = await api("/api/news");
+      state.posts = data.posts;
+    }
+    document.querySelector(".empty-index").textContent = String(state.posts.length);
     renderYears();
     renderPosts();
     if (selectSlug) {
