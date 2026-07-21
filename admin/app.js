@@ -32,6 +32,7 @@ const elements = {
   logoutButton: document.querySelector("#logoutButton"),
   demoBanner: document.querySelector("#demoBanner"),
   modeLabel: document.querySelector("#modeLabel"),
+  openSiteButton: document.querySelector("#openSiteButton"),
   newPostButton: document.querySelector("#newPostButton"),
   searchInput: document.querySelector("#searchInput"),
   yearFilter: document.querySelector("#yearFilter"),
@@ -216,8 +217,10 @@ function serializeDemoPost(post) {
   return {
     id: post.id,
     date: post.date,
+    sourceDate: post.date,
     year: post.year || String(post.date || "").slice(0, 4),
     slug: post.slug,
+    sourceSlug: post.slug,
     title: post.title,
     summary: post.summary || "",
     showSummaryInArticle: post.showSummaryInArticle !== false,
@@ -233,6 +236,56 @@ function serializeDemoPost(post) {
 
 function sortPosts() {
   state.posts.sort((left, right) => right.date.localeCompare(left.date) || Number(right.id) - Number(left.id));
+}
+
+function absoluteMediaUrl(item) {
+  try {
+    return new URL(item.url, window.location.href).href;
+  } catch {
+    return item.url;
+  }
+}
+
+function prepareDemoPreview(event) {
+  if (!state.demo) return;
+  event.preventDefault();
+
+  if (!state.currentPost || state.isNew) {
+    showToast("Сначала выберите сохраненную новость", true);
+    return;
+  }
+
+  const sourceDate = state.currentPost.sourceDate || state.currentPost.date;
+  const sourceSlug = state.currentPost.sourceSlug || elements.originalSlug.value;
+  if (!sourceDate || !sourceSlug) {
+    showToast("Не удалось определить адрес публикации", true);
+    return;
+  }
+
+  const token = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const [year, month, day] = sourceDate.split("-");
+  const payload = {
+    title: elements.titleInput.value.trim(),
+    date: elements.dateInput.value,
+    summary: elements.summaryInput.value.trim(),
+    showSummaryInArticle: elements.showSummaryInput.checked,
+    body: elements.bodyInput.value.trim(),
+    images: mediaItems().map((item) => ({
+      url: absoluteMediaUrl(item),
+      name: item.name || fileName(item.path),
+    })),
+  };
+
+  try {
+    localStorage.setItem(`aet-trans-demo-preview:${token}`, JSON.stringify(payload));
+  } catch {
+    showToast("Браузер не разрешил открыть предпросмотр", true);
+    return;
+  }
+
+  const previewUrl = new URL(`../${year}/${month}/${day}/${sourceSlug}/`, window.location.href);
+  previewUrl.searchParams.set("aet-preview", token);
+  window.open(previewUrl.href, "_blank", "noopener");
 }
 
 function fileName(path) {
@@ -834,6 +887,7 @@ async function loadPosts(selectSlug = "") {
 
 elements.loginForm.addEventListener("submit", login);
 elements.logoutButton.addEventListener("click", logout);
+elements.openSiteButton.addEventListener("click", prepareDemoPreview);
 elements.passwordToggle.addEventListener("click", () => {
   const reveal = elements.passwordInput.type === "password";
   elements.passwordInput.type = reveal ? "text" : "password";

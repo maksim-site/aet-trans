@@ -19,6 +19,8 @@
         <p class="section-label">Панель управления</p>
         <h1 id="loginHeading">Вход в админку</h1>
         <p class="login-copy">Управление новостями сайта.</p>
+        <label class="visually-hidden" for="usernameInput">Пользователь</label>
+        <input class="visually-hidden" id="usernameInput" name="username" type="text" value="aet-admin" autocomplete="username" tabindex="-1" aria-hidden="true" readonly>
         <label class="login-field" for="passwordInput">
           <span>Пароль</span>
           <span class="password-control">
@@ -57,7 +59,7 @@
           <h1>Новости</h1>
         </div>
         <div class="topbar-actions">
-          <a class="button button-secondary open-site-button" href="../novosti/" target="_blank" rel="noopener">Открыть сайт</a>
+          <a class="button button-secondary open-site-button" id="openSiteButton" href="../novosti/" target="_blank" rel="noopener">Открыть сайт</a>
           <button class="button button-secondary button-logout" id="logoutButton" type="button">Выйти</button>
           <button class="button button-primary" id="newPostButton" type="button">Добавить новость</button>
         </div>
@@ -65,7 +67,7 @@
 
       <aside class="demo-banner" id="demoBanner" aria-label="Режим демонстрации" hidden>
         <strong>Демонстрация</strong>
-        <span>Можно открыть редактор и попробовать изменения. После обновления страницы они сбросятся.</span>
+        <span>Изменения можно открыть на сайте. После обновления страницы они сбросятся.</span>
       </aside>
 
       <section class="toolbar" aria-label="Фильтры новостей">
@@ -129,7 +131,7 @@
                 </label>
                 <label class="field">
                   <span>Адрес страницы</span>
-                  <input id="slugInput" name="slug" type="text" maxlength="190" pattern="[a-z0-9-]+" required>
+                  <input id="slugInput" name="slug" type="text" maxlength="190" pattern="[a-z0-9\-]+" required>
                 </label>
               </div>
 

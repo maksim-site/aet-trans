@@ -16,6 +16,124 @@ if (reduceMotion) {
 const currentYear = document.getElementById("currentYear");
 if (currentYear) currentYear.textContent = new Date().getFullYear();
 
+const previewToken = new URLSearchParams(window.location.search).get("aet-preview");
+
+function appendPreviewBody(container, value) {
+  const sections = String(value || "").split(/\n\s*\n/).map((section) => section.trim()).filter(Boolean);
+
+  sections.forEach((section) => {
+    const lines = section.split("\n").map((line) => line.trim()).filter(Boolean);
+    if (lines.length && lines.every((line) => line.startsWith("- "))) {
+      const list = document.createElement("ul");
+      lines.forEach((line) => {
+        const item = document.createElement("li");
+        item.textContent = line.slice(2).trim();
+        list.append(item);
+      });
+      container.append(list);
+      return;
+    }
+
+    if (section.startsWith("## ")) {
+      const heading = document.createElement("h2");
+      heading.textContent = section.slice(3).trim();
+      container.append(heading);
+      return;
+    }
+
+    if (section.startsWith("> ")) {
+      const quote = document.createElement("blockquote");
+      quote.textContent = lines.map((line) => line.replace(/^>\s?/, "")).join(" ");
+      container.append(quote);
+      return;
+    }
+
+    const paragraph = document.createElement("p");
+    paragraph.textContent = lines.join(" ");
+    container.append(paragraph);
+  });
+}
+
+function applyArticlePreview(preview) {
+  const article = document.querySelector(".article-page");
+  const headerContainer = article?.querySelector(".article-header .container");
+  const title = headerContainer?.querySelector("h1");
+  const time = headerContainer?.querySelector("time");
+  const content = article?.querySelector(".article-content");
+  const layout = article?.querySelector(".article-layout");
+  if (!article || !headerContainer || !title || !time || !content || !layout) return;
+
+  const previewLabel = document.createElement("span");
+  previewLabel.className = "article-preview-label";
+  previewLabel.textContent = "Предпросмотр из админки";
+  time.before(previewLabel);
+
+  title.textContent = preview.title || title.textContent;
+  document.title = `${title.textContent} | АЕТ Транс`;
+
+  if (preview.date) {
+    time.dateTime = preview.date;
+    time.textContent = new Intl.DateTimeFormat("ru-RU", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(new Date(`${preview.date}T12:00:00`));
+  }
+
+  const currentSummary = Array.from(headerContainer.children).find((child) => child.tagName === "P");
+  if (preview.showSummaryInArticle && preview.summary) {
+    const summary = currentSummary || document.createElement("p");
+    summary.textContent = preview.summary;
+    if (!currentSummary) headerContainer.append(summary);
+  } else {
+    currentSummary?.remove();
+  }
+
+  content.replaceChildren();
+  appendPreviewBody(content, preview.body);
+
+  const currentGallery = layout.querySelector(".article-gallery");
+  const images = Array.isArray(preview.images) ? preview.images.filter((image) => image?.url) : [];
+  if (!images.length) {
+    currentGallery?.remove();
+    return;
+  }
+
+  const gallery = currentGallery || document.createElement("div");
+  gallery.className = "article-gallery";
+  gallery.replaceChildren(...images.map((imageData, index) => {
+    const figure = document.createElement("figure");
+    const image = document.createElement("img");
+    image.src = imageData.url;
+    image.alt = `${title.textContent}, фотография ${index + 1}`;
+    image.loading = "lazy";
+    figure.append(image);
+    return figure;
+  }));
+
+  if (!currentGallery) {
+    const navigation = layout.querySelector(".article-navigation");
+    layout.insertBefore(gallery, navigation);
+  }
+}
+
+if (previewToken) {
+  const previewKey = `aet-trans-demo-preview:${previewToken}`;
+  let preview = null;
+  try {
+    const savedPreview = localStorage.getItem(previewKey);
+    localStorage.removeItem(previewKey);
+    if (savedPreview) preview = JSON.parse(savedPreview);
+  } catch {
+    preview = null;
+  }
+
+  const cleanUrl = new URL(window.location.href);
+  cleanUrl.searchParams.delete("aet-preview");
+  window.history.replaceState(null, "", `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`);
+  if (preview) applyArticlePreview(preview);
+}
+
 const closeMenu = () => {
   menuToggle.setAttribute("aria-expanded", "false");
   menuToggle.setAttribute("aria-label", "Открыть меню");
