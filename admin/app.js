@@ -2,6 +2,7 @@ const acceptedImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 const maxImageSize = 8 * 1024 * 1024;
 
 const state = {
+  authenticated: false,
   posts: [],
   selectedSlug: "",
   currentPost: null,
@@ -17,6 +18,16 @@ const state = {
 };
 
 const elements = {
+  authScreen: document.querySelector("#authScreen"),
+  authLoading: document.querySelector("#authLoading"),
+  loginForm: document.querySelector("#loginForm"),
+  passwordInput: document.querySelector("#passwordInput"),
+  passwordToggle: document.querySelector("#passwordToggle"),
+  rememberInput: document.querySelector("#rememberInput"),
+  loginButton: document.querySelector("#loginButton"),
+  loginError: document.querySelector("#loginError"),
+  adminShell: document.querySelector("#adminShell"),
+  logoutButton: document.querySelector("#logoutButton"),
   newPostButton: document.querySelector("#newPostButton"),
   searchInput: document.querySelector("#searchInput"),
   yearFilter: document.querySelector("#yearFilter"),
@@ -124,14 +135,100 @@ function mediaLabel(item) {
 async function api(path, options = {}) {
   const response = await fetch(path, {
     ...options,
+    credentials: "same-origin",
     headers: {
       ...(options.body ? { "Content-Type": "application/json" } : {}),
       ...options.headers,
     },
   });
   const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || "Не удалось выполнить запрос");
+  if (!response.ok) {
+    const error = new Error(data.error || "Не удалось выполнить запрос");
+    error.status = response.status;
+    if (response.status === 401 && !path.startsWith("/api/auth/")) {
+      showLogin("Сессия завершилась. Войдите снова");
+    }
+    throw error;
+  }
   return data;
+}
+
+function showLogin(message = "") {
+  state.authenticated = false;
+  state.dirty = false;
+  clearPendingImages();
+  elements.adminShell.hidden = true;
+  elements.authScreen.hidden = false;
+  elements.authLoading.hidden = true;
+  elements.loginForm.hidden = false;
+  elements.loginError.textContent = message;
+  elements.loginError.hidden = !message;
+  elements.passwordInput.value = "";
+  requestAnimationFrame(() => elements.passwordInput.focus());
+}
+
+function showAdmin() {
+  state.authenticated = true;
+  elements.authScreen.hidden = true;
+  elements.adminShell.hidden = false;
+  elements.loginError.hidden = true;
+  elements.passwordInput.value = "";
+}
+
+async function login(event) {
+  event.preventDefault();
+  if (elements.loginButton.disabled || !elements.loginForm.reportValidity()) return;
+  elements.loginButton.disabled = true;
+  elements.loginButton.textContent = "Входим...";
+  elements.loginError.hidden = true;
+  try {
+    await api("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({
+        password: elements.passwordInput.value,
+        remember: elements.rememberInput.checked,
+      }),
+    });
+    showAdmin();
+    await loadPosts();
+  } catch (error) {
+    elements.loginError.textContent = error.message;
+    elements.loginError.hidden = false;
+    elements.passwordInput.select();
+  } finally {
+    elements.loginButton.disabled = false;
+    elements.loginButton.textContent = "Войти";
+  }
+}
+
+async function logout() {
+  if (!canDiscardChanges()) return;
+  elements.logoutButton.disabled = true;
+  try {
+    await api("/api/auth/logout", { method: "POST" });
+    closeEditor(true);
+    state.posts = [];
+    elements.newsTable.replaceChildren();
+    showLogin();
+  } catch (error) {
+    showToast(error.message, true);
+  } finally {
+    elements.logoutButton.disabled = false;
+  }
+}
+
+async function initialize() {
+  try {
+    const session = await api("/api/auth/session");
+    if (!session.authenticated) {
+      showLogin();
+      return;
+    }
+    showAdmin();
+    await loadPosts();
+  } catch (error) {
+    showLogin("Не удалось проверить доступ. Обновите страницу");
+  }
 }
 
 function showToast(message, isError = false) {
@@ -524,6 +621,15 @@ async function loadPosts(selectSlug = "") {
   }
 }
 
+elements.loginForm.addEventListener("submit", login);
+elements.logoutButton.addEventListener("click", logout);
+elements.passwordToggle.addEventListener("click", () => {
+  const reveal = elements.passwordInput.type === "password";
+  elements.passwordInput.type = reveal ? "text" : "password";
+  elements.passwordToggle.textContent = reveal ? "Скрыть" : "Показать";
+  elements.passwordToggle.setAttribute("aria-pressed", String(reveal));
+  elements.passwordInput.focus();
+});
 elements.searchInput.addEventListener("input", renderPosts);
 elements.yearFilter.addEventListener("change", renderPosts);
 elements.newPostButton.addEventListener("click", newPost);
@@ -624,4 +730,4 @@ window.addEventListener("beforeunload", (event) => {
   event.returnValue = "";
 });
 
-loadPosts();
+initialize();

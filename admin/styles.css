@@ -404,14 +404,19 @@ textarea:focus {
 }
 
 .workspace {
-  min-height: calc(100vh - var(--topbar) - 84px);
+  height: calc(100vh - var(--topbar) - 84px);
+  min-height: 520px;
   display: grid;
   grid-template-columns: minmax(430px, 0.82fr) minmax(540px, 1.18fr);
+  overflow: hidden;
 }
 
 .posts-panel {
   min-width: 0;
+  height: 100%;
   position: relative;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: #fff;
   border-right: 1px solid var(--line);
 }
@@ -501,6 +506,9 @@ td {
 
 .editor-panel {
   min-width: 0;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: #fff;
   box-shadow: -12px 0 34px rgba(9, 31, 48, 0.035);
 }
@@ -927,6 +935,129 @@ dialog p:not(.section-label) {
   clip-path: inset(50%);
 }
 
+.auth-screen {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: var(--navy-950);
+  border-top: 4px solid var(--blue-600);
+}
+
+.login-card {
+  width: min(420px, 100%);
+  padding: 36px;
+  background: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 7px;
+  box-shadow: 0 26px 80px rgba(0, 8, 15, 0.3);
+}
+
+.login-brand {
+  width: 188px;
+  display: block;
+  margin-bottom: 42px;
+}
+
+.login-brand img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.auth-loading {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.login-form h1 {
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+.login-copy {
+  margin-bottom: 28px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.login-field {
+  display: grid;
+  gap: 8px;
+}
+
+.login-field > span:first-child {
+  color: #536476;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.password-control {
+  position: relative;
+  display: block;
+}
+
+.password-control input {
+  height: 48px;
+  padding-right: 88px;
+}
+
+.password-control button {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  bottom: 1px;
+  min-width: 78px;
+  padding: 0 12px;
+  color: var(--blue-700);
+  background: #fff;
+  border: 0;
+  border-left: 1px solid var(--line);
+  border-radius: 0 4px 4px 0;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.remember-control {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  color: #435465;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.remember-control input {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  margin: 0;
+  accent-color: var(--blue-600);
+}
+
+.login-submit {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 26px;
+}
+
+.login-error {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  color: #9d2f33;
+  background: #fff5f5;
+  border-left: 3px solid var(--red-600);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 @media (max-width: 1080px) {
   :root {
     --sidebar: 190px;
@@ -1006,10 +1137,14 @@ dialog p:not(.section-label) {
 
   .workspace {
     min-height: calc(100vh - 64px - var(--topbar) - 84px);
+    height: auto;
     display: block;
+    overflow: visible;
   }
 
   .posts-panel {
+    height: auto;
+    overflow: visible;
     border-right: 0;
   }
 
@@ -1069,7 +1204,7 @@ dialog p:not(.section-label) {
     font-size: 25px;
   }
 
-  .topbar-actions .button-secondary {
+  .topbar-actions .open-site-button {
     display: none;
   }
 
@@ -1172,9 +1307,37 @@ dialog p:not(.section-label) {
     right: 16px;
     bottom: 16px;
   }
+
+  .auth-screen {
+    align-items: start;
+    padding: 18px;
+  }
+
+  .login-card {
+    margin-top: 8vh;
+    padding: 28px 22px;
+  }
+
+  .login-brand {
+    width: 168px;
+    margin-bottom: 34px;
+  }
 }
 
 @media (max-width: 420px) {
+  .topbar > div:first-child {
+    display: none;
+  }
+
+  .topbar {
+    justify-content: flex-end;
+  }
+
+  .topbar-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
   .image-field-heading {
     display: grid;
     gap: 8px;

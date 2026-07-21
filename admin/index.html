@@ -9,7 +9,34 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="admin-shell">
+  <main class="auth-screen" id="authScreen" aria-labelledby="loginHeading">
+    <section class="login-card">
+      <a class="login-brand" href="/" target="_blank" rel="noopener" aria-label="Открыть сайт АЕТ Транс">
+        <img src="../assets/logo-wordmark.svg" alt="АЕТ Транс">
+      </a>
+      <div class="auth-loading" id="authLoading" role="status">Проверяем доступ...</div>
+      <form class="login-form" id="loginForm" hidden>
+        <p class="section-label">Панель управления</p>
+        <h1 id="loginHeading">Вход в админку</h1>
+        <p class="login-copy">Управление новостями сайта.</p>
+        <label class="login-field" for="passwordInput">
+          <span>Пароль</span>
+          <span class="password-control">
+            <input id="passwordInput" name="password" type="password" minlength="12" autocomplete="current-password" required autofocus>
+            <button id="passwordToggle" type="button" aria-pressed="false">Показать</button>
+          </span>
+        </label>
+        <label class="remember-control">
+          <input id="rememberInput" type="checkbox">
+          <span>Запомнить меня</span>
+        </label>
+        <button class="button button-primary login-submit" id="loginButton" type="submit">Войти</button>
+        <p class="login-error" id="loginError" role="alert" hidden></p>
+      </form>
+    </section>
+  </main>
+
+  <div class="admin-shell" id="adminShell" hidden>
     <aside class="sidebar">
       <a class="admin-brand" href="/" target="_blank" rel="noopener" aria-label="Открыть сайт АЕТ Транс">
         <img src="../assets/logo-wordmark-light.svg" alt="АЕТ Транс">
@@ -19,7 +46,7 @@
       </nav>
       <div class="sidebar-footer">
         <span class="status-dot" aria-hidden="true"></span>
-        <span>Локальный режим</span>
+        <span>Защищенный режим</span>
       </div>
     </aside>
 
@@ -30,7 +57,8 @@
           <h1>Новости</h1>
         </div>
         <div class="topbar-actions">
-          <a class="button button-secondary" href="/novosti/" target="_blank" rel="noopener">Открыть сайт</a>
+          <a class="button button-secondary open-site-button" href="/novosti/" target="_blank" rel="noopener">Открыть сайт</a>
+          <button class="button button-secondary button-logout" id="logoutButton" type="button">Выйти</button>
           <button class="button button-primary" id="newPostButton" type="button">Добавить новость</button>
         </div>
       </header>

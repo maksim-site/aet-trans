@@ -5,6 +5,6 @@
   "scripts": {
     "build": "node scripts/generate-site.mjs v3 && node scripts/generate-site.mjs",
     "validate": "node scripts/validate-site.mjs",
-    "admin": "node scripts/admin-server.mjs"
+    "admin": "node --env-file-if-exists=.env.admin scripts/admin-server.mjs"
   }
 }

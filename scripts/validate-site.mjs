@@ -45,13 +45,49 @@ function localTarget(htmlPath, rawReference) {
 }
 
 const failures = [];
+const markupFailures = [];
 let checkedReferences = 0;
+let checkedDocuments = 0;
+
+function addMarkupFailure(htmlPath, message) {
+  markupFailures.push({ htmlPath, message });
+}
+
+function validateMarkup(htmlPath, html) {
+  checkedDocuments += 1;
+  const isRedirect = /<meta\s+http-equiv="refresh"/i.test(html);
+  const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
+  const duplicateIds = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
+
+  for (const id of duplicateIds) addMarkupFailure(htmlPath, `Повторяется id="${id}"`);
+
+  for (const [tag] of html.matchAll(/<img\b[^>]*>/gi)) {
+    if (!/\salt="[^"]*"/i.test(tag)) addMarkupFailure(htmlPath, `У изображения отсутствует alt: ${tag.slice(0, 120)}`);
+  }
+
+  for (const [tag] of html.matchAll(/<iframe\b[^>]*>/gi)) {
+    if (!/\stitle="[^"]+"/i.test(tag)) addMarkupFailure(htmlPath, `У iframe отсутствует title: ${tag.slice(0, 120)}`);
+  }
+
+  for (const [tag] of html.matchAll(/<a\b[^>]*\starget="_blank"[^>]*>/gi)) {
+    if (!/\srel="[^"]*noopener[^"]*"/i.test(tag)) {
+      addMarkupFailure(htmlPath, `Ссылка target="_blank" не содержит rel="noopener": ${tag.slice(0, 120)}`);
+    }
+  }
+
+  if (isRedirect) return;
+  if (!/<html\s+[^>]*lang="ru"/i.test(html)) addMarkupFailure(htmlPath, "Не указан lang=\"ru\"");
+  if (!/<title>\s*[^<]+\s*<\/title>/i.test(html)) addMarkupFailure(htmlPath, "Отсутствует непустой title");
+  if (!/<meta\s+name="viewport"\s+content="[^"]+"/i.test(html)) addMarkupFailure(htmlPath, "Отсутствует viewport");
+  if (!/<h1\b/i.test(html)) addMarkupFailure(htmlPath, "Отсутствует h1");
+}
 
 for (const root of roots) {
   const htmlFiles = await collectHtml(root, root === projectRoot);
 
   for (const htmlPath of htmlFiles) {
     const html = await readFile(htmlPath, "utf8");
+    validateMarkup(htmlPath, html);
     const references = [...html.matchAll(/(?:href|src)="([^"]+)"/g)].map((match) => match[1]);
 
     for (const reference of references) {
@@ -63,12 +99,15 @@ for (const root of roots) {
   }
 }
 
-if (failures.length) {
+if (failures.length || markupFailures.length) {
   for (const failure of failures.slice(0, 50)) {
     console.error(`${failure.htmlPath}: ${failure.reference} -> ${failure.target}`);
   }
-  console.error(`Broken local references: ${failures.length}`);
+  for (const failure of markupFailures.slice(0, 50)) {
+    console.error(`${failure.htmlPath}: ${failure.message}`);
+  }
+  console.error(`Broken local references: ${failures.length}; markup errors: ${markupFailures.length}`);
   process.exitCode = 1;
 } else {
-  console.log(`Validated ${checkedReferences} local references without errors.`);
+  console.log(`Validated ${checkedDocuments} documents and ${checkedReferences} local references without errors.`);
 }

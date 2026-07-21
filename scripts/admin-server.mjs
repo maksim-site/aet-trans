@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import { createHash, createHmac, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { mkdir, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { dirname, extname, join, normalize, resolve, sep } from "node:path";
@@ -13,10 +14,28 @@ const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const newsPath = join(projectRoot, "v3/data/news.json");
 const backupDirectory = join(projectRoot, ".admin-backups");
 const uploadDirectory = join(projectRoot, "assets/news/uploads");
-const host = "127.0.0.1";
+const host = process.env.AET_ADMIN_HOST || "127.0.0.1";
 const port = Number.parseInt(process.env.AET_ADMIN_PORT || "43119", 10);
 const bodyLimit = 12 * 1024 * 1024;
 const imageLimit = 8 * 1024 * 1024;
+const adminPassword = process.env.AET_ADMIN_PASSWORD || "";
+const sessionCookieName = "aet_admin_session";
+const shortSessionDuration = 8 * 60 * 60 * 1000;
+const rememberedSessionDuration = 30 * 24 * 60 * 60 * 1000;
+const loginWindowDuration = 15 * 60 * 1000;
+const maximumLoginFailures = 5;
+const secureCookies = process.env.AET_ADMIN_SECURE_COOKIE === "true" || process.env.NODE_ENV === "production";
+
+if (adminPassword.length < 12) {
+  console.error("Задайте AET_ADMIN_PASSWORD длиной не меньше 12 символов.");
+  process.exit(1);
+}
+
+const passwordSalt = "aet-trans-admin-password-v1";
+const passwordHash = scryptSync(adminPassword, passwordSalt, 64);
+const sessionSecret = createHash("sha256")
+  .update(process.env.AET_ADMIN_SESSION_SECRET || `aet-trans-session:${adminPassword}`)
+  .digest();
 
 const mimeTypes = new Map([
   [".html", "text/html; charset=utf-8"],
@@ -54,9 +73,30 @@ const blockedStaticSegments = new Set([
 
 let mutationQueue = Promise.resolve();
 let mutationActive = false;
+const loginAttempts = new Map();
+
+const apiSecurityHeaders = {
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "no-referrer",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+};
+
+const adminContentSecurityPolicy = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self'",
+  "img-src 'self' data: blob:",
+  "connect-src 'self'",
+  "object-src 'none'",
+  "base-uri 'none'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
 
 function sendJson(response, statusCode, payload) {
   response.writeHead(statusCode, {
+    ...apiSecurityHeaders,
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "no-store",
   });
@@ -73,6 +113,108 @@ function httpError(statusCode, message) {
   const error = new Error(message);
   error.statusCode = statusCode;
   return error;
+}
+
+function parseCookies(request) {
+  const cookies = new Map();
+  for (const part of String(request.headers.cookie || "").split(";")) {
+    const separator = part.indexOf("=");
+    if (separator < 0) continue;
+    const name = part.slice(0, separator).trim();
+    if (!name) continue;
+    try {
+      cookies.set(name, decodeURIComponent(part.slice(separator + 1).trim()));
+    } catch {
+      // Ignore malformed cookie values.
+    }
+  }
+  return cookies;
+}
+
+function signSessionPayload(payload) {
+  return createHmac("sha256", sessionSecret).update(payload).digest("base64url");
+}
+
+function safeStringEqual(left, right) {
+  const leftBuffer = Buffer.from(String(left));
+  const rightBuffer = Buffer.from(String(right));
+  return leftBuffer.length === rightBuffer.length && timingSafeEqual(leftBuffer, rightBuffer);
+}
+
+function createSessionToken(expiresAt) {
+  const payload = `${expiresAt}.${randomBytes(18).toString("base64url")}`;
+  return `${payload}.${signSessionPayload(payload)}`;
+}
+
+function hasValidSession(request) {
+  const token = parseCookies(request).get(sessionCookieName);
+  if (!token) return false;
+  const parts = token.split(".");
+  if (parts.length !== 3) return false;
+  const [expiresAt, nonce, signature] = parts;
+  if (!/^\d{13}$/.test(expiresAt) || !/^[A-Za-z0-9_-]+$/.test(nonce)) return false;
+  if (Number(expiresAt) <= Date.now()) return false;
+  return safeStringEqual(signature, signSessionPayload(`${expiresAt}.${nonce}`));
+}
+
+function sessionCookie(value, maxAge) {
+  const attributes = [
+    `${sessionCookieName}=${encodeURIComponent(value)}`,
+    "HttpOnly",
+    "SameSite=Strict",
+    "Path=/",
+  ];
+  if (secureCookies) attributes.push("Secure");
+  if (Number.isInteger(maxAge)) attributes.push(`Max-Age=${maxAge}`);
+  return attributes.join("; ");
+}
+
+function clearSessionCookie() {
+  return `${sessionCookieName}=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT${secureCookies ? "; Secure" : ""}`;
+}
+
+function passwordMatches(value) {
+  if (typeof value !== "string" || value.length > 512) return false;
+  const candidate = scryptSync(value, passwordSalt, 64);
+  return timingSafeEqual(candidate, passwordHash);
+}
+
+function loginKey(request) {
+  return request.socket.remoteAddress || "unknown";
+}
+
+function activeLoginBlock(request) {
+  const key = loginKey(request);
+  const attempt = loginAttempts.get(key);
+  if (!attempt) return 0;
+  if (attempt.blockedUntil > Date.now()) return attempt.blockedUntil;
+  if (Date.now() - attempt.firstFailure > loginWindowDuration) loginAttempts.delete(key);
+  return 0;
+}
+
+function registerLoginFailure(request) {
+  const key = loginKey(request);
+  const now = Date.now();
+  const previous = loginAttempts.get(key);
+  const attempt = !previous || now - previous.firstFailure > loginWindowDuration
+    ? { failures: 0, firstFailure: now, blockedUntil: 0 }
+    : previous;
+  attempt.failures += 1;
+  if (attempt.failures >= maximumLoginFailures) attempt.blockedUntil = now + loginWindowDuration;
+  loginAttempts.set(key, attempt);
+  return attempt.blockedUntil;
+}
+
+function assertSameOrigin(request) {
+  if (["GET", "HEAD", "OPTIONS"].includes(request.method || "GET")) return;
+  const fetchSite = request.headers["sec-fetch-site"];
+  if (fetchSite === "cross-site") throw httpError(403, "Запрос отклонен");
+  const origin = request.headers.origin;
+  const requestHost = request.headers.host;
+  if (!origin || !requestHost) return;
+  const forwardedProtocol = String(request.headers["x-forwarded-proto"] || "").split(",")[0].trim();
+  const protocol = forwardedProtocol || (secureCookies ? "https" : "http");
+  if (origin !== `${protocol}://${requestHost}`) throw httpError(403, "Запрос отклонен");
 }
 
 async function readJsonBody(request) {
@@ -426,6 +568,46 @@ function enqueueMutation(action) {
 
 async function handleApi(request, response, pathname) {
   const method = request.method || "GET";
+  assertSameOrigin(request);
+
+  if (pathname === "/api/auth/session" && method === "GET") {
+    sendJson(response, 200, { authenticated: hasValidSession(request) });
+    return;
+  }
+
+  if (pathname === "/api/auth/login" && method === "POST") {
+    const blockedUntil = activeLoginBlock(request);
+    if (blockedUntil) {
+      response.setHeader("Retry-After", String(Math.ceil((blockedUntil - Date.now()) / 1000)));
+      throw httpError(429, "Слишком много попыток. Попробуйте позже");
+    }
+
+    const payload = await readJsonBody(request);
+    if (!passwordMatches(payload.password)) {
+      const nextBlockedUntil = registerLoginFailure(request);
+      if (nextBlockedUntil) {
+        response.setHeader("Retry-After", String(Math.ceil((nextBlockedUntil - Date.now()) / 1000)));
+        throw httpError(429, "Слишком много попыток. Попробуйте через 15 минут");
+      }
+      throw httpError(401, "Неверный пароль");
+    }
+
+    loginAttempts.delete(loginKey(request));
+    const remember = payload.remember === true;
+    const duration = remember ? rememberedSessionDuration : shortSessionDuration;
+    const token = createSessionToken(Date.now() + duration);
+    response.setHeader("Set-Cookie", sessionCookie(token, remember ? Math.floor(duration / 1000) : undefined));
+    sendJson(response, 200, { authenticated: true, remembered: remember });
+    return;
+  }
+
+  if (pathname === "/api/auth/logout" && method === "POST") {
+    response.setHeader("Set-Cookie", clearSessionCookie());
+    sendJson(response, 200, { authenticated: false });
+    return;
+  }
+
+  if (!hasValidSession(request)) throw httpError(401, "Войдите в админку");
 
   if (pathname === "/api/status" && method === "GET") {
     const document = await readNewsDocument();
@@ -548,12 +730,19 @@ async function serveStatic(request, response, pathname) {
   if (!existsSync(filePath) || !(await stat(filePath)).isFile()) throw httpError(404, "Файл не найден");
 
   const extension = extname(filePath).toLowerCase();
-  const cacheControl = normalizedPath.startsWith("admin/") ? "no-store" : "no-cache";
-  response.writeHead(200, {
+  const isAdminAsset = normalizedPath.startsWith("admin/");
+  const headers = {
     "Content-Type": mimeTypes.get(extension) || "application/octet-stream",
-    "Cache-Control": cacheControl,
+    "Cache-Control": isAdminAsset ? "no-store" : "no-cache",
     "X-Content-Type-Options": "nosniff",
-  });
+  };
+  if (isAdminAsset) {
+    Object.assign(headers, apiSecurityHeaders, {
+      "Content-Security-Policy": adminContentSecurityPolicy,
+      "Cross-Origin-Opener-Policy": "same-origin",
+    });
+  }
+  response.writeHead(200, headers);
   if (request.method === "HEAD") {
     response.end();
     return;
@@ -564,7 +753,12 @@ async function serveStatic(request, response, pathname) {
 const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url || "/", `http://${host}:${port}`);
-    const pathname = decodeURIComponent(url.pathname);
+    let pathname;
+    try {
+      pathname = decodeURIComponent(url.pathname);
+    } catch {
+      throw httpError(400, "Некорректный адрес запроса");
+    }
     if (pathname.startsWith("/api/")) await handleApi(request, response, pathname);
     else if (request.method === "GET" || request.method === "HEAD") await serveStatic(request, response, pathname);
     else throw httpError(405, "Метод не поддерживается");

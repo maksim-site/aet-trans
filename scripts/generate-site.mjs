@@ -171,10 +171,16 @@ function ctaBand(depth, title = "Обсудим вашу перевозку") {
     </section>`;
 }
 
-function documentPage({ depth = 1, active, title, description, canonicalPath, main, afterMain = "", bodyClass = "", image = "images/oversize.jpg" }) {
+function documentPage({ depth = 1, active, title, description, canonicalPath, main, afterMain = "", bodyClass = "", image = "images/oversize.jpg", preloadMap = false }) {
   const root = rootPrefix(depth);
   const assets = assetPrefix(depth);
   const canonical = `https://aet-trans.ru/${canonicalPath}`;
+  const mapConnectionHints = preloadMap
+    ? `  <link rel="preconnect" href="https://yandex.ru">
+  <link rel="preconnect" href="https://maps.yastatic.net" crossorigin>
+  <link rel="preconnect" href="https://core-renderer-tiles.maps.yandex.ru" crossorigin>
+`
+    : "";
   return `<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -192,7 +198,7 @@ function documentPage({ depth = 1, active, title, description, canonicalPath, ma
   <link rel="icon" href="${assets}favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+${mapConnectionHints}  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="${root}styles.css?v=3">
 </head>
 <body class="theme-blue-v3 inner-page${bodyClass ? ` ${bodyClass}` : ""}">
@@ -410,8 +416,8 @@ function contactsPage() {
   const depth = 1;
   const main = `
 ${pageHero({depth, eyebrow: "Санкт-Петербург", title: "Свяжитесь с нами", intro: "Обсудим груз, маршрут, сроки и документы. Можно позвонить или написать на почту."})}
-    <section class="section contact-page"><div class="container contact-page-grid"><div class="contact-details"><a href="tel:+78123094625"><span>Телефон</span><strong>+7 (812) 309-46-25</strong></a><a href="mailto:info@aet-trans.ru"><span>Email</span><strong>info@aet-trans.ru</strong></a><div><span>Офис</span><strong>198035, Санкт-Петербург,<br>Межевой Канал, д. 5, лит. АХ, офис 406</strong></div><div><span>Юридический, почтовый и фактический адрес</span><strong>Совпадают</strong></div></div><div class="contact-page-map"><iframe title="Офис АЕТ Транс на карте" src="https://yandex.ru/map-widget/v1/?ll=30.248474%2C59.911503&amp;z=16&amp;pt=30.248474%2C59.911503,pm2blm" loading="lazy" allowfullscreen></iframe></div></div></section>`;
-  return documentPage({depth, active: "contacts", title: "Контакты | АЕТ Транс", description: "Контакты АЕТ Транс: телефон, email и адрес офиса в Санкт-Петербурге.", canonicalPath: "kontakty/", main, image: "images/hero-port.jpg"});
+    <section class="section contact-page"><div class="container contact-page-grid"><div class="contact-details"><a href="tel:+78123094625"><span>Телефон</span><strong>+7 (812) 309-46-25</strong></a><a href="mailto:info@aet-trans.ru"><span>Email</span><strong>info@aet-trans.ru</strong></a><div><span>Офис</span><strong>198035, Санкт-Петербург,<br>Межевой Канал, д. 5, лит. АХ, офис 406</strong></div><div><span>Юридический, почтовый и фактический адрес</span><strong>Совпадают</strong></div></div><div class="contact-page-map"><iframe title="Офис АЕТ Транс на карте" src="https://yandex.ru/map-widget/v1/?ll=30.248474%2C59.911503&amp;z=16&amp;pt=30.248474%2C59.911503,pm2blm" loading="eager" allowfullscreen></iframe></div></div></section>`;
+  return documentPage({depth, active: "contacts", title: "Контакты | АЕТ Транс", description: "Контакты АЕТ Транс: телефон, email и адрес офиса в Санкт-Петербурге.", canonicalPath: "kontakty/", main, image: "images/hero-port.jpg", preloadMap: true});
 }
 
 function privacyPage() {
