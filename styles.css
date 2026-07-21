@@ -6016,7 +6016,7 @@ body.document-lightbox-open {
 .process-item,
 .process-item + .process-item {
   position: relative;
-  min-height: 252px;
+  min-height: 292px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -6066,10 +6066,309 @@ body.document-lightbox-open {
 
 .process-item h3 {
   max-width: 270px;
-  margin-top: auto;
+  margin: 0;
   color: var(--white);
   font-size: 24px;
   line-height: 1.25;
+}
+
+.process-item-body {
+  width: 100%;
+  margin-top: auto;
+}
+
+.process-schematic {
+  position: relative;
+  width: min(100%, 220px);
+  height: 46px;
+  margin-top: 20px;
+  color: #8dcced;
+}
+
+.process-schematic .schematic-line {
+  position: absolute;
+  height: 1px;
+  background: rgba(141, 204, 237, 0.46);
+  transform-origin: left;
+}
+
+.process-schematic-dispatch .schematic-line,
+.process-schematic-route .schematic-line {
+  top: 30px;
+  right: 7px;
+  left: 7px;
+}
+
+.schematic-cargo {
+  position: absolute;
+  top: 21px;
+  width: 18px;
+  height: 18px;
+  background: var(--navy);
+  border: 1px solid rgba(141, 204, 237, 0.78);
+  transform-origin: center;
+}
+
+.schematic-cargo::before {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  bottom: 4px;
+  left: 4px;
+  background: rgba(141, 204, 237, 0.24);
+  content: "";
+}
+
+.schematic-cargo-first {
+  left: 0;
+}
+
+.schematic-cargo-second {
+  left: calc(50% - 9px);
+}
+
+.schematic-cargo-third {
+  right: 0;
+}
+
+.schematic-route-node {
+  position: absolute;
+  top: 27px;
+  width: 7px;
+  height: 7px;
+  background: var(--navy);
+  border: 1px solid #8dcced;
+  border-radius: 50%;
+}
+
+.schematic-route-first {
+  left: 0;
+}
+
+.schematic-route-second {
+  left: calc(50% - 4px);
+}
+
+.schematic-route-third {
+  right: 0;
+}
+
+.schematic-carrier {
+  --route-distance: 182px;
+  position: absolute;
+  top: 9px;
+  left: 0;
+  width: 25px;
+  height: 12px;
+  background: #8dcced;
+  border-radius: 1px;
+}
+
+.schematic-carrier::before,
+.schematic-carrier::after {
+  position: absolute;
+  bottom: -4px;
+  width: 5px;
+  height: 5px;
+  background: var(--navy);
+  border: 1px solid #8dcced;
+  border-radius: 50%;
+  content: "";
+}
+
+.schematic-carrier::before {
+  left: 3px;
+}
+
+.schematic-carrier::after {
+  right: 3px;
+}
+
+.process-schematic-control .schematic-line,
+.process-schematic-documents .schematic-line {
+  top: 23px;
+  right: 29px;
+  left: 69px;
+}
+
+.schematic-risk-grid {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 58px;
+  height: 38px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+}
+
+.schematic-risk-grid > div {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(141, 204, 237, 0.62);
+}
+
+.schematic-risk-grid > div::after {
+  position: absolute;
+  inset: 3px;
+  background: rgba(141, 204, 237, 0.28);
+  content: "";
+  transform-origin: left;
+}
+
+.schematic-approval {
+  position: absolute;
+  top: 9px;
+  right: 0;
+  width: 29px;
+  height: 29px;
+  background: var(--navy);
+  border: 1px solid rgba(141, 204, 237, 0.78);
+  border-radius: 50%;
+  transform-origin: center;
+}
+
+.schematic-approval::after {
+  position: absolute;
+  top: 7px;
+  left: 8px;
+  width: 10px;
+  height: 5px;
+  border-bottom: 2px solid #8dcced;
+  border-left: 2px solid #8dcced;
+  content: "";
+  transform: rotate(-45deg);
+}
+
+.schematic-document {
+  position: absolute;
+  top: 4px;
+  width: 27px;
+  height: 36px;
+  background: var(--navy);
+  border: 1px solid rgba(141, 204, 237, 0.7);
+}
+
+.schematic-document::before {
+  position: absolute;
+  inset: 8px 6px;
+  background: repeating-linear-gradient(to bottom, rgba(141, 204, 237, 0.52) 0 1px, transparent 1px 5px);
+  content: "";
+}
+
+.schematic-document-back {
+  left: 0;
+  opacity: 0.46;
+  transform: translate3d(7px, -3px, 0);
+}
+
+.schematic-document-front {
+  left: 12px;
+}
+
+.process-item.is-visible .process-schematic .schematic-line {
+  animation: process-line-draw 800ms cubic-bezier(0.23, 1, 0.32, 1) calc(180ms + var(--reveal-delay, 0ms)) both;
+}
+
+.process-item.is-visible .schematic-cargo,
+.process-item.is-visible .schematic-route-node,
+.process-item.is-visible .schematic-approval {
+  animation: process-node-enter 420ms cubic-bezier(0.23, 1, 0.32, 1) calc(380ms + var(--reveal-delay, 0ms)) both;
+}
+
+.process-item.is-visible .schematic-document {
+  animation: process-document-enter 420ms cubic-bezier(0.23, 1, 0.32, 1) calc(380ms + var(--reveal-delay, 0ms)) both;
+}
+
+.process-item.is-visible .schematic-cargo-second,
+.process-item.is-visible .schematic-route-second,
+.process-item.is-visible .schematic-document-front {
+  animation-delay: calc(480ms + var(--reveal-delay, 0ms));
+}
+
+.process-item.is-visible .schematic-cargo-third,
+.process-item.is-visible .schematic-route-third,
+.process-item.is-visible .schematic-approval {
+  animation-delay: calc(580ms + var(--reveal-delay, 0ms));
+}
+
+.process-item.is-visible .schematic-carrier {
+  animation: process-route-travel 1500ms cubic-bezier(0.77, 0, 0.175, 1) calc(360ms + var(--reveal-delay, 0ms)) both;
+}
+
+.process-item.is-visible .schematic-risk-grid > div::after {
+  animation: process-risk-check 520ms cubic-bezier(0.23, 1, 0.32, 1) calc(390ms + var(--reveal-delay, 0ms)) both;
+}
+
+.process-item.is-visible .schematic-risk-grid > div:nth-child(2)::after {
+  animation-delay: calc(460ms + var(--reveal-delay, 0ms));
+}
+
+.process-item.is-visible .schematic-risk-grid > div:nth-child(3)::after {
+  animation-delay: calc(530ms + var(--reveal-delay, 0ms));
+}
+
+.process-item.is-visible .schematic-risk-grid > div:nth-child(4)::after {
+  animation-delay: calc(600ms + var(--reveal-delay, 0ms));
+}
+
+@keyframes process-line-draw {
+  from {
+    opacity: 0.25;
+    transform: scaleX(0.08);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes process-node-enter {
+  from {
+    opacity: 0.25;
+    transform: scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes process-route-travel {
+  from {
+    opacity: 0.58;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(var(--route-distance), 0, 0);
+  }
+}
+
+@keyframes process-document-enter {
+  from {
+    opacity: 0.2;
+    transform: translate3d(7px, -3px, 0) scale(0.86);
+  }
+  to {
+    opacity: 0.46;
+    transform: translate3d(7px, -3px, 0) scale(1);
+  }
+}
+
+.process-item.is-visible .schematic-document-front {
+  animation-name: process-node-enter;
+}
+
+@keyframes process-risk-check {
+  from {
+    opacity: 0.25;
+    transform: scaleX(0.08);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
 }
 
 .company {
@@ -6270,7 +6569,7 @@ body.document-lightbox-open {
 
   .process-item,
   .process-item + .process-item {
-    min-height: 120px;
+    min-height: 174px;
     display: grid;
     grid-template-columns: 44px minmax(0, 1fr);
     align-items: center;
@@ -6294,6 +6593,10 @@ body.document-lightbox-open {
     max-width: none;
     margin-top: 0;
     font-size: 20px;
+  }
+
+  .process-schematic {
+    margin-top: 16px;
   }
 
   .company-grid {
@@ -6330,5 +6633,11 @@ body.document-lightbox-open {
   .company-points > div + div {
     border-top: 1px solid #cbd9e2;
     border-left: 0;
+  }
+}
+
+@media (max-width: 340px) {
+  .schematic-carrier {
+    --route-distance: 153px;
   }
 }
