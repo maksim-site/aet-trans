@@ -6077,7 +6077,12 @@ body.document-lightbox-open {
   transform-origin: left;
 }
 
-.process-schematic-dispatch .schematic-line,
+.process-schematic-dispatch .schematic-line {
+  top: 41px;
+  right: 0;
+  left: 0;
+}
+
 .process-schematic-route .schematic-line {
   top: 30px;
   right: 7px;
@@ -6086,43 +6091,28 @@ body.document-lightbox-open {
 
 .schematic-container {
   position: absolute;
-  top: 17px;
-  width: 42px;
-  height: 25px;
+  top: 11px;
+  height: 30px;
   background: var(--navy);
   border: 1px solid rgba(141, 204, 237, 0.78);
+  box-shadow: inset 0 3px rgba(141, 204, 237, 0.12), inset 0 -3px rgba(141, 204, 237, 0.12);
   transform-origin: center;
 }
 
-.schematic-container::before,
-.schematic-protected-cargo::before {
+.schematic-container::before {
   position: absolute;
   inset: 4px 5px;
   background: repeating-linear-gradient(to right, rgba(141, 204, 237, 0.34) 0 1px, transparent 1px 6px);
   content: "";
 }
 
-.schematic-container::after,
-.schematic-protected-cargo::after {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 2px;
-  height: 2px;
-  background: #8dcced;
-  box-shadow: 34px 0 #8dcced, 0 17px #8dcced, 34px 17px #8dcced;
-  content: "";
-}
-
 .schematic-container-first {
+  width: 32%;
   left: 0;
 }
 
 .schematic-container-second {
-  left: calc(50% - 21px);
-}
-
-.schematic-container-third {
+  width: 58%;
   right: 0;
 }
 
@@ -6185,33 +6175,16 @@ body.document-lightbox-open {
   clip-path: polygon(0 0, 62% 0, 100% 44%, 100% 100%, 0 100%);
 }
 
-.process-schematic-control .schematic-line {
-  top: 23px;
-  right: 35px;
-  left: 52px;
-}
-
 .process-schematic-documents .schematic-line {
   top: 23px;
   right: 29px;
   left: 69px;
 }
 
-.schematic-protected-cargo {
-  position: absolute;
-  top: 11px;
-  left: 0;
-  width: 42px;
-  height: 25px;
-  background: var(--navy);
-  border: 1px solid rgba(141, 204, 237, 0.78);
-  transform-origin: center;
-}
-
 .schematic-shield {
   position: absolute;
   top: 1px;
-  right: 0;
+  left: calc(50% - 19px);
   width: 38px;
   height: 44px;
   background: #8dcced;
@@ -6295,7 +6268,6 @@ body.document-lightbox-open {
 
 .process-item.is-visible .schematic-container,
 .process-item.is-visible .schematic-route-node,
-.process-item.is-visible .schematic-protected-cargo,
 .process-item.is-visible .schematic-shield,
 .process-item.is-visible .schematic-approval {
   animation: process-node-enter 420ms cubic-bezier(0.23, 1, 0.32, 1) calc(380ms + var(--reveal-delay, 0ms)) both;
@@ -6311,7 +6283,6 @@ body.document-lightbox-open {
   animation-delay: calc(480ms + var(--reveal-delay, 0ms));
 }
 
-.process-item.is-visible .schematic-container-third,
 .process-item.is-visible .schematic-route-third,
 .process-item.is-visible .schematic-shield,
 .process-item.is-visible .schematic-approval {
@@ -6538,12 +6509,12 @@ body.document-lightbox-open {
 
 @media (max-width: 720px) {
   .process-heading {
-    gap: 18px;
-    margin-bottom: 30px;
+    gap: 14px;
+    margin-bottom: 22px;
   }
 
   .process-heading p {
-    padding-top: 16px;
+    padding-top: 12px;
   }
 
   .process-list {
@@ -6551,9 +6522,9 @@ body.document-lightbox-open {
   }
 
   .process-list::before {
-    top: 32px;
-    bottom: 32px;
-    left: 46px;
+    top: 28px;
+    bottom: 28px;
+    left: 38px;
     width: 1px;
     height: auto;
     display: block;
@@ -6562,12 +6533,12 @@ body.document-lightbox-open {
 
   .process-item,
   .process-item + .process-item {
-    min-height: 174px;
+    min-height: 148px;
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-columns: 40px minmax(0, 1fr);
     align-items: center;
-    gap: 20px;
-    padding: 22px 24px;
+    gap: 14px;
+    padding: 16px 18px;
     border-top: 1px solid rgba(150, 190, 216, 0.2);
     border-left: 0;
   }
@@ -6577,19 +6548,25 @@ body.document-lightbox-open {
   }
 
   .process-item span {
-    width: 44px;
-    height: 44px;
-    font-size: 13px;
+    width: 40px;
+    height: 40px;
+    font-size: 12px;
   }
 
   .process-item h3 {
     max-width: none;
     margin-top: 0;
-    font-size: 20px;
+    font-size: 19px;
+    line-height: 1.2;
   }
 
   .process-schematic {
-    margin-top: 16px;
+    width: min(100%, 200px);
+    margin-top: 10px;
+  }
+
+  .schematic-truck {
+    --route-distance: 150px;
   }
 
   .company-grid {
@@ -6626,11 +6603,5 @@ body.document-lightbox-open {
   .company-points > div + div {
     border-top: 1px solid #cbd9e2;
     border-left: 0;
-  }
-}
-
-@media (max-width: 340px) {
-  .schematic-truck {
-    --route-distance: 136px;
   }
 }
