@@ -3492,6 +3492,29 @@ body.menu-open .site-header .menu-toggle span { background: #eef4f9; }
   max-width: 720px;
 }
 
+.page-back-link {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 36px;
+  color: #9fc8df;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.page-back-link span {
+  font-size: 19px;
+  transition: transform 180ms ease;
+}
+
+@media (hover: hover) {
+  .page-back-link:hover span {
+    transform: translateX(-4px);
+  }
+}
+
 .page-hero-copy .context-line {
   color: #b9d2e2;
 }
@@ -4741,6 +4764,10 @@ body.document-lightbox-open {
     line-height: 1.08;
   }
 
+  .page-back-link {
+    margin-bottom: 28px;
+  }
+
   .page-hero-copy > p:last-child {
     margin-top: 18px;
     font-size: 16px;
@@ -5980,18 +6007,23 @@ body.document-lightbox-open {
 }
 
 /* Home process and company composition */
+.process {
+  padding: 80px 0 88px;
+}
+
 .process-heading {
   max-width: none;
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(420px, 0.72fr);
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 0.72fr);
   align-items: end;
-  gap: 96px;
+  gap: 72px;
+  margin-bottom: 38px;
 }
 
 .process-heading p {
   max-width: 620px;
   margin: 0;
-  padding-top: 20px;
+  padding-top: 16px;
   border-top: 1px solid var(--line);
 }
 
@@ -6000,27 +6032,21 @@ body.document-lightbox-open {
   overflow: hidden;
   color: var(--white);
   background: var(--navy);
-  border: 0;
+  border-top: 2px solid #2486c1;
 }
 
 .process-list::before {
-  position: absolute;
-  top: 59px;
-  right: 58px;
-  left: 58px;
-  height: 1px;
-  background: rgba(150, 190, 216, 0.3);
-  content: "";
+  display: none;
 }
 
 .process-item,
 .process-item + .process-item {
   position: relative;
-  min-height: 292px;
+  min-height: 258px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 34px 32px 30px;
+  padding: 28px 30px 26px;
   overflow: hidden;
   color: var(--white);
   background: transparent;
@@ -6032,28 +6058,40 @@ body.document-lightbox-open {
   border-left: 1px solid rgba(150, 190, 216, 0.2);
 }
 
+.process-item:nth-child(even) {
+  background: rgba(255, 255, 255, 0.018);
+}
+
 .process-item span {
   position: relative;
   z-index: 1;
-  width: 52px;
-  height: 52px;
-  display: grid;
-  place-items: center;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   color: #99cee8;
-  background: var(--navy);
-  border: 1px solid rgba(153, 206, 232, 0.5);
-  border-radius: 50%;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
   font-size: 14px;
   font-weight: 600;
   line-height: 1;
-  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+  transition: color 180ms ease;
+}
+
+.process-item span::after {
+  width: 32px;
+  height: 1px;
+  background: rgba(141, 204, 237, 0.58);
+  content: "";
 }
 
 .process-item h3 {
   max-width: 270px;
   margin: 0;
   color: var(--white);
-  font-size: 24px;
+  font-size: 23px;
   line-height: 1.25;
 }
 
@@ -6066,7 +6104,7 @@ body.document-lightbox-open {
   position: relative;
   width: min(100%, 220px);
   height: 46px;
-  margin-top: 20px;
+  margin-top: 18px;
   color: #8dcced;
 }
 
@@ -6091,28 +6129,49 @@ body.document-lightbox-open {
 
 .schematic-container {
   position: absolute;
-  top: 11px;
-  height: 30px;
-  background: var(--navy);
-  border: 1px solid rgba(141, 204, 237, 0.78);
-  box-shadow: inset 0 3px rgba(141, 204, 237, 0.12), inset 0 -3px rgba(141, 204, 237, 0.12);
+  top: 6px;
+  height: 34px;
+  background:
+    linear-gradient(to bottom, rgba(230, 247, 255, 0.3) 0 3px, transparent 3px calc(100% - 4px), rgba(4, 29, 49, 0.28) calc(100% - 4px)),
+    repeating-linear-gradient(to right, transparent 0 7px, rgba(4, 29, 49, 0.52) 7px 9px),
+    #75bddd;
+  border: 1px solid #a8ddf3;
+  box-shadow: inset 0 0 0 1px rgba(4, 29, 49, 0.48);
   transform-origin: center;
 }
 
 .schematic-container::before {
   position: absolute;
-  inset: 4px 5px;
-  background: repeating-linear-gradient(to right, rgba(141, 204, 237, 0.34) 0 1px, transparent 1px 6px);
+  top: 3px;
+  right: 3px;
+  bottom: 3px;
+  width: 21%;
+  background:
+    linear-gradient(to right, transparent 28%, rgba(4, 29, 49, 0.72) 28% 35%, transparent 35% 65%, rgba(4, 29, 49, 0.72) 65% 72%, transparent 72%),
+    rgba(127, 197, 226, 0.92);
+  border-right: 1px solid rgba(4, 29, 49, 0.58);
+  border-left: 1px solid rgba(4, 29, 49, 0.58);
+  content: "";
+}
+
+.schematic-container::after {
+  position: absolute;
+  top: 15px;
+  right: 6px;
+  width: 5px;
+  height: 2px;
+  background: #d7f2ff;
+  box-shadow: 0 5px #d7f2ff;
   content: "";
 }
 
 .schematic-container-first {
-  width: 32%;
+  width: 34%;
   left: 0;
 }
 
 .schematic-container-second {
-  width: 58%;
+  width: 60%;
   right: 0;
 }
 
@@ -6448,13 +6507,11 @@ body.document-lightbox-open {
 
 @media (hover: hover) and (pointer: fine) {
   .process-item:hover {
-    background: rgba(255, 255, 255, 0.045);
+    background: rgba(255, 255, 255, 0.055);
   }
 
   .process-item:hover span {
-    color: var(--navy);
-    background: #8dcced;
-    border-color: #8dcced;
+    color: #c4e8f8;
   }
 
   .company-link:hover span {
@@ -6508,6 +6565,10 @@ body.document-lightbox-open {
 }
 
 @media (max-width: 720px) {
+  .process {
+    padding: 56px 0 60px;
+  }
+
   .process-heading {
     gap: 14px;
     margin-bottom: 22px;
@@ -6522,6 +6583,7 @@ body.document-lightbox-open {
   }
 
   .process-list::before {
+    position: absolute;
     top: 28px;
     bottom: 28px;
     left: 38px;
@@ -6529,6 +6591,7 @@ body.document-lightbox-open {
     height: auto;
     display: block;
     background: rgba(150, 190, 216, 0.25);
+    content: "";
   }
 
   .process-item,
@@ -6550,7 +6613,16 @@ body.document-lightbox-open {
   .process-item span {
     width: 40px;
     height: 40px;
+    display: grid;
+    place-items: center;
+    background: var(--navy);
+    border: 1px solid rgba(153, 206, 232, 0.5);
+    border-radius: 50%;
     font-size: 12px;
+  }
+
+  .process-item span::after {
+    display: none;
   }
 
   .process-item h3 {
