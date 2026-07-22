@@ -17,6 +17,8 @@ const state = {
   coverKey: "",
   defaultCoverKey: "",
   inheritedCover: "",
+  hiddenImages: new Set(),
+  pendingDeleteKey: "",
 };
 
 const elements = {
@@ -67,6 +69,8 @@ const elements = {
   deleteDialog: document.querySelector("#deleteDialog"),
   deleteMessage: document.querySelector("#deleteMessage"),
   confirmDeleteButton: document.querySelector("#confirmDeleteButton"),
+  photoDeleteDialog: document.querySelector("#photoDeleteDialog"),
+  photoDeleteMessage: document.querySelector("#photoDeleteMessage"),
   toast: document.querySelector("#toast"),
 };
 
@@ -192,11 +196,13 @@ function demoImageKind(path, inheritedCover) {
 
 function serializeDemoPost(post) {
   const inheritedCover = localNewsImages[post.slug] ? `news/${localNewsImages[post.slug]}` : "";
-  const coverPath = post.coverImage || inheritedCover;
+  const hiddenImages = new Set(post.hiddenImages || []);
+  const coverCandidate = post.coverImage || inheritedCover;
+  const coverPath = hiddenImages.has(coverCandidate) ? "" : coverCandidate;
   const persistedGallery = new Set(post.galleryImages || []);
   const galleryByPath = new Map();
   const addGalleryImage = (path, source = "") => {
-    if (!path) return;
+    if (!path || hiddenImages.has(path)) return;
     const previous = galleryByPath.get(path);
     galleryByPath.set(path, {
       path,
@@ -204,7 +210,7 @@ function serializeDemoPost(post) {
       source: source || previous?.source || "",
       kind: demoImageKind(path, inheritedCover),
       isCover: path === coverPath,
-      removable: path.startsWith("news/uploads/"),
+      removable: true,
       persistInGallery: persistedGallery.has(path),
     });
   };
@@ -230,6 +236,7 @@ function serializeDemoPost(post) {
     coverPath,
     coverUrl: coverPath ? demoAssetUrl(coverPath) : "",
     galleryImages: post.galleryImages || [],
+    hiddenImages: [...hiddenImages],
     gallery: [...galleryByPath.values()],
   };
 }
@@ -526,10 +533,33 @@ function removeMediaItem(item) {
     state.pendingImages = state.pendingImages.filter((candidate) => candidate.key !== item.key);
   } else {
     state.gallery = state.gallery.filter((candidate) => candidate.key !== item.key);
+    if (item.path && item.kind !== "upload") state.hiddenImages.add(item.path);
   }
   if (state.coverKey === item.key) state.coverKey = fallbackCoverKey();
   state.dirty = true;
   renderMedia();
+}
+
+function requestMediaDelete(item) {
+  if (state.busy || !item.removable) return;
+  state.pendingDeleteKey = item.key;
+  elements.photoDeleteMessage.textContent = item.kind === "pending"
+    ? `«${item.name}» не будет добавлено в публикацию.`
+    : `«${item.name}» исчезнет из публикации после сохранения новости.`;
+  if (typeof elements.photoDeleteDialog.showModal === "function") {
+    elements.photoDeleteDialog.showModal();
+  } else if (window.confirm("Удалить эту фотографию из публикации?")) {
+    removeMediaItem(item);
+    showToast("Фотография удалена. Сохраните новость");
+  }
+}
+
+function confirmMediaDelete() {
+  const item = mediaItems().find((candidate) => candidate.key === state.pendingDeleteKey);
+  state.pendingDeleteKey = "";
+  if (!item) return;
+  removeMediaItem(item);
+  showToast("Фотография удалена. Сохраните новость");
 }
 
 function makeGalleryCard(item) {
@@ -557,6 +587,16 @@ function makeGalleryCard(item) {
     select.append(badge);
   }
 
+  if (item.removable) {
+    const removeButton = document.createElement("button");
+    removeButton.className = "gallery-delete";
+    removeButton.type = "button";
+    removeButton.textContent = "Удалить фото";
+    removeButton.setAttribute("aria-label", `Удалить фотографию: ${item.name}`);
+    removeButton.addEventListener("click", () => requestMediaDelete(item));
+    card.append(removeButton);
+  }
+
   const footer = document.createElement("div");
   footer.className = "gallery-card-footer";
   const label = document.createElement("span");
@@ -571,14 +611,6 @@ function makeGalleryCard(item) {
     coverButton.textContent = "Главное";
     coverButton.addEventListener("click", () => chooseCover(item.key));
     actions.append(coverButton);
-  }
-  if (item.removable) {
-    const removeButton = document.createElement("button");
-    removeButton.className = "gallery-delete";
-    removeButton.type = "button";
-    removeButton.textContent = "Удалить";
-    removeButton.addEventListener("click", () => removeMediaItem(item));
-    actions.append(removeButton);
   }
   footer.append(actions);
   card.append(select, footer);
@@ -621,6 +653,8 @@ function openEditor(post, isNew = false) {
   state.inheritedCover = post.inheritedCover || "";
   state.defaultCoverKey = pathKey(state.inheritedCover);
   state.coverKey = pathKey(post.coverPath || "");
+  state.hiddenImages = new Set(post.hiddenImages || []);
+  state.pendingDeleteKey = "";
 
   elements.editorEmpty.hidden = true;
   elements.editorContent.hidden = false;
@@ -660,6 +694,8 @@ function closeEditor(force = false) {
   state.coverKey = "";
   state.defaultCoverKey = "";
   state.inheritedCover = "";
+  state.hiddenImages = new Set();
+  state.pendingDeleteKey = "";
   elements.editorContent.hidden = true;
   elements.editorEmpty.hidden = false;
   document.body.classList.remove("editor-open");
@@ -753,6 +789,7 @@ async function savePost(event) {
       body: elements.bodyInput.value.trim(),
       coverImage,
       galleryImages: [...new Set(galleryImages)],
+      hiddenImages: [...state.hiddenImages],
     };
     const path = state.isNew
       ? "/api/news"
@@ -791,7 +828,8 @@ function saveDemoPost() {
     summary: elements.summaryInput.value.trim(),
     showSummaryInArticle: elements.showSummaryInput.checked,
     body: elements.bodyInput.value.trim(),
-    coverPath: selectedCover || state.currentPost?.coverPath || "",
+    coverPath: selectedCover,
+    hiddenImages: [...state.hiddenImages],
     gallery: state.gallery.map((item) => ({ ...item })),
   };
 
@@ -979,12 +1017,17 @@ elements.deleteDialog.addEventListener("close", () => {
   if (elements.deleteDialog.returnValue === "confirm") deletePost();
 });
 
+elements.photoDeleteDialog.addEventListener("close", () => {
+  if (elements.photoDeleteDialog.returnValue === "confirm") confirmMediaDelete();
+  else state.pendingDeleteKey = "";
+});
+
 window.addEventListener("keydown", (event) => {
   if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s" && state.currentPost) {
     event.preventDefault();
     elements.newsForm.requestSubmit();
   }
-  if (event.key === "Escape" && document.body.classList.contains("editor-open") && !elements.deleteDialog.open) {
+  if (event.key === "Escape" && document.body.classList.contains("editor-open") && !elements.deleteDialog.open && !elements.photoDeleteDialog.open) {
     closeEditor();
   }
 });

@@ -58,8 +58,10 @@ const postRoute = (post) => {
   return `${year}/${month}/${day}/${post.slug}/`;
 };
 
-const postCoverImage = (post) =>
-  post.coverImage || (localNewsImages[post.slug] ? `news/${localNewsImages[post.slug]}` : "");
+const postCoverImage = (post) => {
+  const coverImage = post.coverImage || (localNewsImages[post.slug] ? `news/${localNewsImages[post.slug]}` : "");
+  return (post.hiddenImages || []).includes(coverImage) ? "" : coverImage;
+};
 
 const homeNewsMarkup = posts
   .slice(0, 3)
@@ -387,14 +389,16 @@ function articlePage(post, index) {
   const root = rootPrefix(depth);
   const assets = assetPrefix(depth);
   const coverImage = postCoverImage(post);
+  const hiddenImages = new Set(post.hiddenImages || []);
   const availableImages = (post.images || []).filter((image) =>
-    existsSync(join(projectRoot, "assets", newsImageRelativePath(image))),
+    !hiddenImages.has(newsImageRelativePath(image))
+      && existsSync(join(projectRoot, "assets", newsImageRelativePath(image))),
   );
   const galleryPaths = [
     ...(post.coverImage ? [post.coverImage] : []),
     ...availableImages.map(newsImageRelativePath),
-    ...(post.galleryImages || []).filter((image) => existsSync(join(projectRoot, "assets", image))),
-  ];
+    ...(post.galleryImages || []).filter((image) => !hiddenImages.has(image) && existsSync(join(projectRoot, "assets", image))),
+  ].filter((image) => !hiddenImages.has(image));
   if (!galleryPaths.length && coverImage) galleryPaths.push(coverImage);
   const gallery = [...new Set(galleryPaths)].map((image) =>
     `${assets}${image.startsWith("news/archive/") ? image.split("/").map(encodeURIComponent).join("/") : image}`,

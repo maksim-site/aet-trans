@@ -365,12 +365,14 @@ function serializePost(post, includeBody = false) {
   const inheritedCover = localNewsImages[post.slug]
     ? `news/${localNewsImages[post.slug]}`
     : "";
-  const coverPath = post.coverImage || inheritedCover;
+  const hiddenImages = new Set(post.hiddenImages || []);
+  const coverCandidate = post.coverImage || inheritedCover;
+  const coverPath = hiddenImages.has(coverCandidate) ? "" : coverCandidate;
   const persistedGallery = new Set(post.galleryImages || []);
   const archiveImages = availableArchiveImages(post);
   const galleryByPath = new Map();
   const addGalleryImage = (path, source = "") => {
-    if (!path || !existsSync(join(projectRoot, "assets", path))) return;
+    if (!path || hiddenImages.has(path) || !existsSync(join(projectRoot, "assets", path))) return;
     const previous = galleryByPath.get(path);
     galleryByPath.set(path, {
       path,
@@ -378,7 +380,7 @@ function serializePost(post, includeBody = false) {
       source: source || previous?.source || "",
       kind: imageKind(path, inheritedCover),
       isCover: path === coverPath,
-      removable: path.startsWith("news/uploads/"),
+      removable: true,
       persistInGallery: persistedGallery.has(path),
     });
   };
@@ -401,6 +403,7 @@ function serializePost(post, includeBody = false) {
     coverPath,
     coverUrl: coverPath ? assetUrl(coverPath) : "",
     galleryImages: post.galleryImages || [],
+    hiddenImages: [...hiddenImages],
     gallery: [...galleryByPath.values()],
     url: `/${postRoute(post)}/`,
   };
@@ -430,6 +433,7 @@ function normalizePost(payload, existingPost, posts) {
     : Boolean(payload.showSummaryInArticle);
   const coverImage = normalizeCoverImage(payload.coverImage);
   const galleryImages = normalizeGalleryImages(payload.galleryImages, existingPost?.galleryImages || []);
+  const hiddenImages = normalizeGalleryImages(payload.hiddenImages, existingPost?.hiddenImages || []);
   const nextId = posts.reduce((maximum, post) => Math.max(maximum, Number(post.id) || 0), 0) + 1;
 
   const post = {
@@ -449,6 +453,8 @@ function normalizePost(payload, existingPost, posts) {
   else delete post.coverImage;
   if (galleryImages.length) post.galleryImages = galleryImages;
   else delete post.galleryImages;
+  if (hiddenImages.length) post.hiddenImages = hiddenImages;
+  else delete post.hiddenImages;
 
   if (!existingPost) post.legacyUrl = `https://aet-trans.ru/${postRoute(post)}/`;
   return post;
