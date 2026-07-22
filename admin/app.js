@@ -19,6 +19,7 @@ const state = {
   inheritedCover: "",
   hiddenImages: new Set(),
   pendingDeleteKey: "",
+  pendingReplaceKey: "",
 };
 
 const elements = {
@@ -46,6 +47,7 @@ const elements = {
   editorContent: document.querySelector("#editorContent"),
   editorMode: document.querySelector("#editorMode"),
   editorHeading: document.querySelector("#editorHeading"),
+  previewPostButton: document.querySelector("#previewPostButton"),
   closeEditorButton: document.querySelector("#closeEditorButton"),
   newsForm: document.querySelector("#newsForm"),
   originalSlug: document.querySelector("#originalSlug"),
@@ -56,6 +58,7 @@ const elements = {
   showSummaryInput: document.querySelector("#showSummaryInput"),
   bodyInput: document.querySelector("#bodyInput"),
   imageInput: document.querySelector("#imageInput"),
+  replaceImageInput: document.querySelector("#replaceImageInput"),
   imagePreview: document.querySelector("#imagePreview"),
   previewImage: document.querySelector("#previewImage"),
   coverSourceLabel: document.querySelector("#coverSourceLabel"),
@@ -303,6 +306,26 @@ function prepareDemoPreview(event) {
   window.open(previewUrl.href, "_blank", "noopener");
 }
 
+function previewCurrentPost(event) {
+  if (state.demo) {
+    prepareDemoPreview(event);
+    return;
+  }
+  event.preventDefault();
+  if (!state.currentPost || state.isNew) {
+    showToast("Сначала сохраните новость", true);
+    return;
+  }
+  const date = elements.dateInput.value;
+  const slug = elements.slugInput.value.trim();
+  if (!date || !slug) {
+    showToast("У новости не заполнены дата или адрес", true);
+    return;
+  }
+  const [year, month, day] = date.split("-");
+  window.open(new URL(`../${year}/${month}/${day}/${slug}/`, window.location.href).href, "_blank", "noopener");
+}
+
 function fileName(path) {
   const value = String(path || "").split("/").pop() || "Изображение";
   try {
@@ -448,6 +471,8 @@ function setBusy(value, label = "Сохранение...") {
   elements.cancelButton.disabled = value;
   elements.newPostButton.disabled = value;
   elements.imageInput.disabled = value;
+  elements.replaceImageInput.disabled = value;
+  elements.previewPostButton.disabled = value;
   elements.showSummaryInput.disabled = value;
   elements.saveButton.textContent = value ? label : "Сохранить";
 }
@@ -562,6 +587,64 @@ function requestMediaDelete(item) {
   }
 }
 
+function validateImageFile(file) {
+  if (!acceptedImageTypes.has(file.type)) return `Файл «${file.name}» имеет неподдерживаемый формат`;
+  if (file.size > maxImageSize) return `Файл «${file.name}» больше 8 МБ`;
+  return "";
+}
+
+function requestMediaReplace(item) {
+  if (state.busy || !item.removable) return;
+  state.pendingReplaceKey = item.key;
+  elements.replaceImageInput.value = "";
+  elements.replaceImageInput.click();
+}
+
+function replaceMediaItem(file) {
+  const item = mediaItems().find((candidate) => candidate.key === state.pendingReplaceKey);
+  state.pendingReplaceKey = "";
+  if (!item) return;
+
+  const error = validateImageFile(file);
+  if (error) {
+    showToast(error, true);
+    return;
+  }
+
+  const replacementUrl = URL.createObjectURL(file);
+  if (item.kind === "pending") {
+    URL.revokeObjectURL(item.url);
+    const pendingItem = state.pendingImages.find((candidate) => candidate.key === item.key);
+    if (!pendingItem) {
+      URL.revokeObjectURL(replacementUrl);
+      return;
+    }
+    pendingItem.file = file;
+    pendingItem.name = file.name;
+    pendingItem.url = replacementUrl;
+  } else {
+    const wasCover = state.coverKey === item.key;
+    state.gallery = state.gallery.filter((candidate) => candidate.key !== item.key);
+    if (item.path && item.kind !== "upload") state.hiddenImages.add(item.path);
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const replacement = {
+      key: `pending:${id}`,
+      file,
+      name: file.name,
+      url: replacementUrl,
+      kind: "pending",
+      removable: true,
+      persistInGallery: true,
+    };
+    state.pendingImages.push(replacement);
+    if (wasCover) state.coverKey = replacement.key;
+  }
+
+  state.dirty = true;
+  renderMedia();
+  showToast("Фотография заменена. Сохраните новость");
+}
+
 function confirmMediaDelete() {
   const item = mediaItems().find((candidate) => candidate.key === state.pendingDeleteKey);
   state.pendingDeleteKey = "";
@@ -575,35 +658,58 @@ function makeGalleryCard(item) {
   card.className = "gallery-card";
   card.classList.toggle("is-cover", item.key === state.coverKey);
 
-  const select = document.createElement("button");
-  select.className = "gallery-select";
-  select.type = "button";
-  select.setAttribute("aria-label", `Сделать главным: ${item.name}`);
-  select.title = "Сделать главным фото";
-  select.addEventListener("click", () => chooseCover(item.key));
+  const imageWrap = document.createElement("div");
+  imageWrap.className = "gallery-image";
 
   const image = document.createElement("img");
   image.src = item.url;
   image.alt = "";
   image.loading = "lazy";
-  select.append(image);
+  imageWrap.append(image);
 
   if (item.key === state.coverKey) {
     const badge = document.createElement("span");
     badge.className = "gallery-cover-badge";
     badge.textContent = "Главное";
-    select.append(badge);
+    imageWrap.append(badge);
   }
 
-  if (item.removable) {
-    const removeButton = document.createElement("button");
-    removeButton.className = "gallery-delete";
-    removeButton.type = "button";
-    removeButton.textContent = "Удалить фото";
-    removeButton.setAttribute("aria-label", `Удалить фотографию: ${item.name}`);
-    removeButton.addEventListener("click", () => requestMediaDelete(item));
-    card.append(removeButton);
-  }
+  const menu = document.createElement("details");
+  menu.className = "gallery-menu";
+  const menuTrigger = document.createElement("summary");
+  menuTrigger.className = "gallery-menu-trigger";
+  menuTrigger.setAttribute("aria-label", `Действия с фотографией: ${item.name}`);
+  menuTrigger.innerHTML = '<span aria-hidden="true"><i></i><i></i><i></i></span>';
+  menu.append(menuTrigger);
+
+  const menuPopover = document.createElement("div");
+  menuPopover.className = "gallery-menu-popover";
+  menuPopover.setAttribute("role", "menu");
+
+  const addMenuAction = (label, action, className = "") => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = className;
+    button.textContent = label;
+    button.setAttribute("role", "menuitem");
+    button.addEventListener("click", () => {
+      menu.open = false;
+      action();
+    });
+    menuPopover.append(button);
+  };
+
+  if (item.key !== state.coverKey) addMenuAction("Сделать главной", () => chooseCover(item.key));
+  addMenuAction("Заменить", () => requestMediaReplace(item));
+  if (item.removable) addMenuAction("Удалить", () => requestMediaDelete(item), "is-danger");
+  menu.append(menuPopover);
+  menu.addEventListener("toggle", () => {
+    card.classList.toggle("menu-open", menu.open);
+    if (!menu.open) return;
+    for (const openedMenu of document.querySelectorAll(".gallery-menu[open]")) {
+      if (openedMenu !== menu) openedMenu.open = false;
+    }
+  });
 
   const footer = document.createElement("div");
   footer.className = "gallery-card-footer";
@@ -612,16 +718,7 @@ function makeGalleryCard(item) {
   label.title = item.name;
   footer.append(label);
 
-  const actions = document.createElement("div");
-  if (item.key !== state.coverKey) {
-    const coverButton = document.createElement("button");
-    coverButton.type = "button";
-    coverButton.textContent = "Главное";
-    coverButton.addEventListener("click", () => chooseCover(item.key));
-    actions.append(coverButton);
-  }
-  footer.append(actions);
-  card.append(select, footer);
+  card.append(imageWrap, menu, footer);
   return card;
 }
 
@@ -663,6 +760,7 @@ function openEditor(post, isNew = false) {
   state.coverKey = pathKey(post.coverPath || "");
   state.hiddenImages = new Set(post.hiddenImages || []);
   state.pendingDeleteKey = "";
+  state.pendingReplaceKey = "";
 
   elements.editorEmpty.hidden = true;
   elements.editorContent.hidden = false;
@@ -934,6 +1032,7 @@ async function loadPosts(selectSlug = "") {
 elements.loginForm.addEventListener("submit", login);
 elements.logoutButton.addEventListener("click", logout);
 elements.openSiteButton.addEventListener("click", prepareDemoPreview);
+elements.previewPostButton.addEventListener("click", previewCurrentPost);
 elements.passwordToggle.addEventListener("click", () => {
   const reveal = elements.passwordInput.type === "password";
   elements.passwordInput.type = reveal ? "text" : "password";
@@ -989,12 +1088,9 @@ elements.imageInput.addEventListener("change", () => {
   }
 
   for (const file of files) {
-    if (!acceptedImageTypes.has(file.type)) {
-      showToast(`Файл «${file.name}» имеет неподдерживаемый формат`, true);
-      continue;
-    }
-    if (file.size > maxImageSize) {
-      showToast(`Файл «${file.name}» больше 8 МБ`, true);
+    const error = validateImageFile(file);
+    if (error) {
+      showToast(error, true);
       continue;
     }
     const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -1013,6 +1109,13 @@ elements.imageInput.addEventListener("change", () => {
   state.dirty = true;
   elements.imageInput.value = "";
   renderMedia();
+});
+
+elements.replaceImageInput.addEventListener("change", () => {
+  const [file] = elements.replaceImageInput.files;
+  elements.replaceImageInput.value = "";
+  if (file) replaceMediaItem(file);
+  else state.pendingReplaceKey = "";
 });
 
 elements.removeImageButton.addEventListener("click", () => {
@@ -1035,9 +1138,21 @@ window.addEventListener("keydown", (event) => {
     event.preventDefault();
     elements.newsForm.requestSubmit();
   }
+  if (event.key === "Escape") {
+    const openPhotoMenu = document.querySelector(".gallery-menu[open]");
+    if (openPhotoMenu) {
+      openPhotoMenu.open = false;
+      return;
+    }
+  }
   if (event.key === "Escape" && document.body.classList.contains("editor-open") && !elements.deleteDialog.open && !elements.photoDeleteDialog.open) {
     closeEditor();
   }
+});
+
+document.addEventListener("click", (event) => {
+  if (event.target.closest(".gallery-menu")) return;
+  for (const menu of document.querySelectorAll(".gallery-menu[open]")) menu.open = false;
 });
 
 window.addEventListener("beforeunload", (event) => {

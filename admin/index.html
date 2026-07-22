@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex,nofollow">
   <title>Новости | Админка АЕТ Транс</title>
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
   <main class="auth-screen" id="authScreen" aria-labelledby="loginHeading">
@@ -114,7 +114,10 @@
                 <p class="section-label" id="editorMode">Редактирование</p>
                 <h2 id="editorHeading">Новость</h2>
               </div>
-              <button class="icon-button" id="closeEditorButton" type="button" aria-label="Закрыть редактор">×</button>
+              <div class="editor-header-actions">
+                <button class="button button-secondary editor-preview-button" id="previewPostButton" type="button">Предпросмотр</button>
+                <button class="icon-button" id="closeEditorButton" type="button" aria-label="Закрыть редактор">×</button>
+              </div>
             </header>
 
             <form id="newsForm">
@@ -173,6 +176,7 @@
                   <span>Добавить фотографии</span>
                   <small>Можно выбрать несколько файлов. JPG, PNG или WebP, каждый до 8 МБ.</small>
                 </label>
+                <input class="visually-hidden" id="replaceImageInput" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Выбрать фотографию для замены">
               </section>
 
               <div class="form-actions">
@@ -214,6 +218,6 @@
   </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
-  <script type="module" src="app.js?v=2"></script>
+  <script type="module" src="app.js?v=3"></script>
 </body>
 </html>
