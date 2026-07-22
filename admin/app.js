@@ -262,10 +262,18 @@ function prepareDemoPreview(event) {
     return;
   }
 
-  const sourceDate = state.currentPost.sourceDate || state.currentPost.date;
-  const sourceSlug = state.currentPost.sourceSlug || elements.originalSlug.value;
+  let sourceDate = state.currentPost.sourceDate;
+  let sourceSlug = state.currentPost.sourceSlug;
+
+  // A new demo post has no generated HTML page yet. Reuse an existing article
+  // as the visual shell, then replace its content from localStorage.
   if (!sourceDate || !sourceSlug) {
-    showToast("Не удалось определить адрес публикации", true);
+    const previewTemplate = state.posts.find((post) => post.sourceDate && post.sourceSlug);
+    sourceDate = previewTemplate?.sourceDate;
+    sourceSlug = previewTemplate?.sourceSlug;
+  }
+  if (!sourceDate || !sourceSlug) {
+    showToast("Не удалось подготовить предпросмотр публикации", true);
     return;
   }
 

@@ -175,7 +175,7 @@ function ctaBand(depth, title = "Обсудим вашу перевозку") {
     </section>`;
 }
 
-function documentPage({ depth = 1, active, title, description, canonicalPath, main, afterMain = "", bodyClass = "", image = "images/oversize.jpg", preloadMap = false }) {
+function documentPage({ depth = 1, active, title, description, canonicalPath, main, afterMain = "", bodyClass = "", image = "images/oversize.jpg", preloadMap = false, headStart = "", styleVersion = "3" }) {
   const root = rootPrefix(depth);
   const assets = assetPrefix(depth);
   const canonical = `https://aet-trans.ru/${canonicalPath}`;
@@ -190,7 +190,7 @@ function documentPage({ depth = 1, active, title, description, canonicalPath, ma
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${escapeHtml(title)}</title>
+${headStart ? `${headStart}\n` : ""}  <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
   <meta name="theme-color" content="#081b2e">
   <link rel="canonical" href="${canonical}">
@@ -203,7 +203,7 @@ function documentPage({ depth = 1, active, title, description, canonicalPath, ma
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 ${mapConnectionHints}  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="${root}styles.css?v=3">
+  <link rel="stylesheet" href="${root}styles.css?v=${styleVersion}">
 </head>
 <body class="theme-blue-v3 inner-page${bodyClass ? ` ${bodyClass}` : ""}">
 ${header(depth, active)}
@@ -446,8 +446,23 @@ function privacyPage() {
 
 function notFoundPage() {
   const depth = 0;
-  const main = `<section class="not-found"><div class="container"><span>404</span><h1>Страница не найдена</h1><p>Возможно, адрес изменился при обновлении сайта.</p><a class="button button-primary" href="./">На главную</a></div></section>`;
-  return documentPage({depth, title: "Страница не найдена | АЕТ Транс", description: "Страница не найдена.", canonicalPath: "404/", main});
+  const githubSubdirectory = outputDirectory === "." ? "" : `${outputDirectory}/`;
+  const headStart = `  <script>
+    (function () {
+      var base = document.createElement("base");
+      if (window.location.protocol === "file:") {
+        base.href = new URL("./", window.location.href).href;
+      } else if (window.location.hostname.endsWith(".github.io")) {
+        var project = window.location.pathname.split("/").filter(Boolean)[0];
+        base.href = "/" + project + "/${githubSubdirectory}";
+      } else {
+        base.href = "/${githubSubdirectory}";
+      }
+      document.head.appendChild(base);
+    })();
+  </script>`;
+  const main = `<section class="not-found"><div class="container not-found-grid"><div class="not-found-copy"><p class="not-found-kicker">Код ошибки 404</p><h1>Маршрут не найден</h1><p>Похоже, адрес изменился или в ссылке есть ошибка. Вернитесь на главную или откройте раздел с новостями.</p><div class="not-found-actions"><a class="button button-primary" href="./">На главную</a><a class="button button-secondary" href="novosti/">Все новости</a></div></div><div class="not-found-visual" aria-hidden="true"><strong>404</strong><div class="not-found-route"><i></i><i></i><i></i></div><div class="not-found-route-labels"><span>Запрошенный адрес</span><span>Маршрут прерван</span></div></div></div></section>`;
+  return documentPage({depth, title: "Страница не найдена | АЕТ Транс", description: "Страница не найдена.", canonicalPath: "404/", main, headStart, styleVersion: "4"});
 }
 
 function redirectPage(target) {

@@ -4579,26 +4579,159 @@ body.document-lightbox-open {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  padding: calc(var(--header-height) + 80px) 0 90px;
+  overflow: hidden;
+  padding: calc(var(--header-height) + 74px) 0 84px;
   background: #081b2e;
   color: var(--white);
 }
 
-.not-found span {
-  color: #80b6d8;
-  font-size: 22px;
+.not-found-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(420px, 0.92fr);
+  align-items: center;
+  gap: 92px;
+}
+
+.not-found-copy {
+  max-width: 650px;
+}
+
+.not-found .not-found-kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 24px;
+  color: #8dcced;
+  font-size: 14px;
   font-weight: 600;
+  text-transform: uppercase;
+}
+
+.not-found-kicker::before {
+  width: 34px;
+  height: 2px;
+  background: #36a7df;
+  content: "";
 }
 
 .not-found h1 {
-  margin-top: 14px;
-  font-size: 64px;
+  max-width: 620px;
+  font-size: 72px;
+  line-height: 1.02;
 }
 
-.not-found p {
-  margin: 18px 0 30px;
+.not-found-copy > p:not(.not-found-kicker) {
+  max-width: 600px;
+  margin: 26px 0 34px;
   color: #bdccd7;
   font-size: 18px;
+}
+
+.not-found-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.not-found-actions .button {
+  min-width: 164px;
+}
+
+.not-found-visual {
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 72px;
+  border-left: 1px solid rgba(141, 204, 237, 0.22);
+}
+
+.not-found-visual > strong {
+  color: rgba(141, 204, 237, 0.18);
+  font-size: 176px;
+  font-weight: 500;
+  line-height: 0.9;
+}
+
+.not-found-route {
+  position: relative;
+  width: 100%;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 58px;
+}
+
+.not-found-route::before,
+.not-found-route::after {
+  position: absolute;
+  top: 18px;
+  height: 1px;
+  background: #5f91b0;
+  content: "";
+}
+
+.not-found-route::before {
+  right: 57%;
+  left: 0;
+}
+
+.not-found-route::after {
+  right: 0;
+  left: 57%;
+  background: rgba(95, 145, 176, 0.3);
+}
+
+.not-found-route i {
+  position: relative;
+  z-index: 1;
+  width: 13px;
+  height: 13px;
+  border: 2px solid #8dcced;
+  border-radius: 50%;
+  background: #081b2e;
+}
+
+.not-found-route i:nth-child(2) {
+  width: 38px;
+  height: 38px;
+  border-color: #36a7df;
+}
+
+.not-found-route i:nth-child(2)::before,
+.not-found-route i:nth-child(2)::after {
+  position: absolute;
+  top: 17px;
+  left: 8px;
+  width: 20px;
+  height: 2px;
+  background: #8dcced;
+  content: "";
+}
+
+.not-found-route i:nth-child(2)::before {
+  transform: rotate(45deg);
+}
+
+.not-found-route i:nth-child(2)::after {
+  transform: rotate(-45deg);
+}
+
+.not-found-route i:last-child {
+  border-color: rgba(141, 204, 237, 0.38);
+}
+
+.not-found-route-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 12px;
+  color: #7894a7;
+  font-size: 13px;
+}
+
+.not-found-route-labels span:last-child {
+  text-align: right;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -5072,11 +5205,68 @@ body.document-lightbox-open {
   }
 
   .not-found h1 {
-    font-size: 44px;
+    font-size: 48px;
+  }
+
+  .not-found-grid {
+    grid-template-columns: 1fr;
+    gap: 58px;
+  }
+
+  .not-found-visual {
+    min-height: 0;
+    padding: 46px 0 0;
+    border-top: 1px solid rgba(141, 204, 237, 0.22);
+    border-left: 0;
+  }
+
+  .not-found-visual > strong {
+    font-size: 124px;
   }
 }
 
 @media (max-width: 600px) {
+  .not-found {
+    min-height: 100svh;
+    padding: calc(var(--header-height) + 46px) 0 54px;
+  }
+
+  .not-found-grid {
+    gap: 42px;
+  }
+
+  .not-found h1 {
+    font-size: 42px;
+  }
+
+  .not-found-copy > p:not(.not-found-kicker) {
+    margin: 20px 0 28px;
+    font-size: 16px;
+  }
+
+  .not-found-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .not-found-actions .button {
+    min-width: 0;
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .not-found-visual {
+    padding-top: 34px;
+  }
+
+  .not-found-visual > strong {
+    font-size: 94px;
+  }
+
+  .not-found-route {
+    margin-top: 34px;
+  }
+
   .review-grid {
     grid-template-columns: 1fr;
     gap: 12px;
