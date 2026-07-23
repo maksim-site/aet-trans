@@ -47,10 +47,10 @@ const rootPrefix = (depth) => "../".repeat(depth);
 const assetPrefix = (depth) => "../".repeat(depth + assetDepthOffset) + "assets/";
 
 const navItems = [
-  ["about", "О компании", "o-kompanii/"],
-  ["services", "Услуги", "uslugi/"],
+  ["about", "О компании", "#company"],
+  ["services", "Услуги", "#services"],
   ["news", "Новости", "novosti/"],
-  ["contacts", "Контакты", "kontakty/"],
+  ["contacts", "Контакты", "#contacts"],
 ];
 
 const postRoute = (post) => {
@@ -136,7 +136,7 @@ function footer(depth) {
     <div class="container footer-main">
       <a class="footer-brand" href="${root}" aria-label="АЕТ Транс, на главную"><img src="${assets}logo-wordmark-light.svg" alt="АЕТ Транс"></a>
       <nav class="footer-nav" aria-label="Навигация в подвале">
-        <a href="${root}o-kompanii/">О компании</a><a href="${root}uslugi/">Услуги</a><a href="${root}novosti/">Новости</a><a href="${root}kontakty/">Контакты</a><a href="${root}proekty/">Проекты</a><a href="${root}testimonial/">Отзывы</a>
+        <a href="${root}#company">О компании</a><a href="${root}#services">Услуги</a><a href="${root}novosti/">Новости</a><a href="${root}#contacts">Контакты</a><a href="${root}proekty/">Проекты</a><a href="${root}testimonial/">Отзывы</a>
       </nav>
     </div>
     <div class="container footer-bottom">
@@ -486,37 +486,34 @@ async function writeOutput(relativePath, content) {
 }
 
 await Promise.all([
-  writeOutput("uslugi/index.html", servicesPage()),
+  writeOutput("uslugi/index.html", redirectPage("../#services")),
   writeOutput("negabaritnye-perevozki/index.html", oversizedPage()),
   writeOutput("proekty/index.html", projectsPage()),
-  writeOutput("o-kompanii/index.html", aboutPage()),
+  writeOutput("o-kompanii/index.html", redirectPage("../#company")),
   writeOutput("klienty/index.html", redirectPage("../#clients")),
   writeOutput("testimonial/index.html", reviewsPage()),
   writeOutput("novosti/index.html", newsPage()),
-  writeOutput("kontakty/index.html", contactsPage()),
+  writeOutput("kontakty/index.html", redirectPage("../#contacts")),
   writeOutput("privacy/index.html", privacyPage()),
   writeOutput("404.html", notFoundPage()),
-  writeOutput("services/index.html", redirectPage("../uslugi/")),
+  writeOutput("services/index.html", redirectPage("../#services")),
   writeOutput("oversized/index.html", redirectPage("../negabaritnye-perevozki/")),
   writeOutput("projects/index.html", redirectPage("../proekty/")),
-  writeOutput("about/index.html", redirectPage("../o-kompanii/")),
+  writeOutput("about/index.html", redirectPage("../#company")),
   writeOutput("clients/index.html", redirectPage("../#clients")),
   writeOutput("reviews/index.html", redirectPage("../testimonial/")),
   writeOutput("news/index.html", redirectPage("../novosti/")),
-  writeOutput("contacts/index.html", redirectPage("../kontakty/")),
+  writeOutput("contacts/index.html", redirectPage("../#contacts")),
   ...posts.map((post, index) => writeOutput(`${postRoute(post)}index.html`, articlePage(post, index))),
   ...posts.map((post) => writeOutput(`news/${post.slug}/index.html`, redirectPage(`../../${postRoute(post)}`))),
 ]);
 
 const sitemapPaths = [
   "",
-  "uslugi/",
   "negabaritnye-perevozki/",
   "proekty/",
-  "o-kompanii/",
   "testimonial/",
   "novosti/",
-  "kontakty/",
   "privacy/",
   ...posts.map((post) => postRoute(post)),
 ];

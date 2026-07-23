@@ -31,10 +31,10 @@
       </a>
 
       <nav class="desktop-nav" aria-label="Основная навигация">
-        <a href="o-kompanii/">О компании</a>
-        <a href="uslugi/">Услуги</a>
+        <a href="#company">О компании</a>
+        <a href="#services">Услуги</a>
         <a href="novosti/">Новости</a>
-        <a href="kontakty/">Контакты</a>
+        <a href="#contacts">Контакты</a>
       </nav>
 
       <div class="header-actions">
@@ -50,10 +50,10 @@
 
   <nav class="mobile-menu" id="mobileMenu" aria-label="Мобильная навигация">
     <div class="container mobile-menu-inner">
-      <a href="o-kompanii/">О компании <span aria-hidden="true">→</span></a>
-      <a href="uslugi/">Услуги <span aria-hidden="true">→</span></a>
+      <a href="#company">О компании <span aria-hidden="true">→</span></a>
+      <a href="#services">Услуги <span aria-hidden="true">→</span></a>
       <a href="novosti/">Новости <span aria-hidden="true">→</span></a>
-      <a href="kontakty/">Контакты <span aria-hidden="true">→</span></a>
+      <a href="#contacts">Контакты <span aria-hidden="true">→</span></a>
       <div class="mobile-menu-contacts">
         <a href="tel:+78123094625">+7 (812) 309-46-25</a>
         <a href="mailto:info@aet-trans.ru">info@aet-trans.ru</a>
@@ -87,94 +87,62 @@
 
     <section class="section services" id="services">
       <div class="container">
-        <header class="section-heading services-heading reveal">
-          <div>
-            <p class="section-label">Услуги</p>
-            <h2>Полный комплекс логистических услуг</h2>
-          </div>
-          <p>Используем железнодорожный, автомобильный, водный и авиационный транспорт.</p>
+        <header class="section-heading reveal">
+          <h2>Полный цикл перевозки</h2>
+          <p>Подключаемся к отдельному этапу или полностью организуем перевозку от подготовки схемы до выгрузки на площадке.</p>
         </header>
 
-        <div class="services-showcase">
-          <a class="service-feature reveal" href="uslugi/">
-            <img src="assets/news/china-2026.jpg" alt="Перевозка промышленного оборудования на низкорамной платформе" loading="lazy">
-            <span class="service-feature-shade" aria-hidden="true"></span>
-            <span class="service-feature-copy">
-              <span class="service-feature-kicker">Приоритетное направление</span>
-              <strong>Крупногабаритные и тяжеловесные грузы</strong>
-              <span>Организуем перевозки по России и за рубежом.</span>
-              <span class="service-feature-link">Все услуги <span aria-hidden="true">→</span></span>
-            </span>
-          </a>
+        <div class="services-layout">
+          <article class="service-main reveal">
+            <span class="service-number">Главное направление</span>
+            <h3>Проектная логистика</h3>
+            <p>Собираем сложную перевозку в единый рабочий план и отвечаем за координацию всех участников.</p>
+            <ul>
+              <li>Разработка и обследование маршрута</li>
+              <li>Подбор транспорта и разработка схем крепления</li>
+              <li>Разрешения, страхование и сопровождение</li>
+            </ul>
+          </article>
 
-          <div class="service-directory" aria-label="Основные услуги">
-            <a class="service-home-row reveal" href="uslugi/">
+          <div class="service-list">
+            <article class="service-item reveal">
               <span class="service-number">01</span>
-              <span><strong>Грузоперевозки по РФ</strong></span>
-              <span class="service-arrow" aria-hidden="true">→</span>
-            </a>
-            <a class="service-home-row reveal" href="uslugi/">
+              <h3>Экспедирование грузов</h3>
+              <p>Транспорт, ПРР, упаковка, страхование и контроль документов.</p>
+            </article>
+            <article class="service-item reveal">
               <span class="service-number">02</span>
-              <span><strong>Международные транспортировки груза</strong></span>
-              <span class="service-arrow" aria-hidden="true">→</span>
-            </a>
-            <a class="service-home-row reveal" href="uslugi/">
+              <h3>Международные перевозки</h3>
+              <p>Прямые и мультимодальные маршруты между Россией, Европой, Азией и странами СНГ.</p>
+            </article>
+            <article class="service-item reveal">
               <span class="service-number">03</span>
-              <span><strong>Организация таможенного оформления</strong></span>
-              <span class="service-arrow" aria-hidden="true">→</span>
-            </a>
-            <a class="service-home-row reveal" href="negabaritnye-perevozki/">
+              <h3>Таможенное оформление</h3>
+              <p>Импорт и экспорт, декларации, платежи, сертификаты.</p>
+            </article>
+            <article class="service-item reveal">
               <span class="service-number">04</span>
-              <span><strong>Перевозки крупногабаритного и тяжеловесного груза</strong></span>
-              <span class="service-arrow" aria-hidden="true">→</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="specialization" id="specialization">
-      <div class="container specialization-grid">
-        <div class="specialization-media reveal">
-          <img src="assets/images/specialization.jpg" alt="Погрузка крупногабаритного оборудования на судно" loading="lazy">
-        </div>
-        <div class="specialization-copy reveal">
-          <p class="section-label">Крупногабаритные и тяжеловесные грузы</p>
-          <h2>Приоритетное направление компании</h2>
-          <p>Организуем перевозки крупногабаритных и тяжеловесных грузов в России и за рубежом.</p>
-          <div class="technical-list">
-            <div><span>01</span><strong>Международные транспортировки</strong></div>
-            <div><span>02</span><strong>Таможенное оформление</strong></div>
-            <div><span>03</span><strong>Мультимодальные перевозки</strong></div>
-            <div><span>04</span><strong>Экспедирование груза</strong></div>
+              <h3>Крупногабаритные грузы</h3>
+              <p>Инженерная подготовка и точная координация тяжеловесных перевозок.</p>
+            </article>
           </div>
         </div>
       </div>
     </section>
 
     <section class="section routes" id="routes">
-      <div class="container">
-        <header class="routes-heading reveal">
-          <div>
-            <p class="section-label">География</p>
-            <h2>Россия и международные направления</h2>
-          </div>
+      <div class="container routes-grid">
+        <div class="routes-copy reveal">
+          <h2>Перевозки по России и международным направлениям</h2>
           <p>Выбираем способ доставки с учетом груза, сроков, таможенного оформления и доступной инфраструктуры.</p>
-        </header>
-        <div class="routes-board">
-          <figure class="routes-media reveal">
-            <img src="assets/images/hero-port.jpg" alt="Морской порт и грузовые суда" loading="lazy">
-            <figcaption><span>Мультимодальные маршруты</span><strong>Один подрядчик на всем пути груза</strong></figcaption>
-          </figure>
-          <div class="route-directory reveal" aria-label="Основные направления перевозок">
-            <div class="route-directory-head"><span>Основные направления</span><strong>06</strong></div>
-            <div class="route-home-row"><span>01</span><strong>Россия</strong><small>Межрегиональные перевозки</small></div>
-            <div class="route-home-row"><span>02</span><strong>Китай</strong><small>Импорт и экспорт</small></div>
-            <div class="route-home-row"><span>03</span><strong>Европа</strong><small>Международные маршруты</small></div>
-            <div class="route-home-row"><span>04</span><strong>СНГ</strong><small>Прямые доставки</small></div>
-            <div class="route-home-row"><span>05</span><strong>Турция</strong><small>Авто и морские линии</small></div>
-            <div class="route-home-row"><span>06</span><strong>Другие страны</strong><small>Составные схемы доставки</small></div>
-          </div>
+        </div>
+        <div class="route-list reveal" aria-label="Основные направления перевозок">
+          <div><span>01</span><strong>Россия</strong></div>
+          <div><span>02</span><strong>Китай</strong></div>
+          <div><span>03</span><strong>Европа</strong></div>
+          <div><span>04</span><strong>СНГ</strong></div>
+          <div><span>05</span><strong>Турция</strong></div>
+          <div><span>06</span><strong>Другие направления</strong></div>
         </div>
       </div>
     </section>
@@ -264,7 +232,6 @@
           <h2>Опыт в сложной логистике</h2>
           <p>Организуем перевозки по России и за рубежом. Основная специализация компании: сложные, крупногабаритные и тяжеловесные грузы.</p>
           <p>Берем на себя работы, связанные с отправкой груза, перевозкой, страхованием, таможенным оформлением и юридическим сопровождением.</p>
-          <a class="company-link" href="o-kompanii/">Подробнее о компании <span aria-hidden="true">→</span></a>
         </div>
         <aside class="company-quote reveal">
           <div class="company-year"><span>Компания работает с</span><strong>2004</strong></div>
@@ -339,7 +306,7 @@
     <div class="container footer-main">
       <a class="footer-brand" href="./" aria-label="АЕТ Транс, на главную"><img src="assets/logo-wordmark-light.svg" alt="АЕТ Транс"></a>
       <nav class="footer-nav" aria-label="Навигация в подвале">
-        <a href="o-kompanii/">О компании</a><a href="uslugi/">Услуги</a><a href="novosti/">Новости</a><a href="kontakty/">Контакты</a><a href="proekty/">Проекты</a><a href="testimonial/">Отзывы</a>
+        <a href="#company">О компании</a><a href="#services">Услуги</a><a href="novosti/">Новости</a><a href="#contacts">Контакты</a><a href="proekty/">Проекты</a><a href="testimonial/">Отзывы</a>
       </nav>
     </div>
     <div class="container footer-bottom">
