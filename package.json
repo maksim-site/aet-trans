@@ -4,7 +4,11 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/generate-site.mjs v3 && node scripts/generate-site.mjs",
+    "build:v4": "node scripts/generate-v4.mjs",
     "validate": "node scripts/validate-site.mjs",
     "admin": "node --env-file-if-exists=.env.admin scripts/admin-server.mjs"
+  },
+  "devDependencies": {
+    "lenis": "^1.3.11"
   }
 }

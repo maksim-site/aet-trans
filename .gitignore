@@ -3,3 +3,10 @@ __pycache__/
 .DS_Store
 .admin-backups/
 .env.admin
+node_modules/
+
+# Local v4 art-direction experiments; production uses the final WebP only.
+v4/director-concept/*.png
+v4/director-concept/index.html
+v4/director-concept-editorial/
+v4/director-concept-lower-third/
