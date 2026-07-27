@@ -1,6 +1,6 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   clients,
@@ -57,6 +57,14 @@ const assetWebPath = (path) =>
     .map((part) => encodeURIComponent(part))
     .join("/");
 
+const optimizedAssetPath = (path) => {
+  if (!path || path.toLowerCase().endsWith(".webp")) return path;
+  const extension = extname(path);
+  if (!extension) return path;
+  const webpPath = path.slice(0, -extension.length) + ".webp";
+  return existsSync(join(projectRoot, "assets", webpPath)) ? webpPath : path;
+};
+
 const postCoverImage = (post) => {
   const hiddenImages = new Set(post.hiddenImages || []);
   const candidates = [
@@ -66,12 +74,13 @@ const postCoverImage = (post) => {
     ...(post.galleryImages || []),
   ];
 
-  return candidates.find(
+  const image = candidates.find(
     (image) =>
       image
       && !hiddenImages.has(image)
       && existsSync(join(projectRoot, "assets", image)),
   ) || "";
+  return optimizedAssetPath(image);
 };
 
 const homeNewsMarkup = posts
@@ -161,6 +170,7 @@ function footer(depth) {
 function pageHero({ depth, eyebrow, title, intro, image, imageAlt = "" }) {
   const root = rootPrefix(depth);
   const assets = assetPrefix(depth);
+  const optimizedImage = optimizedAssetPath(image);
   return `
     <section class="page-hero${image ? "" : " page-hero-no-media"}">
       <div class="container page-hero-grid">
@@ -170,7 +180,7 @@ function pageHero({ depth, eyebrow, title, intro, image, imageAlt = "" }) {
           <h1>${escapeHtml(title)}</h1>
           <p>${escapeHtml(intro)}</p>
         </div>${image ? `
-        <figure class="page-hero-media reveal"><img src="${assets}${image}" alt="${escapeHtml(imageAlt)}"></figure>` : ""}
+        <figure class="page-hero-media reveal"><img src="${assets}${optimizedImage}" alt="${escapeHtml(imageAlt)}" decoding="async"></figure>` : ""}
       </div>
     </section>`;
 }
@@ -191,6 +201,7 @@ function documentPage({ depth = 1, active, title, description, canonicalPath, ma
   const root = rootPrefix(depth);
   const assets = assetPrefix(depth);
   const canonical = `https://aet-trans.ru/${canonicalPath}`;
+  const optimizedImage = optimizedAssetPath(image);
   const mapConnectionHints = preloadMap
     ? `  <link rel="preconnect" href="https://yandex.ru">
   <link rel="preconnect" href="https://maps.yastatic.net" crossorigin>
@@ -210,7 +221,7 @@ ${headStart ? `${headStart}\n` : ""}  <title>${escapeHtml(title)}</title>
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:url" content="${canonical}">
-  <meta property="og:image" content="https://aet-trans.ru/assets/${image}">
+  <meta property="og:image" content="https://aet-trans.ru/assets/${optimizedImage}">
   <link rel="icon" href="${assets}favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -360,7 +371,7 @@ function newsPage() {
   const items = posts.map((post) => {
     const image = postCoverImage(post);
     const media = image
-      ? `\n      <a class="news-archive-media" href="${root}${postRoute(post)}"><img src="${assets}${assetWebPath(image)}" alt="${escapeHtml(post.title)}" loading="lazy"></a>`
+      ? `\n      <a class="news-archive-media" href="${root}${postRoute(post)}"><img src="${assets}${assetWebPath(image)}" alt="${escapeHtml(post.title)}" loading="lazy" decoding="async"></a>`
       : `\n      <a class="news-archive-media news-archive-placeholder" href="${root}${postRoute(post)}" aria-label="Открыть публикацию: ${escapeHtml(post.title)}"><span>${post.year}</span><small>Фото в архиве отсутствует</small></a>`;
     return `<article class="news-archive-item has-media${image ? "" : " has-placeholder"}" data-news-item data-year="${post.year}" data-search="${escapeHtml(`${post.title} ${post.summary}`.toLowerCase())}">${media}
       <div><time datetime="${post.date}">${formatDate(post.date)}</time><h2><a href="${root}${postRoute(post)}">${escapeHtml(post.title)}</a></h2>${post.summary ? `<p>${escapeHtml(post.summary)}</p>` : ""}<a class="text-link" href="${root}${postRoute(post)}">Читать <span aria-hidden="true">→</span></a></div>
@@ -413,9 +424,10 @@ function articlePage(post, index) {
     ...(post.galleryImages || []).filter((image) => !hiddenImages.has(image) && existsSync(join(projectRoot, "assets", image))),
   ].filter((image) => !hiddenImages.has(image));
   if (!galleryPaths.length && coverImage) galleryPaths.push(coverImage);
-  const gallery = [...new Set(galleryPaths)].map((image) =>
-    `${assets}${image.startsWith("news/archive/") ? image.split("/").map(encodeURIComponent).join("/") : image}`,
-  );
+  const gallery = [...new Set(galleryPaths)].map((image) => {
+    const optimizedImage = optimizedAssetPath(image);
+    return `${assets}${optimizedImage.startsWith("news/archive/") ? assetWebPath(optimizedImage) : optimizedImage}`;
+  });
   const newer = posts[index - 1];
   const older = posts[index + 1];
   const articleNavigation = newer || older
@@ -425,7 +437,7 @@ function articlePage(post, index) {
   const main = `
     <article class="article-page">
       <header class="article-header"><div class="container"><a class="article-back" href="${root}novosti/">← Все новости</a><time datetime="${post.date}">${formatDate(post.date)}</time><h1>${escapeHtml(post.title)}</h1>${post.summary && showSummaryInArticle ? `<p>${escapeHtml(post.summary)}</p>` : ""}</div></header>
-      <div class="container article-layout"><div class="article-content">${renderArticleBlocks(post)}</div>${gallery.length ? `<div class="article-gallery">${gallery.map((image, imageIndex) => `<figure><img src="${image}" alt="${escapeHtml(post.title)}${imageIndex ? `, фотография ${imageIndex + 1}` : ""}" loading="lazy"></figure>`).join("")}</div>` : ""}${articleNavigation}</div>
+      <div class="container article-layout"><div class="article-content">${renderArticleBlocks(post)}</div>${gallery.length ? `<div class="article-gallery">${gallery.map((image, imageIndex) => `<figure><img src="${image}" alt="${escapeHtml(post.title)}${imageIndex ? `, фотография ${imageIndex + 1}` : ""}" loading="lazy" decoding="async"></figure>`).join("")}</div>` : ""}${articleNavigation}</div>
     </article>
 ${ctaBand(depth)}`;
   return documentPage({depth, active: "news", title: `${post.title} | АЕТ Транс`, description: post.summary || post.title, canonicalPath: postRoute(post), main, image: coverImage || "images/oversize.jpg"});
