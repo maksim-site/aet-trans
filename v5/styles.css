@@ -7781,12 +7781,12 @@ html.lenis body {
   position: relative;
   overflow: hidden;
   padding: clamp(78px, 7vw, 104px) 0 clamp(68px, 6vw, 88px);
-  border-top: 1px solid #d5e0e7;
-  color: var(--navy);
-  background-color: #eef3f6;
+  border-top: 1px solid rgba(111, 170, 208, 0.14);
+  color: var(--white);
+  background-color: #071d31;
   background-image:
-    linear-gradient(rgba(17, 88, 132, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(17, 88, 132, 0.045) 1px, transparent 1px);
+    linear-gradient(rgba(111, 170, 208, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(111, 170, 208, 0.055) 1px, transparent 1px);
   background-size: 52px 52px;
 }
 
@@ -7799,16 +7799,16 @@ html.lenis body {
 }
 
 .theme-v5 .trusted-heading .context-line {
-  color: var(--green-dark);
+  color: #82c5e8;
 }
 
 .theme-v5 .trusted-heading .context-line::before {
-  background: var(--green);
+  background: #54b7e8;
 }
 
 .theme-v5 .trusted-heading h2 {
   margin-top: 18px;
-  color: var(--navy);
+  color: var(--white);
   font-size: clamp(42px, 4.1vw, 62px);
   line-height: 1.02;
 }
@@ -7816,7 +7816,7 @@ html.lenis body {
 .theme-v5 .trusted-heading > p {
   max-width: 600px;
   margin: 0;
-  color: var(--muted);
+  color: #aebfcb;
   font-size: 17px;
   line-height: 1.6;
 }
@@ -7830,8 +7830,8 @@ html.lenis body {
   margin-left: calc(50% - 50vw);
   padding: 0;
   overflow: hidden;
-  border-top: 1px solid #cfdae1;
-  border-bottom: 1px solid #cfdae1;
+  border-top: 1px solid rgba(120, 177, 211, 0.18);
+  border-bottom: 1px solid rgba(120, 177, 211, 0.18);
   -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
   mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
 }
@@ -7851,8 +7851,8 @@ html.lenis body {
   height: 106px;
   flex: 0 0 196px;
   padding: 18px 20px;
-  border-right: 1px solid #d8e1e7;
-  background: rgba(255, 255, 255, 0.78);
+  border-right: 1px solid rgba(120, 177, 211, 0.16);
+  background: rgba(3, 21, 37, 0.28);
 }
 
 .theme-v5 .trusted-logo picture {
@@ -7865,8 +7865,8 @@ html.lenis body {
 .theme-v5 .trusted-logo img {
   width: 156px;
   height: 58px;
-  filter: brightness(0);
-  opacity: 0.56;
+  filter: none;
+  opacity: 0.76;
 }
 
 .theme-v5.news-index-page .page-hero-grid,
@@ -7902,7 +7902,7 @@ html.lenis body {
   }
 
   .theme-v5 .trusted-logo:hover img {
-    opacity: 0.82;
+    opacity: 0.98;
   }
 }
 
