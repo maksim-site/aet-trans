@@ -8204,85 +8204,84 @@ html.lenis body {
   }
 
   .theme-v5 .director-feature {
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
+    min-height: clamp(500px, 132vw, 560px);
+    display: block;
     padding-top: 0;
   }
 
   .theme-v5 .director-feature-content {
-    order: 1;
-    min-height: 0;
-    padding-top: 42px;
+    min-height: clamp(500px, 132vw, 560px);
+    justify-content: center;
+    padding-top: 34px;
     padding-bottom: 34px;
   }
 
   .theme-v5 .director-feature-kicker {
-    margin-bottom: 8px;
-    font-size: 13px;
+    max-width: min(60vw, 232px);
+    margin-bottom: 7px;
+    font-size: 12px;
   }
 
   .theme-v5 .director-feature-quote {
-    max-width: none;
-    padding-top: 28px;
+    max-width: min(60vw, 232px);
+    padding-top: 24px;
   }
 
   .theme-v5 .director-feature-mark {
-    top: -18px;
-    left: -3px;
-    font-size: 66px;
+    top: -12px;
+    left: -2px;
+    font-size: 54px;
   }
 
   .theme-v5 .director-feature-quote > p {
-    font-size: clamp(21px, 5.8vw, 24px);
-    line-height: 1.2;
+    font-size: clamp(16px, 4.55vw, 18px);
+    line-height: 1.18;
     text-wrap: pretty;
   }
 
   .theme-v5 .director-feature-quote footer {
-    margin-top: 22px;
+    margin-top: 18px;
   }
 
   .theme-v5 .director-feature-quote strong {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .theme-v5 .director-feature-quote small {
     margin-top: 4px;
-    font-size: 12px;
-    line-height: 1.45;
+    font-size: 10.5px;
+    line-height: 1.4;
   }
 
   .theme-v5 .director-feature-media {
-    position: relative;
-    inset: auto;
-    order: 2;
-    height: clamp(220px, 64vw, 280px);
-    overflow: hidden;
-  }
-
-  .theme-v5 .director-feature-media::after {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      180deg,
-      #031525 0%,
-      rgba(3, 21, 37, 0.66) 12%,
-      rgba(3, 21, 37, 0) 42%
-    );
-    pointer-events: none;
-    content: "";
+    height: 100%;
   }
 
   .theme-v5 .director-feature-media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 62% 40%;
+    object-position: 55% center;
   }
 
   .theme-v5 .director-feature-shade {
-    display: none;
+    display: block;
+    background:
+      linear-gradient(
+        90deg,
+        #031525 0%,
+        rgba(3, 21, 37, 0.98) 34%,
+        rgba(3, 21, 37, 0.86) 55%,
+        rgba(3, 21, 37, 0.3) 82%,
+        rgba(3, 21, 37, 0.12) 100%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(3, 21, 37, 0.08) 38%,
+        rgba(3, 21, 37, 0.48) 100%
+      );
   }
 }
 
@@ -8330,13 +8329,17 @@ html.lenis body {
     font-size: 16px;
   }
 
+  .theme-v5 .director-feature,
   .theme-v5 .director-feature-content {
-    padding-top: 36px;
-    padding-bottom: 30px;
+    min-height: 500px;
   }
 
   .theme-v5 .director-feature-quote > p {
-    font-size: 20px;
+    font-size: 16px;
+  }
+
+  .theme-v5 .director-feature-media img {
+    object-position: 60% center;
   }
 }
 
