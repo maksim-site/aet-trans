@@ -40,7 +40,6 @@ const rootPrefix = (depth) => "../".repeat(depth);
 const assetPrefix = (depth) => "../".repeat(depth + assetDepthOffset) + "assets/";
 
 const navItems = [
-  ["about", "О компании", "#company"],
   ["services", "Услуги", "#services"],
   ["news", "Новости", "novosti/"],
   ["contacts", "Контакты", "#contacts"],
@@ -156,7 +155,7 @@ function footer(depth) {
     <div class="container footer-main">
       <a class="footer-brand" href="${root}" aria-label="АЕТ Транс, на главную"><img src="${assets}logo-wordmark-light.svg" alt="АЕТ Транс"></a>
       <nav class="footer-nav" aria-label="Навигация в подвале">
-        <a href="${root}#company">О компании</a><a href="${root}#services">Услуги</a><a href="${root}novosti/">Новости</a><a href="${root}#contacts">Контакты</a>
+        <a href="${root}#services">Услуги</a><a href="${root}novosti/">Новости</a><a href="${root}#contacts">Контакты</a>
       </nav>
     </div>
     <div class="container footer-bottom">
@@ -197,7 +196,7 @@ function ctaBand(depth, title = "Обсудим вашу перевозку") {
     </section>`;
 }
 
-function documentPage({ depth = 1, active, title, description, canonicalPath, main, afterMain = "", bodyClass = "", image = "images/oversize.jpg", preloadMap = false, headStart = "", styleVersion = "20260728-1" }) {
+function documentPage({ depth = 1, active, title, description, canonicalPath, main, afterMain = "", bodyClass = "", image = "images/oversize.jpg", preloadMap = false, headStart = "", styleVersion = "20260729-1" }) {
   const root = rootPrefix(depth);
   const assets = assetPrefix(depth);
   const canonical = `https://aet-trans.ru/${canonicalPath}`;
@@ -487,7 +486,7 @@ function notFoundPage() {
     })();
   </script>`;
   const main = `<section class="not-found"><div class="container not-found-grid"><div class="not-found-copy"><p class="not-found-kicker">Код ошибки 404</p><h1>Маршрут не найден</h1><p>Похоже, адрес изменился или в ссылке есть ошибка. Вернитесь на главную или откройте раздел с новостями.</p><div class="not-found-actions"><a class="button button-primary" href="./">На главную</a><a class="button button-secondary" href="novosti/">Все новости</a></div></div><div class="not-found-visual" aria-hidden="true"><strong>404</strong><div class="not-found-route"><i></i><i></i><i></i></div><div class="not-found-route-labels"><span>Запрошенный адрес</span><span>Маршрут прерван</span></div></div></div></section>`;
-  return documentPage({depth, title: "Страница не найдена | АЕТ Транс", description: "Страница не найдена.", canonicalPath: "404/", main, headStart, styleVersion: "20260728-1"});
+  return documentPage({depth, title: "Страница не найдена | АЕТ Транс", description: "Страница не найдена.", canonicalPath: "404/", main, headStart, styleVersion: "20260729-1"});
 }
 
 function redirectPage(target) {
