@@ -126,11 +126,11 @@ function header(depth, active) {
           <span class="header-phone">+7 (812) 309-46-25</span>
           <a class="header-email" href="mailto:info@aet-trans.ru">info@aet-trans.ru</a>
         </div>
-        <a class="language-switch header-language-switch" href="${root}en/" lang="en" hreflang="en" aria-label="English version">EN</a>
         <a class="button button-primary header-cta" href="${root}#request">
           <span class="header-cta-full">Оставить заявку</span>
           <span class="header-cta-short">Заявка</span>
         </a>
+        <a class="language-switch header-language-switch" href="${root}en/" lang="en" hreflang="en" aria-label="English version">EN</a>
         <button class="menu-toggle" id="menuToggle" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
       </div>
     </div>
