@@ -8638,6 +8638,10 @@ html.lenis body {
   gap: 8px;
 }
 
+.theme-v6 .request-form .quote-route-grid label {
+  grid-column: auto;
+}
+
 .theme-v6 .quote-route-grid label > span,
 .theme-v6 .quote-contact-grid label > span,
 .theme-v6 .quote-wide-field > span,
