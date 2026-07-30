@@ -6,6 +6,7 @@
     "build": "node scripts/generate-site.mjs v3 && node scripts/generate-site.mjs",
     "build:v4": "node scripts/generate-v4.mjs",
     "build:v5": "node scripts/generate-v5.mjs",
+    "build:v6": "node scripts/generate-v6.mjs",
     "optimize:v4-images": "node scripts/optimize-v4-images.mjs",
     "validate": "node scripts/validate-site.mjs",
     "admin": "node --env-file-if-exists=.env.admin scripts/admin-server.mjs"

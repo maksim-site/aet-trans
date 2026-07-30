@@ -76,7 +76,7 @@ function validateMarkup(htmlPath, html) {
   }
 
   if (isRedirect) return;
-  if (!/<html\s+[^>]*lang="ru"/i.test(html)) addMarkupFailure(htmlPath, "Не указан lang=\"ru\"");
+  if (!/<html\s+[^>]*lang="(?:ru|en)"/i.test(html)) addMarkupFailure(htmlPath, "Не указан поддерживаемый lang=\"ru|en\"");
   if (!/<title>\s*[^<]+\s*<\/title>/i.test(html)) addMarkupFailure(htmlPath, "Отсутствует непустой title");
   if (!/<meta\s+name="viewport"\s+content="[^"]+"/i.test(html)) addMarkupFailure(htmlPath, "Отсутствует viewport");
   if (!/<h1\b/i.test(html)) addMarkupFailure(htmlPath, "Отсутствует h1");
