@@ -349,7 +349,7 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
 }
 
 .theme-v7 .route-vehicle-icon {
-  opacity: 1;
+  opacity: 0;
   will-change: opacity;
 }
 
