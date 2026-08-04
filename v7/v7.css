@@ -792,16 +792,6 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   }
 }
 
-.theme-v7 .service-main {
-  min-height: 0;
-  align-self: start;
-}
-
-.theme-v7 .service-main ul {
-  margin-top: 24px;
-  padding-top: 22px;
-}
-
 .theme-v7 .service-icon {
   display: block;
   width: 54px;
