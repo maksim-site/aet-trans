@@ -792,6 +792,112 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   }
 }
 
+.theme-v7 .service-icon {
+  display: block;
+  width: 42px;
+  height: 42px;
+  margin-top: 18px;
+  overflow: visible;
+  color: #78bd43;
+}
+
+.theme-v7 .service-icon path,
+.theme-v7 .service-icon circle,
+.theme-v7 .service-icon ellipse {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition:
+    stroke-dashoffset 620ms cubic-bezier(0.4, 0, 0.2, 1) var(--draw-delay, 0ms),
+    transform 340ms ease;
+}
+
+.theme-v7 .service-icon :nth-child(2) { --draw-delay: 90ms; }
+.theme-v7 .service-icon :nth-child(3) { --draw-delay: 180ms; }
+.theme-v7 .service-icon :nth-child(4) { --draw-delay: 270ms; }
+.theme-v7 .service-icon :nth-child(5) { --draw-delay: 360ms; }
+
+.theme-v7 .will-reveal .service-icon path,
+.theme-v7 .will-reveal .service-icon circle,
+.theme-v7 .will-reveal .service-icon ellipse {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.theme-v7 .is-visible .service-icon path,
+.theme-v7 .is-visible .service-icon circle,
+.theme-v7 .is-visible .service-icon ellipse {
+  stroke-dashoffset: 0;
+}
+
+.theme-v7 .service-icon--globe ellipse {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.theme-v7 .service-icon-seal {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.theme-v7 .service-icon-hook {
+  transform-origin: 12px 2.6px;
+}
+
+@keyframes service-icon-truck {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(2px); }
+}
+
+@keyframes service-icon-globe {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(0.35); }
+}
+
+@keyframes service-icon-stamp {
+  0%, 100% { transform: scale(1); }
+  45% { transform: scale(0.85); }
+}
+
+@keyframes service-icon-swing {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(5deg); }
+  70% { transform: rotate(-5deg); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .theme-v7 .service-item:hover .service-icon {
+    color: #5c9e30;
+  }
+
+  .theme-v7 .service-item:hover .service-icon--truck {
+    animation: service-icon-truck 1.1s ease-in-out infinite;
+  }
+
+  .theme-v7 .service-item:hover .service-icon--globe ellipse {
+    animation: service-icon-globe 1.6s ease-in-out infinite;
+  }
+
+  .theme-v7 .service-item:hover .service-icon--customs .service-icon-seal {
+    animation: service-icon-stamp 1s ease-in-out infinite;
+  }
+
+  .theme-v7 .service-item:hover .service-icon--cargo .service-icon-hook {
+    animation: service-icon-swing 1.6s ease-in-out infinite;
+  }
+}
+
+@media (max-width: 720px) {
+  .theme-v7 .service-icon {
+    grid-column: 2;
+    width: 36px;
+    height: 36px;
+    margin-top: 12px;
+  }
+}
+
 @media (max-width: 1100px) {
   .theme-v7 .request-grid {
     grid-template-columns: 1fr;
@@ -1040,6 +1146,17 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
 
   .theme-v7 .service-item {
     transition: none;
+  }
+
+  .theme-v7 .service-icon path,
+  .theme-v7 .service-icon circle,
+  .theme-v7 .service-icon ellipse {
+    transition: none;
+  }
+
+  .theme-v7 .service-icon,
+  .theme-v7 .service-icon * {
+    animation: none !important;
   }
 
   .theme-v7:not(.carousel-ready) .trusted-logo-track {
