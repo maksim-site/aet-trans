@@ -892,9 +892,10 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
 }
 
 @keyframes service-icon-truck {
-  0%, 100% { transform: translateX(0); }
-  45% { transform: translateX(5px); }
-  65% { transform: translateX(3px); }
+  0% { transform: translateX(0); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(6px); }
+  100% { transform: translateX(0); }
 }
 
 @keyframes service-icon-globe {
