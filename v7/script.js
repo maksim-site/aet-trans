@@ -744,10 +744,6 @@ if (routeExplorer) {
   });
 
   document.body.classList.add("route-map-ready");
-  requestAnimationFrame(() => {
-    const selectedRoute = routeButtons.find((button) => button.getAttribute("aria-pressed") === "true")?.dataset.routeKey;
-    activateRoute(selectedRoute || routeButtons[0]?.dataset.routeKey);
-  });
 
   window.addEventListener("pagehide", () => {
     if (routeVehicleFrame) cancelAnimationFrame(routeVehicleFrame);
