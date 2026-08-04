@@ -856,9 +856,9 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   transform-origin: center;
 }
 
-.theme-v7 .service-icon--oversize .service-icon-box {
+.theme-v7 .service-icon--trailer .service-icon-cargo-load {
   transform-box: fill-box;
-  transform-origin: center;
+  transform-origin: 50% 100%;
 }
 
 .theme-v7 .service-icon-wind,
@@ -908,19 +908,17 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   62% { transform: scale(1.08); }
 }
 
-@keyframes service-icon-box-grow {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.08); }
+@keyframes service-icon-trailer-rock {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(-2.2deg); }
+  60% { transform: rotate(1.4deg); }
+  80% { transform: rotate(-0.6deg); }
 }
 
-@keyframes service-icon-dims-top {
+@keyframes service-icon-trailer-sink {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-1.6px); }
-}
-
-@keyframes service-icon-dims-left {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(-1.6px); }
+  35% { transform: translateY(1.2px); }
+  70% { transform: translateY(0.4px); }
 }
 
 @keyframes service-icon-wind {
@@ -977,16 +975,12 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
     animation: service-icon-ring 550ms ease-out 220ms;
   }
 
-  .theme-v7 .service-item:hover .service-icon--oversize .service-icon-box {
-    animation: service-icon-box-grow 700ms cubic-bezier(0.34, 1.3, 0.64, 1);
+  .theme-v7 .service-item:hover .service-icon--trailer {
+    animation: service-icon-trailer-sink 1s ease-in-out;
   }
 
-  .theme-v7 .service-item:hover .service-icon--oversize .service-icon-dims-top {
-    animation: service-icon-dims-top 700ms ease-in-out;
-  }
-
-  .theme-v7 .service-item:hover .service-icon--oversize .service-icon-dims-left {
-    animation: service-icon-dims-left 700ms ease-in-out;
+  .theme-v7 .service-item:hover .service-icon--trailer .service-icon-cargo-load {
+    animation: service-icon-trailer-rock 1s ease-in-out;
   }
 }
 
