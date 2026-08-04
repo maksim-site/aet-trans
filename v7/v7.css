@@ -802,6 +802,11 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   transition: color 200ms ease, filter 250ms ease;
 }
 
+.theme-v7 .service-icon--trailer {
+  width: 66px;
+  height: 66px;
+}
+
 .theme-v7 .service-icon path,
 .theme-v7 .service-icon circle,
 .theme-v7 .service-icon ellipse {
@@ -991,6 +996,11 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
     width: 44px;
     height: 44px;
     margin-top: 12px;
+  }
+
+  .theme-v7 .service-icon--trailer {
+    width: 54px;
+    height: 54px;
   }
 }
 
