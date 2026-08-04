@@ -794,12 +794,12 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
 
 .theme-v7 .service-icon {
   display: block;
-  width: 42px;
-  height: 42px;
+  width: 54px;
+  height: 54px;
   margin-top: 18px;
   overflow: visible;
   color: var(--v7-blue);
-  transition: color 200ms ease;
+  transition: color 200ms ease, filter 250ms ease;
 }
 
 .theme-v7 .service-icon path,
@@ -860,6 +860,36 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   transform-origin: 12px 2.6px;
 }
 
+.theme-v7 .service-icon-wind,
+.theme-v7 .service-icon-ring {
+  opacity: 0;
+}
+
+.theme-v7 .service-icon-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.theme-v7 .will-reveal .service-icon-wind,
+.theme-v7 .will-reveal .service-icon-ring {
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+}
+
+.theme-v7 .service-icon-orbit {
+  opacity: 0;
+  transform-origin: 12px 12px;
+}
+
+.theme-v7 .service-icon-orbit circle {
+  fill: currentColor;
+  stroke: none;
+}
+
+.theme-v7 .will-reveal .service-icon-orbit circle {
+  stroke-dasharray: none;
+}
+
 @keyframes service-icon-truck {
   0%, 100% { transform: translateX(0); }
   45% { transform: translateX(5px); }
@@ -884,9 +914,34 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   80% { transform: rotate(3deg); }
 }
 
+@keyframes service-icon-wind {
+  0% { opacity: 0; transform: translateX(3px); }
+  30% { opacity: 0.85; }
+  100% { opacity: 0; transform: translateX(-3px); }
+}
+
+@keyframes service-icon-orbit {
+  0% { opacity: 0; transform: rotate(0deg); }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: rotate(320deg); }
+}
+
+@keyframes service-icon-ring {
+  0% { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.7); }
+}
+
+@keyframes service-icon-load {
+  0%, 100% { transform: translateY(0); }
+  40% { transform: translateY(2px); }
+  70% { transform: translateY(-1px); }
+}
+
 @media (hover: hover) and (pointer: fine) {
   .theme-v7 .service-item:hover .service-icon {
     color: #0c668e;
+    filter: drop-shadow(0 3px 7px rgba(23, 127, 183, 0.35));
   }
 
   .theme-v7 .service-item:hover .service-icon path,
@@ -899,24 +954,40 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
     animation: service-icon-truck 800ms cubic-bezier(0.3, 0.9, 0.4, 1);
   }
 
+  .theme-v7 .service-item:hover .service-icon--truck .service-icon-wind {
+    animation: service-icon-wind 750ms ease-out;
+  }
+
   .theme-v7 .service-item:hover .service-icon--globe ellipse {
     animation: service-icon-globe 900ms ease-in-out;
+  }
+
+  .theme-v7 .service-item:hover .service-icon--globe .service-icon-orbit {
+    animation: service-icon-orbit 1.3s cubic-bezier(0.45, 0, 0.55, 1);
   }
 
   .theme-v7 .service-item:hover .service-icon--customs .service-icon-seal {
     animation: service-icon-stamp 650ms cubic-bezier(0.34, 1.4, 0.64, 1);
   }
 
+  .theme-v7 .service-item:hover .service-icon--customs .service-icon-ring {
+    animation: service-icon-ring 550ms ease-out 220ms;
+  }
+
   .theme-v7 .service-item:hover .service-icon--cargo .service-icon-hook {
     animation: service-icon-swing 1s ease-in-out;
+  }
+
+  .theme-v7 .service-item:hover .service-icon--cargo .service-icon-load {
+    animation: service-icon-load 800ms ease-in-out 250ms;
   }
 }
 
 @media (max-width: 720px) {
   .theme-v7 .service-icon {
     grid-column: 2;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     margin-top: 12px;
   }
 }
@@ -1168,6 +1239,10 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   }
 
   .theme-v7 .service-item {
+    transition: none;
+  }
+
+  .theme-v7 .service-icon {
     transition: none;
   }
 
