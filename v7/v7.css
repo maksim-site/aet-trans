@@ -990,6 +990,62 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   }
 }
 
+.theme-v7 .service-main li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-v7 .service-step-icon {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  overflow: visible;
+  color: #65b8d9;
+  transition: color 200ms ease;
+}
+
+.theme-v7 .service-step-icon path,
+.theme-v7 .service-step-icon circle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition:
+    stroke-dashoffset 620ms cubic-bezier(0.4, 0, 0.2, 1) calc(var(--step-delay, 0ms) + var(--shape-delay, 0ms)),
+    stroke-width 200ms ease;
+}
+
+.theme-v7 .service-step-icon :nth-child(2) { --shape-delay: 120ms; }
+.theme-v7 .service-step-icon :nth-child(3) { --shape-delay: 220ms; }
+.theme-v7 .service-step-icon :nth-child(4) { --shape-delay: 320ms; }
+
+.theme-v7 .service-main li:nth-child(2) { --step-delay: 140ms; }
+.theme-v7 .service-main li:nth-child(3) { --step-delay: 280ms; }
+
+.theme-v7 .will-reveal .service-step-icon path,
+.theme-v7 .will-reveal .service-step-icon circle {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.theme-v7 .is-visible .service-step-icon path,
+.theme-v7 .is-visible .service-step-icon circle {
+  stroke-dashoffset: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .theme-v7 .service-main li:hover .service-step-icon {
+    color: #a5dcf2;
+  }
+
+  .theme-v7 .service-main li:hover .service-step-icon path,
+  .theme-v7 .service-main li:hover .service-step-icon circle {
+    stroke-width: 1.9;
+  }
+}
+
 @media (max-width: 720px) {
   .theme-v7 .service-icon {
     grid-column: 2;
@@ -1001,6 +1057,11 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   .theme-v7 .service-icon--trailer {
     width: 54px;
     height: 54px;
+  }
+
+  .theme-v7 .service-step-icon {
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -1261,6 +1322,11 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   .theme-v7 .service-icon path,
   .theme-v7 .service-icon circle,
   .theme-v7 .service-icon ellipse {
+    transition: none;
+  }
+
+  .theme-v7 .service-step-icon path,
+  .theme-v7 .service-step-icon circle {
     transition: none;
   }
 
