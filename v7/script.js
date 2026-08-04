@@ -723,6 +723,16 @@ if (routeExplorer) {
     setRouteVehiclePath(routeKey);
   };
 
+  const deactivateRoutes = () => {
+    routeButtons.forEach((button) => button.setAttribute("aria-pressed", "false"));
+    routeCorridors.forEach((corridor) => corridor.classList.remove("is-active", "is-complete"));
+    routeHighlights.forEach((highlight) => highlight.classList.remove("is-active"));
+    if (routeVehicleFrame) cancelAnimationFrame(routeVehicleFrame);
+    routeVehicleFrame = 0;
+    activeRoutePath = null;
+    if (routeVehicleIcon) routeVehicleIcon.style.opacity = "0";
+  };
+
   routeButtons.forEach((button, index) => {
     button.addEventListener("click", () => activateRoute(button.dataset.routeKey));
     button.addEventListener("focus", () => activateRoute(button.dataset.routeKey));
@@ -742,6 +752,17 @@ if (routeExplorer) {
       routeButtons[nextIndex].focus();
     });
   });
+
+  const routeList = routeExplorer.querySelector(".route-list");
+
+  if (routeList) {
+    if (finePointer) {
+      routeList.addEventListener("mouseleave", deactivateRoutes);
+    }
+    routeList.addEventListener("focusout", (event) => {
+      if (!routeButtons.includes(event.relatedTarget)) deactivateRoutes();
+    });
+  }
 
   document.body.classList.add("route-map-ready");
 
