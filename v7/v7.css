@@ -792,145 +792,6 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   }
 }
 
-.theme-v7 .service-transport {
-  margin-top: 28px;
-  padding-top: 24px;
-  border-top: 1px solid var(--line-dark);
-}
-
-.theme-v7 .service-transport-tabs {
-  display: flex;
-  gap: 8px;
-}
-
-.theme-v7 .service-transport-tabs > button {
-  width: 44px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(151, 204, 226, 0.24);
-  border-radius: 4px;
-  appearance: none;
-  background: rgba(10, 34, 56, 0.55);
-  color: #8fb9cf;
-  cursor: pointer;
-  transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease;
-}
-
-.theme-v7 .service-transport-tabs > button svg {
-  fill: currentColor;
-  pointer-events: none;
-}
-
-.theme-v7 .service-transport-tabs > button:hover {
-  border-color: rgba(151, 204, 226, 0.5);
-  color: #e8f4fa;
-}
-
-.theme-v7 .service-transport-tabs > button[aria-pressed="true"] {
-  border-color: rgba(139, 206, 89, 0.6);
-  background: rgba(120, 189, 67, 0.14);
-  color: #a4d97c;
-}
-
-.theme-v7 .service-transport-tabs > button:focus-visible {
-  outline: 3px solid rgba(142, 216, 244, 0.78);
-  outline-offset: 2px;
-}
-
-.theme-v7 .service-transport-track {
-  margin-top: 18px;
-}
-
-.theme-v7 .service-transport-track svg {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.theme-v7 .service-transport-base {
-  fill: none;
-  stroke: rgba(143, 203, 228, 0.32);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-dasharray: 1 10;
-  vector-effect: non-scaling-stroke;
-}
-
-.theme-v7 .service-transport-line {
-  fill: none;
-  stroke: #8bce59;
-  stroke-width: 3;
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 6px rgba(120, 189, 67, 0.4));
-  vector-effect: non-scaling-stroke;
-}
-
-.theme-v7.transport-ready .service-transport-line {
-  stroke-dasharray: 1 1;
-  stroke-dashoffset: 1;
-  opacity: 0;
-  transition:
-    stroke-dashoffset 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 220ms ease;
-}
-
-.theme-v7.transport-ready .service-transport.is-running .service-transport-line {
-  stroke-dashoffset: 0;
-  opacity: 1;
-}
-
-.theme-v7.transport-ready .service-transport.is-complete .service-transport-line {
-  stroke-dashoffset: -1;
-  opacity: 0;
-  transition:
-    stroke-dashoffset 620ms cubic-bezier(0.55, 0.06, 0.28, 0.96) 140ms,
-    opacity 360ms ease 520ms;
-}
-
-.theme-v7 .service-transport-vehicle {
-  pointer-events: none;
-  will-change: opacity;
-}
-
-.theme-v7 .service-transport-icon {
-  opacity: 0;
-  filter: drop-shadow(0 0 5px rgba(116, 206, 89, 0.55));
-  transition: opacity 200ms ease;
-}
-
-.theme-v7 .service-transport-icon.is-active {
-  opacity: 1;
-}
-
-.theme-v7 .service-transport-icon path {
-  fill: #f4fbfd;
-  stroke: #17384d;
-  stroke-width: 0.8;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-.theme-v7 .service-transport-caption {
-  display: grid;
-  min-height: 22px;
-  margin: 10px 0 0;
-  color: #9fb9ca;
-  font-size: 13.5px;
-  line-height: 1.45;
-}
-
-.theme-v7 .service-transport-caption span {
-  grid-area: 1 / 1;
-  opacity: 0;
-  transition: opacity 220ms ease;
-}
-
-.theme-v7 .service-transport-caption span.is-active {
-  opacity: 1;
-}
-
 @media (max-width: 1100px) {
   .theme-v7 .request-grid {
     grid-template-columns: 1fr;
@@ -1156,22 +1017,6 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   }
 }
 
-@media (max-width: 720px) {
-  .theme-v7 .service-transport {
-    margin-top: 22px;
-    padding-top: 20px;
-  }
-
-  .theme-v7 .service-transport-tabs {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .theme-v7 .service-transport-tabs > button {
-    width: 100%;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .theme-v7 .route-country-highlight {
     transition: none;
@@ -1193,17 +1038,8 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
     transition: none;
   }
 
-  .theme-v7 .service-item,
-  .theme-v7 .service-transport-line,
-  .theme-v7 .service-transport-icon,
-  .theme-v7 .service-transport-caption span {
+  .theme-v7 .service-item {
     transition: none;
-  }
-
-  .theme-v7.transport-ready .service-transport-line {
-    stroke-dasharray: none;
-    stroke-dashoffset: 0;
-    opacity: 1;
   }
 
   .theme-v7:not(.carousel-ready) .trusted-logo-track {
