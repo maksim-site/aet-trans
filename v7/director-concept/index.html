@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Руководитель компании | АЕТ Транс</title>
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #061d31;
+      --navy-deep: #031525;
+      --cyan: #54bce9;
+      --text-muted: #b6c6d3;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      color-scheme: dark;
+      font-family: "IBM Plex Sans", Arial, sans-serif;
+      background: var(--navy-deep);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: #fff;
+      background: var(--navy-deep);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .director-concept {
+      position: relative;
+      min-height: 100svh;
+      overflow: hidden;
+      isolation: isolate;
+      background: var(--navy);
+    }
+
+    .director-media {
+      position: absolute;
+      z-index: -2;
+      inset: 0;
+      margin: 0;
+    }
+
+    .director-media img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+    }
+
+    .director-overlay {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(3, 18, 32, 0.97) 0%,
+          rgba(3, 18, 32, 0.9) 27%,
+          rgba(3, 18, 32, 0.58) 48%,
+          rgba(3, 18, 32, 0.08) 72%
+        ),
+        linear-gradient(
+          180deg,
+          rgba(3, 18, 32, 0.26) 0%,
+          rgba(3, 18, 32, 0) 34%,
+          rgba(3, 18, 32, 0.22) 100%
+        );
+    }
+
+    .director-shell {
+      width: min(1680px, 100%);
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+      padding: 28px clamp(28px, 5vw, 84px) clamp(38px, 5vh, 60px);
+    }
+
+    .director-top {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    .director-brand {
+      display: block;
+      width: clamp(210px, 16vw, 268px);
+    }
+
+    .director-brand img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .director-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      padding: 0 2px;
+      color: #d6e1e9;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 180ms ease, transform 180ms ease;
+    }
+
+    .director-back:hover {
+      color: #fff;
+      transform: translateX(-3px);
+    }
+
+    .director-back:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 5px;
+    }
+
+    .director-copy {
+      position: relative;
+      width: min(690px, 52vw);
+      margin: auto 0;
+      padding: clamp(68px, 9vh, 110px) 0 clamp(30px, 5vh, 54px);
+    }
+
+    .director-kicker {
+      margin: 0 0 24px;
+      color: #8dd6f6;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .director-quote {
+      position: relative;
+      margin: 0;
+      max-width: 650px;
+      padding-top: 52px;
+    }
+
+    .director-quote-mark {
+      position: absolute;
+      top: -20px;
+      left: -7px;
+      color: var(--cyan);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 108px;
+      font-weight: 400;
+      line-height: 1;
+      opacity: 0.95;
+    }
+
+    .director-quote p {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(36px, 3.25vw, 56px);
+      font-weight: 400;
+      line-height: 1.12;
+      text-wrap: balance;
+    }
+
+    .director-meta {
+      display: flex;
+      align-items: center;
+      margin-top: clamp(32px, 5vh, 48px);
+    }
+
+    .director-meta strong,
+    .director-meta small {
+      display: block;
+    }
+
+    .director-meta strong {
+      margin-bottom: 5px;
+      font-size: 19px;
+      font-weight: 600;
+    }
+
+    .director-meta small {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 1180px) {
+      .director-quote p {
+        font-size: clamp(34px, 3.8vw, 50px);
+      }
+    }
+
+    @media (max-width: 820px) {
+      .director-concept {
+        min-height: auto;
+        overflow: visible;
+        background: var(--navy-deep);
+      }
+
+      .director-media {
+        position: relative;
+        z-index: 0;
+        height: clamp(330px, 46svh, 430px);
+      }
+
+      .director-media::after {
+        position: absolute;
+        inset: 0;
+        content: "";
+        background:
+          linear-gradient(180deg, rgba(3, 18, 32, 0.35) 0%, rgba(3, 18, 32, 0) 45%, var(--navy-deep) 100%);
+      }
+
+      .director-media img {
+        object-position: 68% center;
+      }
+
+      .director-overlay {
+        display: none;
+      }
+
+      .director-shell {
+        position: static;
+        min-height: auto;
+        padding: 0 20px 38px;
+      }
+
+      .director-brand {
+        width: 142px;
+      }
+
+      .director-top {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        left: 16px;
+      }
+
+      .director-back {
+        width: 38px;
+        height: 38px;
+        min-height: 38px;
+        justify-content: center;
+        overflow: hidden;
+        border: 1px solid rgba(148, 205, 235, 0.32);
+        background: rgba(3, 18, 32, 0.4);
+        backdrop-filter: blur(10px);
+        font-size: 0;
+      }
+
+      .director-back span {
+        font-size: 18px;
+      }
+
+      .director-copy {
+        width: 100%;
+        max-width: 650px;
+        margin: -10px 0 0;
+        padding: 12px 0 10px;
+      }
+
+      .director-kicker {
+        margin-bottom: 14px;
+        font-size: 11px;
+      }
+
+      .director-quote {
+        max-width: 620px;
+        padding-top: 34px;
+      }
+
+      .director-quote-mark {
+        top: -8px;
+        font-size: 72px;
+      }
+
+      .director-quote p {
+        font-size: clamp(26px, 7vw, 32px);
+        line-height: 1.15;
+      }
+
+      .director-meta {
+        margin-top: 22px;
+      }
+
+      .director-meta strong {
+        font-size: 16px;
+      }
+
+      .director-meta small {
+        font-size: 11.5px;
+      }
+    }
+
+    @media (max-width: 460px) {
+      .director-media {
+        height: 360px;
+      }
+
+      .director-media img {
+        object-position: 69% center;
+      }
+
+      .director-quote p {
+        font-size: clamp(26px, 7.2vw, 30px);
+      }
+
+      .director-meta {
+        align-items: flex-start;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .director-back {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="director-concept">
+    <figure class="director-media">
+      <img
+        src="director-office-composite-final.webp"
+        width="2400"
+        height="1358"
+        fetchpriority="high"
+        alt="Александр Торгашов, генеральный директор ООО «АЕТ Транс», в рабочем кабинете"
+      >
+    </figure>
+    <div class="director-overlay" aria-hidden="true"></div>
+    <div class="director-shell">
+      <div class="director-top">
+        <a class="director-brand" href="../" aria-label="АЕТ Транс, на главную">
+          <img src="../../assets/logo-wordmark-light.svg" alt="АЕТ Транс">
+        </a>
+        <a class="director-back" href="../"><span aria-hidden="true">←</span> На главную</a>
+      </div>
+      <section class="director-copy">
+        <h1 class="director-kicker">Слово руководителя</h1>
+        <blockquote class="director-quote">
+          <span class="director-quote-mark" aria-hidden="true">“</span>
+          <p>В сложной логистике нет мелочей. Каждый маршрут должен быть просчитан, а каждый этап находиться под контролем одной команды.</p>
+          <footer class="director-meta">
+            <div>
+              <strong>Александр Торгашов</strong>
+              <small>Генеральный директор ООО «АЕТ Транс»</small>
+            </div>
+          </footer>
+        </blockquote>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
