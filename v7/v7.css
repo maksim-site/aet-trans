@@ -990,69 +990,6 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   }
 }
 
-.theme-v7 .service-main-flow {
-  margin-top: 24px;
-}
-
-.theme-v7 .service-main-flow svg {
-  display: block;
-  width: 100%;
-  max-width: 340px;
-  height: auto;
-  overflow: visible;
-}
-
-.theme-v7 .service-main-flow .flow-line {
-  fill: none;
-  stroke: rgba(101, 184, 217, 0.4);
-  stroke-width: 1.2;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 900ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.theme-v7 .service-main-flow .flow-node {
-  color: #65b8d9;
-  transition: color 200ms ease;
-}
-
-.theme-v7 .service-main-flow .flow-node path,
-.theme-v7 .service-main-flow .flow-node circle {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition:
-    stroke-dashoffset 620ms cubic-bezier(0.4, 0, 0.2, 1) calc(var(--draw-delay, 0ms) + var(--shape-delay, 0ms));
-}
-
-.theme-v7 .service-main-flow .flow-node :nth-child(2) { --shape-delay: 110ms; }
-.theme-v7 .service-main-flow .flow-node :nth-child(3) { --shape-delay: 200ms; }
-.theme-v7 .service-main-flow .flow-node :nth-child(4) { --shape-delay: 290ms; }
-
-.theme-v7 .service-main-flow .flow-node-1 { --draw-delay: 280ms; }
-.theme-v7 .service-main-flow .flow-node-2 { --draw-delay: 520ms; }
-.theme-v7 .service-main-flow .flow-node-3 { --draw-delay: 760ms; }
-
-.theme-v7 .will-reveal .service-main-flow .flow-line,
-.theme-v7 .will-reveal .service-main-flow .flow-node path,
-.theme-v7 .will-reveal .service-main-flow .flow-node circle {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-}
-
-.theme-v7 .is-visible .service-main-flow .flow-line,
-.theme-v7 .is-visible .service-main-flow .flow-node path,
-.theme-v7 .is-visible .service-main-flow .flow-node circle {
-  stroke-dashoffset: 0;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .theme-v7 .service-main-flow .flow-node:hover {
-    color: #a5dcf2;
-  }
-}
-
 @media (max-width: 720px) {
   .theme-v7 .service-icon {
     grid-column: 2;
@@ -1324,12 +1261,6 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   .theme-v7 .service-icon path,
   .theme-v7 .service-icon circle,
   .theme-v7 .service-icon ellipse {
-    transition: none;
-  }
-
-  .theme-v7 .service-main-flow .flow-line,
-  .theme-v7 .service-main-flow .flow-node path,
-  .theme-v7 .service-main-flow .flow-node circle {
     transition: none;
   }
 
