@@ -774,7 +774,7 @@ if (routeExplorer) {
 
 const revealItems = document.querySelectorAll(".reveal");
 
-document.querySelectorAll(".service-directory, .process-list").forEach((group) => {
+document.querySelectorAll(".service-list, .process-list").forEach((group) => {
   group.querySelectorAll(":scope > .reveal").forEach((item, index) => {
     item.style.setProperty("--reveal-delay", `${index * 75}ms`);
   });
