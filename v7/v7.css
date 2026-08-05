@@ -794,10 +794,11 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
 
 .theme-v7 .reveal.will-reveal {
   opacity: 0;
-  transform: translate3d(0, 40px, 0);
-  will-change: opacity, transform;
-  transition-property: opacity, transform;
-  transition-duration: 800ms;
+  transform: translate3d(0, 34px, 0) scale(0.985);
+  filter: blur(8px);
+  will-change: opacity, transform, filter;
+  transition-property: opacity, transform, filter;
+  transition-duration: 820ms;
   transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   transition-delay: var(--reveal-delay, 0s);
 }
@@ -805,6 +806,7 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
 .theme-v7 .reveal.will-reveal.is-visible {
   opacity: 1;
   transform: none;
+  filter: blur(0);
 }
 
 @keyframes hero-rise {
@@ -1290,6 +1292,7 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   .theme-v7 .reveal.will-reveal {
     opacity: 1;
     transform: none;
+    filter: none;
     transition: none;
   }
 
