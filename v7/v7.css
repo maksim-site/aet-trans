@@ -794,10 +794,10 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
 
 .theme-v7 .reveal.will-reveal {
   opacity: 0;
-  transform: translate3d(0, 30px, 0);
+  transform: translate3d(0, 40px, 0);
   will-change: opacity, transform;
   transition-property: opacity, transform;
-  transition-duration: 720ms;
+  transition-duration: 800ms;
   transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   transition-delay: var(--reveal-delay, 0s);
 }
@@ -806,6 +806,20 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   opacity: 1;
   transform: none;
 }
+
+@keyframes hero-rise {
+  from { opacity: 0; transform: translate3d(0, 26px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+.theme-v7 .hero-copy.is-visible > * {
+  animation: hero-rise 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.theme-v7 .hero-copy.is-visible > *:nth-child(2) { animation-delay: 130ms; }
+.theme-v7 .hero-copy.is-visible > *:nth-child(3) { animation-delay: 260ms; }
+.theme-v7 .hero-copy.is-visible > *:nth-child(4) { animation-delay: 390ms; }
+.theme-v7 .hero-copy.is-visible > *:nth-child(5) { animation-delay: 520ms; }
 
 .theme-v7 .service-icon {
   display: block;
