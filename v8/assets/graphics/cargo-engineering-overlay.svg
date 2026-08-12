@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="955" viewBox="0 0 1400 955" fill="none">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 9 5 1 9" stroke="currentColor" stroke-width="1.4"/>
+    </marker>
+  </defs>
+
+  <g color="#b8e7f5" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke">
+    <path d="M690 177C779 116 891 75 1006 63"/>
+    <path d="M691 451C785 466 884 470 1002 470"/>
+    <ellipse cx="1112" cy="270" rx="211" ry="210"/>
+    <ellipse cx="1112" cy="270" rx="185" ry="184" stroke-dasharray="8 11" opacity=".7"/>
+    <path d="M707 166C675 245 671 356 701 448"/>
+    <path d="M812 112C780 205 777 376 804 462"/>
+    <path d="M899 81C864 190 864 383 894 468"/>
+    <path d="M1112 60V480M901 270h422" stroke-dasharray="7 10" opacity=".66"/>
+
+    <path d="M278 344C321 306 368 285 421 274"/>
+    <path d="M276 457C326 464 379 467 430 467"/>
+    <ellipse cx="476" cy="357" rx="119" ry="111"/>
+    <ellipse cx="476" cy="357" rx="98" ry="91" stroke-dasharray="7 10" opacity=".65"/>
+    <path d="M302 324C286 365 286 419 303 457"/>
+    <path d="M371 291C350 342 350 420 367 463"/>
+
+    <path d="M712 474 667 552h126l-34-78M968 472l-39 80h128l-35-79"/>
+    <path d="M394 466l-26 72h82l-20-72M522 464l-24 74h88l-25-76"/>
+    <path d="M130 557H1322" stroke-dasharray="12 10"/>
+    <path d="M154 578H1300" opacity=".55"/>
+
+    <path d="M680 34H1329M680 34v24M1329 34v24" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+    <path d="M1360 60V481M1337 60h23M1337 481h23" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+    <path d="M265 243H602M265 243v22M602 243v22" marker-start="url(#arrow)" marker-end="url(#arrow)" opacity=".75"/>
+
+    <path d="M650 525h458" stroke="#8bd14e" stroke-width="3"/>
+    <path d="m641 525 12-7v14Z" fill="#8bd14e" stroke="none"/>
+    <path d="m1117 525-12-7v14Z" fill="#8bd14e" stroke="none"/>
+  </g>
+
+  <g stroke="#b8e7f5" stroke-width="1.4" vector-effect="non-scaling-stroke" opacity=".42">
+    <path d="M86 130H1340M86 210H1340M86 290H1340M86 370H1340M86 450H1340M86 530H1340" stroke-dasharray="2 13"/>
+    <path d="M170 95V575M330 95V575M490 95V575M650 95V575M810 95V575M970 95V575M1130 95V575M1290 95V575" stroke-dasharray="2 13"/>
+  </g>
+</svg>
