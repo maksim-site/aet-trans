@@ -237,6 +237,30 @@ if (newsArchive) {
   const pageSize = 18;
   let limit = pageSize;
 
+  const replaceMissingNewsImage = (image) => {
+    const media = image.closest(".news-archive-media");
+    const item = image.closest("[data-news-item]");
+    if (!media || media.classList.contains("news-archive-placeholder")) return;
+
+    const placeholderYear = document.createElement("span");
+    placeholderYear.textContent = item?.dataset.year || "Архив";
+    const placeholderText = document.createElement("small");
+    placeholderText.textContent = "Фото в архиве отсутствует";
+
+    media.classList.add("news-archive-placeholder");
+    media.setAttribute("aria-label", `Открыть публикацию: ${image.alt || "новость компании"}`);
+    media.replaceChildren(placeholderYear, placeholderText);
+    item?.classList.add("has-placeholder");
+  };
+
+  newsArchive.querySelectorAll(".news-archive-media img").forEach((image) => {
+    if (image.complete && !image.naturalWidth) {
+      replaceMissingNewsImage(image);
+      return;
+    }
+    image.addEventListener("error", () => replaceMissingNewsImage(image), { once: true });
+  });
+
   const updateNews = () => {
     const query = search.value.trim().toLocaleLowerCase("ru");
     const selectedYear = year.value;

@@ -19,8 +19,8 @@
   <script>document.documentElement.classList.add("js", "font-layout-pending");</script>
   <link rel="preload" as="image" href="../assets/images/oversize.jpg" type="image/jpeg" fetchpriority="high">
   <noscript><style>.theme-v7 .site-header{position:absolute!important}</style></noscript>
-  <link rel="stylesheet" href="styles.min.css?v=20260812-v8-20">
-  <link rel="stylesheet" href="v7.css?v=20260812-v8-20">
+  <link rel="stylesheet" href="styles.min.css?v=20260812-v8-24">
+  <link rel="stylesheet" href="v7.css?v=20260812-v8-24">
   <script>
     (() => {
       const root = document.documentElement;
@@ -415,9 +415,10 @@
           <p>Укажите контакты и коротко опишите груз или маршрут. Мы свяжемся с вами, чтобы уточнить детали.</p>
           <div class="request-direct">
             <span>Можно связаться напрямую</span>
-            <strong class="request-phone">+7 (812) 309-46-25</strong>
-            <a class="request-call-mobile" href="tel:+78123094625">Позвонить</a>
-            <a href="mailto:info@aet-trans.ru">info@aet-trans.ru</a>
+            <div class="request-direct-links">
+              <a class="request-phone" href="tel:+78123094625">+7 (812) 309-46-25</a>
+              <a href="mailto:info@aet-trans.ru">info@aet-trans.ru</a>
+            </div>
           </div>
         </div>
         <form class="request-form simple-request-form reveal" id="requestForm">
@@ -449,8 +450,10 @@
         <div class="contacts-copy reveal">
           <h2>Свяжитесь с нами</h2>
           <div class="contact-list">
-            <div class="contact-phone"><span>Телефон</span><strong>+7 (812) 309-46-25</strong><a class="contact-call-mobile" href="tel:+78123094625">Позвонить</a></div>
-            <a href="mailto:info@aet-trans.ru"><span>Электронная почта</span><strong>info@aet-trans.ru</strong></a>
+            <div class="contact-primary-row">
+              <a class="contact-phone" href="tel:+78123094625"><span>Телефон</span><strong>+7 (812) 309-46-25</strong></a>
+              <a href="mailto:info@aet-trans.ru"><span>Электронная почта</span><strong>info@aet-trans.ru</strong></a>
+            </div>
             <div><span>Офис</span><strong>198035, Россия, г. Санкт-Петербург, вн. тер. г. муниципальный округ Морские ворота, ул. Межевой Канал, д. 5, литера АХ, помещ. 3-Н, офис 406</strong></div>
           </div>
         </div>
@@ -476,6 +479,6 @@
   </footer>
 
   <script src="vendor/lenis.min.js?v=1"></script>
-  <script src="script.js?v=20260812-v8-20"></script>
+  <script src="script.js?v=20260812-v8-24"></script>
 </body>
 </html>
