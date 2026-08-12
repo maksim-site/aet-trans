@@ -19,8 +19,8 @@
   <script>document.documentElement.classList.add("js", "font-layout-pending");</script>
   <link rel="preload" as="image" href="../assets/images/oversize.jpg" type="image/jpeg" fetchpriority="high">
   <noscript><style>.theme-v7 .site-header{position:absolute!important}</style></noscript>
-  <link rel="stylesheet" href="styles.min.css?v=20260812-v8-14">
-  <link rel="stylesheet" href="v7.css?v=20260812-v8-14">
+  <link rel="stylesheet" href="styles.min.css?v=20260812-v8-20">
+  <link rel="stylesheet" href="v7.css?v=20260812-v8-20">
   <script>
     (() => {
       const root = document.documentElement;
@@ -294,16 +294,41 @@
     <section class="section company-facts" aria-labelledby="company-facts-title">
       <div class="container company-facts-layout">
         <header class="company-facts-heading reveal">
-          <p class="context-line">Компания в цифрах</p>
+          <svg class="company-facts-route" viewBox="0 0 520 360" aria-hidden="true" focusable="false">
+            <path class="company-facts-route-line" pathLength="1" d="M22 286C104 342 176 332 238 286C302 238 358 252 407 298C434 323 462 317 496 278"></path>
+            <circle class="company-facts-route-node company-facts-route-node--start" cx="22" cy="286" r="6"></circle>
+            <circle class="company-facts-route-node" cx="238" cy="286" r="5"></circle>
+            <circle class="company-facts-route-node company-facts-route-node--finish" cx="496" cy="278" r="7"></circle>
+            <g class="company-facts-route-truck">
+              <g class="company-facts-route-truck-body" transform="translate(0 -14)">
+                <path d="M-19-8h23v15h-23zM4-4h9l7 7v4H4z"></path>
+                <path class="company-facts-route-truck-window" d="M7-1h5l4 4H7z"></path>
+                <circle cx="-12" cy="9" r="4"></circle>
+                <circle cx="13" cy="9" r="4"></circle>
+              </g>
+              <animateMotion class="company-facts-route-truck-motion" begin="indefinite" dur="22s" repeatCount="1" fill="freeze" rotate="auto" calcMode="linear" keyPoints="0.07;0.07;0.91" keyTimes="0;0.04;1" path="M22 286C104 342 176 332 238 286C302 238 358 252 407 298C434 323 462 317 496 278"></animateMotion>
+            </g>
+          </svg>
+          <p class="context-line">Коротко о компании</p>
           <h2 id="company-facts-title">Опыт, подтверждённый работой</h2>
-          <p>Работаем с 2004 года и организуем перевозки по России и международным направлениям.</p>
         </header>
         <div class="company-facts-grid">
           <article class="company-fact reveal"><strong>С 2004 года</strong><span>работаем в транспортной логистике</span></article>
-          <article class="company-fact reveal"><strong>20+ лет</strong><span>организуем перевозки для бизнеса</span></article>
+          <article class="company-fact reveal"><strong>Проектная логистика</strong><span>организуем перевозки сложных и крупногабаритных грузов</span></article>
           <article class="company-fact reveal"><strong>Авто · ж/д · море · авиа</strong><span>подбираем транспорт под задачу и маршрут</span></article>
           <article class="company-fact reveal"><strong>Россия · СНГ · Европа · Азия</strong><span>ведём внутренние и международные направления</span></article>
         </div>
+        <a class="registry-proof reveal" href="goslog/" aria-label="Открыть макет страницы выписки из реестра экспедиторов ГосЛог">
+          <span class="registry-proof-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" focusable="false"><path d="M12 6h17l7 7v29H12z"></path><path d="M29 6v8h7M18 20h12M18 26h12"></path><path class="registry-proof-check" d="m18 35 3 3 7-8"></path></svg>
+          </span>
+          <span class="registry-proof-copy">
+            <small>Документы и реестры</small>
+            <strong>Выписка из реестра экспедиторов ГосЛог</strong>
+            <span>Демонстрационный макет — документ будет добавлен после согласования.</span>
+          </span>
+          <span class="registry-proof-action">Открыть документ <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"></path></svg></span>
+        </a>
       </div>
     </section>
 
@@ -451,6 +476,6 @@
   </footer>
 
   <script src="vendor/lenis.min.js?v=1"></script>
-  <script src="script.js?v=20260812-v8-14"></script>
+  <script src="script.js?v=20260812-v8-20"></script>
 </body>
 </html>

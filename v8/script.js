@@ -566,6 +566,62 @@ if (reduceMotion || !("IntersectionObserver" in window)) {
   revealItems.forEach((item) => revealObserver.observe(item));
 }
 
+const companyFactsRoute = document.querySelector(".company-facts-route");
+
+if (companyFactsRoute) {
+  const companyFactsTruck = companyFactsRoute.querySelector(".company-facts-route-truck");
+  const companyFactsTruckMotion = companyFactsRoute.querySelector(".company-facts-route-truck-motion");
+  const supportsSvgMotion =
+    typeof companyFactsRoute.pauseAnimations === "function" &&
+    typeof companyFactsRoute.unpauseAnimations === "function" &&
+    typeof companyFactsTruckMotion?.beginElement === "function";
+  let routeIsVisible = false;
+  let routeMotionStarted = false;
+
+  if (supportsSvgMotion) {
+    companyFactsRoute.classList.add("is-motion-ready");
+    companyFactsRoute.pauseAnimations();
+  }
+
+  const syncCompanyRouteMotion = () => {
+    const shouldRun = routeIsVisible && !document.hidden;
+
+    companyFactsRoute.classList.toggle("is-route-active", shouldRun);
+
+    if (!supportsSvgMotion) return;
+
+    if (!shouldRun) {
+      companyFactsRoute.pauseAnimations();
+      return;
+    }
+
+    companyFactsRoute.unpauseAnimations();
+
+    if (!routeMotionStarted) {
+      companyFactsTruck?.removeAttribute("transform");
+      companyFactsTruckMotion.beginElement();
+      routeMotionStarted = true;
+    }
+  };
+
+  if ("IntersectionObserver" in window) {
+    const companyRouteObserver = new IntersectionObserver(
+      ([entry]) => {
+        routeIsVisible = entry.isIntersecting;
+        syncCompanyRouteMotion();
+      },
+      { threshold: 0.1 }
+    );
+
+    companyRouteObserver.observe(companyFactsRoute);
+  } else {
+    routeIsVisible = true;
+    syncCompanyRouteMotion();
+  }
+
+  document.addEventListener("visibilitychange", syncCompanyRouteMotion);
+}
+
 const requestForm = document.getElementById("requestForm");
 const requestStatus = document.getElementById("requestStatus");
 
