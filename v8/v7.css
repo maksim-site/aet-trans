@@ -1324,12 +1324,84 @@ html.js body.theme-v7 .reveal:not(.is-visible),
 .theme-v7 .company-facts-layout {
   display: grid;
   grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.28fr);
-  gap: clamp(48px, 7vw, 112px);
+  column-gap: clamp(48px, 7vw, 112px);
+  row-gap: clamp(36px, 4vw, 56px);
   align-items: start;
 }
 
 .theme-v7 .company-facts-heading {
+  position: relative;
+  isolation: isolate;
   max-width: 520px;
+  padding-top: clamp(32px, 3.5vw, 52px);
+}
+
+.theme-v7 .company-facts-route {
+  position: absolute;
+  z-index: -1;
+  top: 46px;
+  left: -24px;
+  width: min(520px, calc(100% + 42px));
+  height: auto;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.theme-v7 .company-facts-route-line {
+  fill: none;
+  stroke: rgba(15, 112, 158, 0.2);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 0.025 0.025;
+}
+
+.theme-v7 .company-facts-route-node {
+  fill: var(--v7-paper);
+  stroke: rgba(15, 112, 158, 0.32);
+  stroke-width: 2;
+}
+
+.theme-v7 .company-facts-route-node--start,
+.theme-v7 .company-facts-route-node--finish {
+  stroke: rgba(115, 177, 44, 0.58);
+}
+
+.theme-v7 .company-facts-route-truck-body > path:first-child {
+  fill: rgba(115, 177, 44, 0.5);
+  stroke: rgba(77, 139, 35, 0.48);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.theme-v7 .company-facts-route-truck-window {
+  fill: rgba(247, 249, 250, 0.9);
+}
+
+.theme-v7 .company-facts-route-truck circle {
+  fill: rgba(15, 112, 158, 0.62);
+  stroke: var(--v7-paper);
+  stroke-width: 1.5;
+}
+
+.theme-v7 .company-facts-route-truck {
+  transform: translate(432px, 309px) rotate(-12deg);
+  transform-origin: 0 0;
+}
+
+.theme-v7 .company-facts-route.is-motion-ready .company-facts-route-truck {
+  transform: none;
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+
+.theme-v7 .company-facts-route.is-motion-ready.is-route-active .company-facts-route-truck {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-v7 .company-facts-route.is-motion-ready .company-facts-route-truck {
+    transition-duration: 1.2s;
+  }
 }
 
 .theme-v7 .company-facts-heading .context-line {
@@ -1359,6 +1431,96 @@ html.js body.theme-v7 .reveal:not(.is-visible),
   border-top: 1px solid #bdd2dc;
   border-left: 1px solid #bdd2dc;
   background: rgba(255, 255, 255, 0.56);
+}
+
+.theme-v7 .registry-proof {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) auto;
+  gap: 22px;
+  align-items: center;
+  padding: 22px 24px;
+  border-top: 1px solid #bdd2dc;
+  border-bottom: 1px solid #bdd2dc;
+  background: rgba(255, 255, 255, 0.58);
+  color: var(--v7-ink);
+  text-decoration: none;
+  transition: background-color 200ms ease, border-color 200ms ease;
+}
+
+.theme-v7 .registry-proof-icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border: 1px solid rgba(15, 112, 158, 0.24);
+  color: var(--v7-blue);
+}
+
+.theme-v7 .registry-proof-icon svg {
+  width: 34px;
+  height: 34px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-v7 .registry-proof-icon .registry-proof-check {
+  stroke: var(--v7-green);
+  stroke-width: 2.3;
+}
+
+.theme-v7 .registry-proof-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.theme-v7 .registry-proof-copy small {
+  color: #0f709e;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.theme-v7 .registry-proof-copy strong {
+  font-size: clamp(19px, 1.7vw, 25px);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+}
+
+.theme-v7 .registry-proof-copy > span {
+  color: var(--v7-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.theme-v7 .registry-proof-action {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  color: #0f709e;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.theme-v7 .registry-proof-action svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 180ms ease;
+}
+
+.theme-v7 .registry-proof:focus-visible {
+  outline: 3px solid rgba(23, 127, 183, 0.3);
+  outline-offset: 4px;
 }
 
 .theme-v7 .company-fact {
@@ -1689,12 +1851,33 @@ html.js body.theme-v7 .reveal:not(.is-visible),
   .theme-v7 .trusted-logo:hover img {
     opacity: 0.86;
   }
+
+  .theme-v7 .registry-proof:hover {
+    border-color: #a9c5d2;
+    background: rgba(255, 255, 255, 0.82);
+  }
+
+  .theme-v7 .registry-proof:hover .registry-proof-action svg {
+    transform: translateX(4px);
+  }
 }
 
 @media (max-width: 980px) {
   .theme-v7 .company-facts-layout {
     grid-template-columns: 1fr;
     gap: 38px;
+  }
+
+  .theme-v7 .company-facts-heading {
+    padding-top: 0;
+  }
+
+  .theme-v7 .company-facts-route {
+    display: none;
+  }
+
+  .theme-v7 .registry-proof {
+    grid-column: auto;
   }
 }
 
@@ -1706,6 +1889,10 @@ html.js body.theme-v7 .reveal:not(.is-visible),
 
   .theme-v7 .company-facts-heading .context-line {
     display: flex;
+  }
+
+  .theme-v7 .company-facts-route {
+    display: none;
   }
 
   .theme-v7 .company-facts {
@@ -1724,6 +1911,37 @@ html.js body.theme-v7 .reveal:not(.is-visible),
     min-height: 142px;
     gap: 18px;
     padding: 22px;
+  }
+
+  .theme-v7 .registry-proof {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 16px;
+    padding: 20px 0;
+    background: transparent;
+  }
+
+  .theme-v7 .registry-proof-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .theme-v7 .registry-proof-icon svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .theme-v7 .registry-proof-copy strong {
+    font-size: 19px;
+  }
+
+  .theme-v7 .registry-proof-copy > span {
+    font-size: 13px;
+  }
+
+  .theme-v7 .registry-proof-action {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 2px;
   }
 
   .theme-v7 .company-fact strong {
@@ -1807,5 +2025,277 @@ html.js body.theme-v7 .reveal:not(.is-visible),
     stroke-dasharray: 1 1;
     stroke-dashoffset: -1;
     opacity: 0;
+  }
+}
+
+/* v8 GosLog registry proof concept. */
+.theme-v7.registry-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--v7-paper);
+  color: var(--v7-ink);
+}
+
+.theme-v7.registry-page .registry-main {
+  flex: 1;
+}
+
+.theme-v7.registry-page .site-header,
+.theme-v7.registry-page .site-header:not(.is-scrolled) {
+  border-bottom: 1px solid rgba(8, 38, 62, 0.11);
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 8px 28px rgba(8, 31, 51, 0.07);
+}
+
+.theme-v7.registry-page .site-header .brand-color {
+  display: block;
+}
+
+.theme-v7.registry-page .site-header .brand-light {
+  display: none;
+}
+
+.theme-v7.registry-page .site-header .desktop-nav a,
+.theme-v7.registry-page .site-header .header-phone {
+  color: #21303d;
+}
+
+.theme-v7.registry-page .site-header .header-email {
+  color: #526271;
+}
+
+.theme-v7.registry-page .site-header .header-language-switch {
+  border-color: #c9d8e1;
+  background: transparent;
+  color: #116f9f;
+}
+
+.theme-v7.registry-page .site-header .menu-toggle {
+  border-color: #d4dee5;
+  background: #f4f7f9;
+}
+
+.theme-v7.registry-page .site-header .menu-toggle span {
+  background: var(--v7-navy);
+}
+
+.theme-v7.registry-page .registry-hero {
+  min-height: 720px;
+  padding: clamp(146px, 14vw, 206px) 0 clamp(86px, 9vw, 132px);
+  border-bottom: 1px solid var(--v7-line);
+  background:
+    linear-gradient(rgba(49, 113, 145, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(49, 113, 145, 0.05) 1px, transparent 1px),
+    var(--v7-paper);
+  background-size: 56px 56px, 56px 56px, auto;
+}
+
+.theme-v7 .registry-back {
+  display: inline-flex;
+  gap: 9px;
+  align-items: center;
+  margin-bottom: clamp(42px, 6vw, 72px);
+  color: #0f709e;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.theme-v7 .registry-back svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 180ms ease;
+}
+
+.theme-v7 .registry-back:focus-visible {
+  outline: 3px solid rgba(23, 127, 183, 0.3);
+  outline-offset: 5px;
+}
+
+.theme-v7 .registry-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(420px, 0.72fr);
+  gap: clamp(54px, 9vw, 132px);
+  align-items: center;
+}
+
+.theme-v7 .registry-hero-copy {
+  max-width: 690px;
+}
+
+.theme-v7 .registry-draft-label {
+  display: inline-flex;
+  padding: 8px 11px;
+  border: 1px solid rgba(15, 112, 158, 0.24);
+  color: #0f709e;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.theme-v7 .registry-hero-copy h1 {
+  max-width: 660px;
+  margin: 24px 0;
+  color: var(--v7-ink);
+  font-size: clamp(48px, 5.7vw, 82px);
+  line-height: 0.99;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.theme-v7 .registry-hero-copy > p {
+  max-width: 610px;
+  margin: 0;
+  color: var(--v7-muted);
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.65;
+}
+
+.theme-v7 .registry-document {
+  position: relative;
+  padding: clamp(24px, 3vw, 42px);
+  border: 1px solid #bdd2dc;
+  background: rgba(255, 255, 255, 0.46);
+}
+
+.theme-v7 .registry-document::before,
+.theme-v7 .registry-document::after {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  content: "";
+  pointer-events: none;
+}
+
+.theme-v7 .registry-document::before {
+  top: -1px;
+  left: -1px;
+  border-top: 3px solid var(--v7-green);
+  border-left: 3px solid var(--v7-green);
+}
+
+.theme-v7 .registry-document::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 3px solid var(--v7-blue);
+  border-bottom: 3px solid var(--v7-blue);
+}
+
+.theme-v7 .registry-document-sheet {
+  min-height: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 34px;
+  border: 1px dashed #aac4d1;
+  background: rgba(255, 255, 255, 0.72);
+  text-align: center;
+}
+
+.theme-v7 .registry-document-emblem {
+  display: grid;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 28px;
+  place-items: center;
+  border: 1px solid rgba(15, 112, 158, 0.25);
+  color: var(--v7-blue);
+}
+
+.theme-v7 .registry-document-emblem svg {
+  width: 46px;
+  height: 46px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-v7 .registry-document-emblem .registry-document-check {
+  stroke: var(--v7-green);
+  stroke-width: 2.3;
+}
+
+.theme-v7 .registry-document-sheet strong {
+  max-width: 330px;
+  color: var(--v7-ink);
+  font-size: clamp(23px, 2.2vw, 31px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.theme-v7 .registry-document-sheet p {
+  max-width: 380px;
+  margin: 16px 0 28px;
+  color: var(--v7-muted);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.theme-v7 .registry-document-sheet > span {
+  color: #0f709e;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .theme-v7 .registry-back:hover svg {
+    transform: translateX(-4px);
+  }
+}
+
+@media (max-width: 980px) {
+  .theme-v7 .registry-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .theme-v7 .registry-document {
+    max-width: 680px;
+  }
+}
+
+@media (max-width: 720px) {
+  .theme-v7.registry-page .registry-hero {
+    min-height: 0;
+    padding: 112px 0 72px;
+  }
+
+  .theme-v7 .registry-back {
+    margin-bottom: 42px;
+  }
+
+  .theme-v7 .registry-hero-grid {
+    gap: 46px;
+  }
+
+  .theme-v7 .registry-hero-copy h1 {
+    margin: 20px 0;
+    font-size: clamp(40px, 11.2vw, 52px);
+    line-height: 1.02;
+  }
+
+  .theme-v7 .registry-hero-copy > p {
+    font-size: 16px;
+    line-height: 1.58;
+  }
+
+  .theme-v7 .registry-document {
+    padding: 16px;
+  }
+
+  .theme-v7 .registry-document-sheet {
+    min-height: 360px;
+    padding: 42px 22px;
   }
 }
