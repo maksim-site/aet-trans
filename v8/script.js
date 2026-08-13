@@ -787,25 +787,151 @@ if (requestForm && !requestForm.classList.contains("simple-request-form")) {
 
 if (requestForm?.classList.contains("simple-request-form")) {
   const isEnglish = document.documentElement.lang.toLowerCase().startsWith("en");
-  const statusCopy = isEnglish
-    ? "This is a test version. Your request has not been sent; live delivery and anti-spam protection will be connected after approval."
-    : "Это тестовая версия. Заявка не отправлена — рабочую отправку и антиспам подключим после согласования.";
+  const copy = isEnglish
+    ? {
+        invalid: "Please check the highlighted fields.",
+        phoneRu: "Enter the 10 digits after +7.",
+        phoneIntl: "Enter the phone number after the country code.",
+        preview: "The form is complete. This is a preview: no data has been sent; live delivery will be connected after approval."
+      }
+    : {
+        invalid: "Проверьте выделенные поля.",
+        phoneRu: "Введите 10 цифр номера после +7.",
+        phoneIntl: "Введите номер после кода страны.",
+        preview: "Форма заполнена. Это предпросмотр: данные не отправлены; рабочую отправку подключим после согласования."
+      };
+  const phoneControl = requestForm.querySelector("[data-phone-control]");
+  const phoneWrap = phoneControl?.querySelector(".simple-phone-input-wrap");
+  const phoneField = phoneControl?.querySelector("[data-phone-local]");
+  const phoneFull = phoneControl?.querySelector("[data-phone-full]");
+  const phoneToggle = phoneControl?.querySelector("[data-phone-toggle]");
+  const phonePrefix = phoneControl?.querySelector("[data-phone-prefix]");
+  const phoneFlag = phoneControl?.querySelector("[data-phone-flag]");
+  const phoneMenu = phoneControl?.querySelector("[data-phone-menu]");
+  const phoneError = phoneControl?.querySelector("[data-phone-error]");
+  const phoneOptions = phoneMenu ? [...phoneMenu.querySelectorAll("button[data-code]")] : [];
+  let phoneCode = "+7";
+  let phoneFormat = "ru";
+
+  const phoneDigits = (value) => String(value || "").replace(/\D/g, "").slice(0, 15);
+  const formatRuPhone = (value) => {
+    let digits = phoneDigits(value);
+    if (digits.length > 10 && (digits.startsWith("7") || digits.startsWith("8"))) digits = digits.slice(1);
+    digits = digits.slice(0, 10);
+    if (!digits) return "";
+    if (digits.length <= 3) return `(${digits}`;
+    let formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}`;
+    if (digits.length > 6) formatted += `-${digits.slice(6, 8)}`;
+    if (digits.length > 8) formatted += `-${digits.slice(8, 10)}`;
+    return formatted;
+  };
+  const formatInternationalPhone = (value) => {
+    let digits = phoneDigits(value).slice(0, 12);
+    const groups = [];
+    while (digits.length) {
+      const groupSize = digits.length > 4 ? 3 : digits.length;
+      groups.push(digits.slice(0, groupSize));
+      digits = digits.slice(groupSize);
+    }
+    return groups.join(" ");
+  };
+  const updatePhone = () => {
+    if (!phoneField || !phoneFull) return;
+    phoneField.value = phoneFormat === "ru" ? formatRuPhone(phoneField.value) : formatInternationalPhone(phoneField.value);
+    const digits = phoneDigits(phoneField.value);
+    phoneFull.value = digits ? `${phoneCode} ${digits}` : phoneCode;
+  };
+  const closePhoneMenu = () => {
+    phoneMenu?.classList.remove("is-open");
+    phoneToggle?.setAttribute("aria-expanded", "false");
+  };
+  const clearPhoneError = () => {
+    phoneField?.setCustomValidity("");
+    phoneWrap?.classList.remove("is-invalid");
+    if (phoneError) phoneError.textContent = "";
+  };
+  const validatePhone = () => {
+    if (!phoneField) return true;
+    updatePhone();
+    const digitCount = phoneDigits(phoneField.value).length;
+    const isValid = phoneFormat === "ru" ? digitCount === 10 : digitCount >= 5 && digitCount <= 12;
+    clearPhoneError();
+    if (!isValid) {
+      const message = phoneFormat === "ru" ? copy.phoneRu : copy.phoneIntl;
+      phoneField.setCustomValidity(message);
+      phoneWrap?.classList.add("is-invalid");
+      if (phoneError) phoneError.textContent = message;
+    }
+    return isValid;
+  };
+  const selectPhoneCode = (option, focusField = true) => {
+    phoneCode = option.dataset.code || "+7";
+    phoneFormat = option.dataset.format || "intl";
+    if (phonePrefix) phonePrefix.textContent = phoneCode;
+    const selectedFlag = option.querySelector(".simple-flag");
+    if (phoneFlag && selectedFlag) phoneFlag.className = selectedFlag.className;
+    phoneOptions.forEach((button) => {
+      const isSelected = button === option;
+      button.classList.toggle("is-active", isSelected);
+      button.setAttribute("aria-pressed", String(isSelected));
+    });
+    if (phoneField) {
+      phoneField.value = "";
+      phoneField.placeholder = option.dataset.placeholder || "000 000 0000";
+    }
+    clearPhoneError();
+    updatePhone();
+    closePhoneMenu();
+    if (focusField) phoneField?.focus();
+  };
+
+  phoneToggle?.addEventListener("click", () => {
+    const willOpen = !phoneMenu?.classList.contains("is-open");
+    phoneMenu?.classList.toggle("is-open", willOpen);
+    phoneToggle.setAttribute("aria-expanded", String(willOpen));
+  });
+  phoneOptions.forEach((option) => option.addEventListener("click", () => selectPhoneCode(option)));
+  phoneField?.addEventListener("input", () => {
+    updatePhone();
+    clearPhoneError();
+  });
+  phoneField?.addEventListener("blur", () => {
+    if (!phoneDigits(phoneField.value).length) phoneField.value = "";
+    updatePhone();
+  });
+  document.addEventListener("click", (event) => {
+    if (phoneControl && !phoneControl.contains(event.target)) closePhoneMenu();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || !phoneMenu?.classList.contains("is-open")) return;
+    closePhoneMenu();
+    phoneToggle?.focus();
+  });
 
   requestForm.addEventListener("input", () => {
-    if (!requestStatus) return;
-    requestStatus.textContent = "";
-    requestStatus.classList.remove("is-test-message");
+    if (requestStatus) {
+      requestStatus.textContent = "";
+      requestStatus.classList.remove("is-error", "is-test-message");
+    }
   });
 
   requestForm.addEventListener("submit", (event) => {
     event.preventDefault();
+    requestForm.classList.add("was-validated");
+    validatePhone();
     if (!requestForm.checkValidity()) {
+      if (requestStatus) {
+        requestStatus.textContent = copy.invalid;
+        requestStatus.classList.add("is-error");
+        requestStatus.classList.remove("is-test-message");
+      }
       requestForm.reportValidity();
       return;
     }
     if (requestStatus) {
-      requestStatus.textContent = statusCopy;
+      requestStatus.textContent = copy.preview;
       requestStatus.classList.add("is-test-message");
+      requestStatus.classList.remove("is-error");
     }
   });
 }

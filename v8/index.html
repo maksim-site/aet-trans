@@ -20,7 +20,7 @@
   <link rel="preload" as="image" href="../assets/images/oversize.jpg" type="image/jpeg" fetchpriority="high">
   <noscript><style>.theme-v7 .site-header{position:absolute!important}</style></noscript>
   <link rel="stylesheet" href="styles.min.css?v=20260812-v8-24">
-  <link rel="stylesheet" href="v7.css?v=20260812-v8-24">
+  <link rel="stylesheet" href="v7.css?v=20260813-v8-25">
   <script>
     (() => {
       const root = document.documentElement;
@@ -424,22 +424,54 @@
         <form class="request-form simple-request-form reveal" id="requestForm">
           <label>
             <span>Как к вам обращаться</span>
-            <input type="text" name="name" autocomplete="name" required>
+            <input type="text" name="name" autocomplete="name" maxlength="80" required>
           </label>
-          <label>
-            <span>Телефон или почта</span>
-            <input type="text" name="contact" autocomplete="tel" required>
+          <div class="simple-request-field simple-phone-control" data-phone-control>
+            <span id="requestPhoneLabel">Телефон</span>
+            <div class="simple-phone-input-wrap">
+              <button class="simple-phone-prefix" type="button" data-phone-toggle aria-expanded="false" aria-controls="requestPhoneMenu" aria-label="Выбрать код страны">
+                <span class="simple-flag simple-flag-ru" data-phone-flag></span>
+                <span data-phone-prefix>+7</span>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+              </button>
+              <input id="requestPhone" name="phoneVisible" type="tel" inputmode="numeric" autocomplete="tel" maxlength="18" placeholder="(911) 000-00-00" data-phone-local aria-labelledby="requestPhoneLabel" aria-describedby="requestPhoneError" required>
+              <input name="phone" type="hidden" value="+7" data-phone-full>
+              <div class="simple-phone-menu" id="requestPhoneMenu" data-phone-menu aria-label="Код страны">
+                <button type="button" class="is-active" data-code="+7" data-format="ru" data-placeholder="(911) 000-00-00" aria-pressed="true"><span class="simple-phone-choice"><span class="simple-flag simple-flag-ru"></span><span>Россия</span></span><span>+7</span></button>
+                <button type="button" data-code="+375" data-placeholder="29 000 00 00" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-by"></span><span>Беларусь</span></span><span>+375</span></button>
+                <button type="button" data-code="+7" data-placeholder="701 000 0000" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-kz"></span><span>Казахстан</span></span><span>+7</span></button>
+                <button type="button" data-code="+374" data-placeholder="77 000 000" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-am"></span><span>Армения</span></span><span>+374</span></button>
+                <button type="button" data-code="+995" data-placeholder="555 000 000" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-ge"></span><span>Грузия</span></span><span>+995</span></button>
+                <button type="button" data-code="+994" data-placeholder="50 000 00 00" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-az"></span><span>Азербайджан</span></span><span>+994</span></button>
+                <button type="button" data-code="+90" data-placeholder="532 000 00 00" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-tr"></span><span>Турция</span></span><span>+90</span></button>
+                <button type="button" data-code="+39" data-placeholder="333 000 0000" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-it"></span><span>Италия</span></span><span>+39</span></button>
+                <button type="button" data-code="+33" data-placeholder="6 00 00 00 00" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-fr"></span><span>Франция</span></span><span>+33</span></button>
+                <button type="button" data-code="+49" data-placeholder="170 0000000" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-de"></span><span>Германия</span></span><span>+49</span></button>
+                <button type="button" data-code="+34" data-placeholder="600 000 000" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-es"></span><span>Испания</span></span><span>+34</span></button>
+                <button type="button" data-code="+351" data-placeholder="912 000 000" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-pt"></span><span>Португалия</span></span><span>+351</span></button>
+                <button type="button" data-code="+43" data-placeholder="660 0000000" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-at"></span><span>Австрия</span></span><span>+43</span></button>
+                <button type="button" data-code="+41" data-placeholder="79 000 00 00" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-ch"></span><span>Швейцария</span></span><span>+41</span></button>
+                <button type="button" data-code="+1" data-placeholder="212 000 0000" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-us"></span><span>США / Канада</span></span><span>+1</span></button>
+                <button type="button" data-code="+86" data-placeholder="138 0000 0000" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-cn"></span><span>Китай</span></span><span>+86</span></button>
+                <button type="button" data-code="+971" data-placeholder="50 000 0000" aria-pressed="false"><span class="simple-phone-choice"><span class="simple-flag simple-flag-ae"></span><span>ОАЭ</span></span><span>+971</span></button>
+              </div>
+            </div>
+            <small class="simple-field-error" id="requestPhoneError" data-phone-error></small>
+          </div>
+          <label class="simple-request-email">
+            <span>Электронная почта <small>необязательно</small></span>
+            <input type="email" name="email" autocomplete="email" inputmode="email" maxlength="120" placeholder="name@company.ru">
           </label>
           <label class="simple-request-message">
             <span>Задача</span>
-            <textarea name="message" rows="4" placeholder="Груз, маршрут, сроки"></textarea>
+            <textarea name="message" rows="4" maxlength="2200" placeholder="Груз, маршрут, сроки" required></textarea>
           </label>
           <label class="simple-request-consent">
             <input type="checkbox" name="consent" required>
             <span>Я согласен с <a href="privacy/">политикой обработки данных</a></span>
           </label>
           <button class="button button-primary" type="submit">Отправить заявку</button>
-          <p class="request-note">Тестовая версия формы — данные никуда не отправляются.</p>
+          <p class="request-note">Предпросмотр формы — отправку подключим отдельно после согласования.</p>
           <p class="form-status" id="requestStatus" role="status" aria-live="polite"></p>
         </form>
       </div>
@@ -479,6 +511,6 @@
   </footer>
 
   <script src="vendor/lenis.min.js?v=1"></script>
-  <script src="script.js?v=20260812-v8-24"></script>
+  <script src="script.js?v=20260813-v8-25"></script>
 </body>
 </html>
