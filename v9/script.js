@@ -44,6 +44,23 @@ if (reduceMotion) {
 const currentYear = document.getElementById("currentYear");
 if (currentYear) currentYear.textContent = new Date().getFullYear();
 
+const registryBack = document.querySelector("[data-registry-back]");
+
+if (registryBack) {
+  registryBack.addEventListener("click", (event) => {
+    if (!document.referrer || window.history.length <= 1) return;
+
+    try {
+      const previousUrl = new URL(document.referrer);
+      if (previousUrl.origin !== window.location.origin || previousUrl.href === window.location.href) return;
+      event.preventDefault();
+      window.history.back();
+    } catch {
+      // The link's href remains a safe fallback when the referrer is unavailable.
+    }
+  });
+}
+
 const previewToken = new URLSearchParams(window.location.search).get("aet-preview");
 
 function appendPreviewBody(container, value) {
@@ -243,9 +260,9 @@ if (newsArchive) {
     if (!media || media.classList.contains("news-archive-placeholder")) return;
 
     const placeholderYear = document.createElement("span");
-    placeholderYear.textContent = item?.dataset.year || "Архив";
+    placeholderYear.textContent = item?.dataset.year || "АЕТ";
     const placeholderText = document.createElement("small");
-    placeholderText.textContent = "Фото в архиве отсутствует";
+    placeholderText.textContent = "Новости компании";
 
     media.classList.add("news-archive-placeholder");
     media.setAttribute("aria-label", `Открыть публикацию: ${image.alt || "новость компании"}`);
