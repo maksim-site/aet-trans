@@ -911,3 +911,96 @@ if (requestForm?.classList.contains("simple-request-form")) {
     }
   });
 }
+
+const registryViewer = document.querySelector("[data-registry-viewer]");
+
+if (registryViewer) {
+  const registryViewerOpeners = [...document.querySelectorAll("[data-registry-viewer-open]")];
+  const registryViewerClose = registryViewer.querySelector("[data-registry-viewer-close]");
+  const registryViewerPages = registryViewer.querySelector("[data-registry-viewer-pages]");
+  const registryViewerZoomOut = registryViewer.querySelector("[data-registry-zoom-out]");
+  const registryViewerZoomIn = registryViewer.querySelector("[data-registry-zoom-in]");
+  const registryViewerZoomValue = registryViewer.querySelector("[data-registry-zoom-value]");
+  const registryViewerZoomSteps = [0.75, 1, 1.25, 1.5];
+  let registryViewerTrigger = null;
+  let registryViewerKeyboardMode = false;
+  let registryViewerZoomIndex = 1;
+
+  const unlockRegistryViewer = () => {
+    document.body.classList.remove("registry-viewer-open");
+  };
+
+  const finishRegistryViewerClose = () => {
+    unlockRegistryViewer();
+    if (registryViewerKeyboardMode) registryViewerTrigger?.focus({ preventScroll: true });
+    else document.activeElement?.blur?.();
+    registryViewerKeyboardMode = false;
+  };
+
+  const closeRegistryViewer = (restoreKeyboardFocus = registryViewerKeyboardMode) => {
+    registryViewerKeyboardMode = restoreKeyboardFocus;
+    if (typeof registryViewer.close === "function" && registryViewer.open) registryViewer.close();
+    else {
+      registryViewer.removeAttribute("open");
+      finishRegistryViewerClose();
+    }
+  };
+
+  const updateRegistryViewerZoom = (nextIndex, preservePosition = true) => {
+    const previousWidth = registryViewerPages.scrollWidth;
+    const previousHeight = registryViewerPages.scrollHeight;
+    const centerX = registryViewerPages.scrollLeft + registryViewerPages.clientWidth / 2;
+    const centerY = registryViewerPages.scrollTop + registryViewerPages.clientHeight / 2;
+    const relativeX = previousWidth ? centerX / previousWidth : 0.5;
+    const relativeY = previousHeight ? centerY / previousHeight : 0;
+    const padding = getComputedStyle(registryViewerPages);
+    const availableWidth = registryViewerPages.clientWidth - parseFloat(padding.paddingLeft) - parseFloat(padding.paddingRight);
+
+    registryViewerZoomIndex = Math.max(0, Math.min(nextIndex, registryViewerZoomSteps.length - 1));
+    const zoom = registryViewerZoomSteps[registryViewerZoomIndex];
+    const baseWidth = Math.min(920, Math.max(280, availableWidth));
+    registryViewer.style.setProperty("--registry-page-width", `${Math.round(baseWidth * zoom)}px`);
+    if (registryViewerZoomValue) registryViewerZoomValue.textContent = `${Math.round(zoom * 100)}%`;
+    if (registryViewerZoomOut) registryViewerZoomOut.disabled = registryViewerZoomIndex === 0;
+    if (registryViewerZoomIn) registryViewerZoomIn.disabled = registryViewerZoomIndex === registryViewerZoomSteps.length - 1;
+
+    requestAnimationFrame(() => {
+      if (!preservePosition) {
+        registryViewerPages.scrollTo({ top: 0, left: 0 });
+        return;
+      }
+      registryViewerPages.scrollTo({
+        left: Math.max(0, relativeX * registryViewerPages.scrollWidth - registryViewerPages.clientWidth / 2),
+        top: Math.max(0, relativeY * registryViewerPages.scrollHeight - registryViewerPages.clientHeight / 2)
+      });
+    });
+  };
+
+  const openRegistryViewer = (trigger, keyboardMode) => {
+    registryViewerTrigger = trigger;
+    registryViewerKeyboardMode = keyboardMode;
+    registryViewerPages.scrollTop = 0;
+    if (typeof registryViewer.showModal === "function") registryViewer.showModal();
+    else registryViewer.setAttribute("open", "");
+    document.body.classList.add("registry-viewer-open");
+    updateRegistryViewerZoom(1, false);
+    requestAnimationFrame(() => {
+      if (registryViewerKeyboardMode) registryViewerClose?.focus({ preventScroll: true });
+      else registryViewerClose?.blur();
+    });
+  };
+
+  registryViewerOpeners.forEach((opener) => {
+    opener.addEventListener("click", (event) => openRegistryViewer(opener, event.detail === 0));
+  });
+  registryViewerClose?.addEventListener("click", (event) => {
+    closeRegistryViewer(event.detail === 0 && registryViewerKeyboardMode);
+  });
+  registryViewerZoomOut?.addEventListener("click", () => updateRegistryViewerZoom(registryViewerZoomIndex - 1));
+  registryViewerZoomIn?.addEventListener("click", () => updateRegistryViewerZoom(registryViewerZoomIndex + 1));
+  registryViewer.addEventListener("click", (event) => {
+    if (event.target === registryViewer) closeRegistryViewer(false);
+  });
+  registryViewer.addEventListener("close", finishRegistryViewerClose);
+  registryViewer.addEventListener("cancel", unlockRegistryViewer);
+}
