@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>АЕТ Транс | международная и проектная логистика</title>
+  <meta name="description" content="АЕТ Транс организует международные, проектные и негабаритные перевозки. Маршрут, документы, таможня и контроль груза в одной команде.">
+  <meta name="theme-color" content="#0a2238">
+  <link rel="canonical" href="https://aet-trans.ru/">
+  <link rel="alternate" hreflang="ru" href="https://aet-trans.ru/">
+  <link rel="alternate" hreflang="en" href="https://aet-trans.ru/en/">
+  <link rel="alternate" hreflang="x-default" href="https://aet-trans.ru/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="АЕТ Транс | международная и проектная логистика">
+  <meta property="og:description" content="Международные, проектные и негабаритные перевозки для бизнеса.">
+  <meta property="og:url" content="https://aet-trans.ru/">
+  <meta property="og:image" content="https://aet-trans.ru/assets/images/oversize.webp">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <script>document.documentElement.classList.add("js", "font-layout-pending");</script>
+  <link rel="preload" as="image" href="../assets/images/oversize.jpg" type="image/jpeg" fetchpriority="high">
+  <noscript><style>.theme-v7 .site-header{position:absolute!important}</style></noscript>
+  <link rel="stylesheet" href="styles.min.css?v=20260812-v8-24">
+  <link rel="stylesheet" href="v7.css?v=20260814-v9-03">
+  <script>
+    (() => {
+      const root = document.documentElement;
+      let released = false;
+      const release = () => {
+        if (released) return;
+        released = true;
+        requestAnimationFrame(() => root.classList.remove("font-layout-pending"));
+      };
+      const fallback = window.setTimeout(release, 1000);
+
+      if (!document.fonts?.load) {
+        window.clearTimeout(fallback);
+        release();
+        return;
+      }
+
+      Promise.all([
+        document.fonts.load('400 1em "Golos Text"', "Логистика АЕТ Trans"),
+        document.fonts.load('600 1em "Golos Text"', "Сложные грузы"),
+      ]).then(() => {
+        window.clearTimeout(fallback);
+        release();
+      }, release);
+    })();
+  </script>
+</head>
+<body class="theme-blue-v3 theme-v4 theme-v5 theme-v6 theme-v7">
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="./" aria-label="АЕТ Транс, на главную">
+        <img class="brand-color" src="../assets/logo-wordmark.svg" alt="АЕТ Транс">
+        <img class="brand-light" src="../assets/logo-wordmark-light.svg" alt="" aria-hidden="true">
+      </a>
+
+      <nav class="desktop-nav" aria-label="Основная навигация">
+        <a href="#services">Услуги</a>
+        <a href="novosti/">Новости</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="header-contacts">
+          <span class="header-phone">+7 (812) 309-46-25</span>
+          <a class="header-email" href="mailto:info@aet-trans.ru">info@aet-trans.ru</a>
+        </div>
+        <a class="button button-primary header-cta" href="#request">
+          <span class="header-cta-full">Оставить заявку</span>
+          <span class="header-cta-short">Заявка</span>
+        </a>
+        <a class="language-switch header-language-switch" href="en/" lang="en" hreflang="en" aria-label="English version">EN</a>
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <button class="menu-backdrop" id="menuBackdrop" type="button" aria-label="Закрыть меню" aria-hidden="true" tabindex="-1"></button>
+
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Мобильная навигация">
+    <div class="container mobile-menu-inner">
+      <a href="#services">Услуги <span aria-hidden="true">→</span></a>
+      <a href="novosti/">Новости <span aria-hidden="true">→</span></a>
+      <a href="#contacts">Контакты <span aria-hidden="true">→</span></a>
+      <a href="en/" lang="en" hreflang="en">English <span aria-hidden="true">→</span></a>
+      <a class="mobile-menu-request" href="#request">Оставить заявку <span aria-hidden="true">→</span></a>
+      <div class="mobile-menu-contacts">
+        <a href="tel:+78123094625">+7 (812) 309-46-25</a>
+        <a href="mailto:info@aet-trans.ru">info@aet-trans.ru</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <p class="context-line">Транспортно-экспедиторская компания</p>
+          <h1>Логистика для сложных грузов</h1>
+          <p class="hero-lead">Организуем проектные и крупногабаритные перевозки по России и международным направлениям. Берем на себя маршрут, документы и сопровождение груза.</p>
+          <div class="hero-facts" aria-label="Основные сведения о компании">
+            <div><strong>С 2004 года</strong><span>в транспортной логистике</span></div>
+            <div><strong>Россия и другие страны</strong><span>международные маршруты</span></div>
+            <div><strong>Все виды транспорта</strong><span>авто, ж/д, море и авиа</span></div>
+          </div>
+        </div>
+        <div class="hero-media reveal" aria-hidden="true">
+          <img src="../assets/images/oversize.jpg" width="1600" height="1091" fetchpriority="high" decoding="async" alt="">
+        </div>
+      </div>
+    </section>
+
+    <section class="section services" id="services">
+      <div class="container">
+        <header class="section-heading reveal">
+          <h2>Полный цикл перевозки</h2>
+          <p>Подключаемся к отдельному этапу или полностью организуем перевозку от подготовки схемы до выгрузки на площадке.</p>
+        </header>
+
+        <div class="services-layout">
+          <article class="service-main reveal">
+            <span class="service-number">Главное направление</span>
+            <h3>Проектная логистика</h3>
+            <p>Собираем сложную перевозку в единый рабочий план и отвечаем за координацию всех участников.</p>
+            <ul>
+              <li>Разработка и обследование маршрута</li>
+              <li>Подбор транспорта и разработка схем крепления</li>
+              <li>Разрешения, страхование и сопровождение</li>
+            </ul>
+          </article>
+
+          <div class="service-list">
+            <article class="service-item reveal">
+              <span class="service-number">01</span>
+              <h3>Экспедирование грузов</h3>
+              <p>Транспорт, ПРР, упаковка, страхование и контроль документов.</p>
+            </article>
+            <article class="service-item reveal">
+              <span class="service-number">02</span>
+              <h3>Международные перевозки</h3>
+              <p>Прямые и мультимодальные маршруты между Россией, Европой, Азией и странами СНГ.</p>
+            </article>
+            <article class="service-item reveal">
+              <span class="service-number">03</span>
+              <h3>Таможенное оформление</h3>
+              <p>Импорт и экспорт, декларации, платежи, сертификаты.</p>
+            </article>
+            <article class="service-item reveal">
+              <span class="service-number">04</span>
+              <h3>Крупногабаритные грузы</h3>
+              <p>Инженерная подготовка и точная координация тяжеловесных перевозок.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section routes" id="routes">
+      <div class="container routes-grid">
+        <div class="routes-copy reveal">
+          <h2>Перевозки по России и международным направлениям</h2>
+          <p>Выбираем способ доставки с учетом специфики груза, сроков, таможенного оформления и доступной инфраструктуры.</p>
+        </div>
+        <div class="route-explorer reveal" data-route-explorer>
+          <div class="route-field" aria-hidden="true">
+            <svg viewBox="-16 -18 932 578" preserveAspectRatio="xMidYMid meet" focusable="false">
+              <defs>
+                <linearGradient id="route-sea-ru" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#0b2c45"/>
+                  <stop offset="1" stop-color="#061b2d"/>
+                </linearGradient>
+                <pattern id="route-grid-ru" width="52" height="52" patternUnits="userSpaceOnUse">
+                  <path d="M52 0H0V52" fill="none" stroke="#8fcbe4" stroke-opacity=".09" stroke-width="1"/>
+                </pattern>
+              </defs>
+              <rect x="-16" y="-18" width="932" height="578" fill="url(#route-sea-ru)"/>
+              <rect x="-16" y="-18" width="932" height="578" fill="url(#route-grid-ru)"/>
+              <image class="route-map-image" href="assets/graphics/eurasia-base.svg" x="-16" y="-18" width="932" height="578" preserveAspectRatio="xMidYMid meet"/>
+              <g class="route-country-highlights" aria-hidden="true">
+                <image class="route-country-highlight" data-route-highlight="russia" href="assets/graphics/route-highlight-russia.svg" x="-16" y="-18" width="932" height="578"/>
+                <image class="route-country-highlight" data-route-highlight="china" href="assets/graphics/route-highlight-china.svg" x="-16" y="-18" width="932" height="578"/>
+                <image class="route-country-highlight" data-route-highlight="europe" href="assets/graphics/route-highlight-europe.svg" x="-16" y="-18" width="932" height="578"/>
+                <image class="route-country-highlight" data-route-highlight="cis" href="assets/graphics/route-highlight-cis.svg" x="-16" y="-18" width="932" height="578"/>
+                <image class="route-country-highlight" data-route-highlight="turkey" href="assets/graphics/route-highlight-turkey.svg" x="-16" y="-18" width="932" height="578"/>
+                <image class="route-country-highlight" data-route-highlight="other" href="assets/graphics/route-highlight-other.svg" x="-16" y="-18" width="932" height="578"/>
+              </g>
+              <g class="route-corridor" data-route-corridor="russia">
+                <path data-route-path pathLength="1" d="M242.8 263C334 210 457 205 553.3 232.8"/>
+              </g>
+              <g class="route-corridor" data-route-corridor="china">
+                <path data-route-path pathLength="1" d="M242.8 263C348 228 486 283 567.2 381.3"/>
+              </g>
+              <g class="route-corridor" data-route-corridor="europe">
+                <path data-route-path pathLength="1" d="M242.8 263C220 264 192 282 174 307"/>
+              </g>
+              <g class="route-corridor" data-route-corridor="cis">
+                <path data-route-path pathLength="1" d="M242.8 263C292 258 348 289 382 340"/>
+              </g>
+              <g class="route-corridor" data-route-corridor="turkey">
+                <path data-route-path pathLength="1" d="M242.8 263C244 302 251 345 265.2 375.2"/>
+              </g>
+              <g class="route-corridor" data-route-corridor="other">
+                <path data-route-path pathLength="1" d="M242.8 263C300 316 376 408 470 448"/>
+              </g>
+              <g class="route-start-marker" transform="translate(242.8 263)" aria-hidden="true">
+                <circle class="route-start-marker-ring" r="7.5"/>
+                <circle class="route-start-marker-core" r="2.8"/>
+              </g>
+              <g class="route-destination-marker" data-route-destination="russia" transform="translate(553.3 232.8)" aria-hidden="true"><circle class="route-destination-marker-ring" r="8"/><circle class="route-destination-marker-core" r="3"/></g>
+              <g class="route-destination-marker" data-route-destination="china" transform="translate(567.2 381.3)" aria-hidden="true"><circle class="route-destination-marker-ring" r="8"/><circle class="route-destination-marker-core" r="3"/></g>
+              <g class="route-destination-marker" data-route-destination="europe" transform="translate(174 307)" aria-hidden="true"><circle class="route-destination-marker-ring" r="8"/><circle class="route-destination-marker-core" r="3"/></g>
+              <g class="route-destination-marker" data-route-destination="cis" transform="translate(382 340)" aria-hidden="true"><circle class="route-destination-marker-ring" r="8"/><circle class="route-destination-marker-core" r="3"/></g>
+              <g class="route-destination-marker" data-route-destination="turkey" transform="translate(265.2 375.2)" aria-hidden="true"><circle class="route-destination-marker-ring" r="8"/><circle class="route-destination-marker-core" r="3"/></g>
+              <g class="route-destination-marker" data-route-destination="other" transform="translate(470 448)" aria-hidden="true"><circle class="route-destination-marker-ring" r="8"/><circle class="route-destination-marker-core" r="3"/></g>
+              <g class="route-vehicle" data-route-vehicle transform="translate(242.8 263)" aria-hidden="true">
+                <g class="route-vehicle-icon" transform="scale(.052) translate(-285.5 -224)">
+                  <path d="M480 192H365.7L260.8 8.6C257.7 3.3 252 0 245.9 0h-47.7c-10.7 0-18.8 9.7-16.8 20.3L214.9 192H112l-43.2-57.6C65.8 130.4 61.1 128 56 128H37.7c-7.6 0-13 7.4-10.7 14.6L53.3 224 27 305.4C24.7 312.6 30.1 320 37.7 320H56c5 0 9.8-2.4 12.8-6.4L112 256h102.9l-33.5 171.7c-2.1 10.5 6 20.3 16.8 20.3h47.7c6.1 0 11.8-3.3 14.9-8.6L365.7 256H480l64-32-64-32Z"/>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <div class="route-list" aria-label="Основные направления перевозок">
+            <button type="button" data-route-key="russia" aria-pressed="false"><span>01</span><strong>Россия</strong></button>
+            <button type="button" data-route-key="china" aria-pressed="false"><span>02</span><strong>Китай</strong></button>
+            <button type="button" data-route-key="europe" aria-pressed="false"><span>03</span><strong>Европа</strong></button>
+            <button type="button" data-route-key="cis" aria-pressed="false"><span>04</span><strong>СНГ</strong></button>
+            <button type="button" data-route-key="turkey" aria-pressed="false"><span>05</span><strong>Турция</strong></button>
+            <button type="button" data-route-key="other" aria-pressed="false"><span>06</span><strong>Другие направления</strong></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section process" id="process">
+      <div class="container">
+        <header class="section-heading process-heading reveal">
+          <h2>Как строится работа</h2>
+          <p>До старта фиксируем маршрут, стоимость, сроки и зоны ответственности. В процессе сообщаем статус и следующую контрольную точку.</p>
+        </header>
+        <div class="process-list">
+          <article class="process-item reveal">
+            <span>01</span>
+            <h3>Заявка</h3>
+            <p>Уточняем специфику груза, маршрут, сроки и требования.</p>
+          </article>
+          <article class="process-item reveal">
+            <span>02</span>
+            <h3>Расчёт</h3>
+            <p>Сравниваем варианты маршрута и рассчитываем стоимость.</p>
+          </article>
+          <article class="process-item reveal">
+            <span>03</span>
+            <h3>Решение</h3>
+            <p>Согласуем транспорт, документы и план перевозки.</p>
+          </article>
+          <article class="process-item reveal">
+            <span>04</span>
+            <h3>Доставка</h3>
+            <p>Контролируем движение, выгрузку и закрывающие документы.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="director-feature" id="company" aria-labelledby="director-title">
+      <figure class="director-feature-media">
+        <img
+          src="director-concept/director-office-composite-final.webp"
+          width="2400"
+          height="1358"
+          loading="lazy"
+          decoding="async"
+          alt="Александр Торгашов, генеральный директор ООО «АЕТ Транс», в рабочем кабинете"
+        >
+      </figure>
+      <div class="director-feature-shade" aria-hidden="true"></div>
+      <div class="container director-feature-content reveal">
+        <p class="director-feature-kicker" id="director-title">Слово руководителя</p>
+        <blockquote class="director-feature-quote">
+          <span class="director-feature-mark" aria-hidden="true">“</span>
+          <p>Для нас важно не просто организовать перевозку, а сделать весь процесс понятным для клиента.<br>Мы остаёмся на связи на каждом этапе и отвечаем за результат.</p>
+          <footer>
+            <strong>Александр Торгашов</strong>
+            <small>Генеральный директор ООО «АЕТ Транс»</small>
+          </footer>
+        </blockquote>
+      </div>
+    </section>
+
+    <section class="section company-facts" aria-labelledby="company-facts-title">
+      <div class="container company-facts-layout">
+        <header class="company-facts-heading reveal">
+          <svg class="company-facts-route" viewBox="0 0 520 360" aria-hidden="true" focusable="false">
+            <path class="company-facts-route-line" pathLength="1" d="M22 286C104 342 176 332 238 286C302 238 358 252 407 298C434 323 462 317 496 278"></path>
+            <circle class="company-facts-route-node company-facts-route-node--start" cx="22" cy="286" r="6"></circle>
+            <circle class="company-facts-route-node" cx="238" cy="286" r="5"></circle>
+            <circle class="company-facts-route-node company-facts-route-node--finish" cx="496" cy="278" r="7"></circle>
+            <g class="company-facts-route-truck">
+              <g class="company-facts-route-truck-body" transform="translate(0 -14)">
+                <path d="M-19-8h23v15h-23zM4-4h9l7 7v4H4z"></path>
+                <path class="company-facts-route-truck-window" d="M7-1h5l4 4H7z"></path>
+                <circle cx="-12" cy="9" r="4"></circle>
+                <circle cx="13" cy="9" r="4"></circle>
+              </g>
+              <animateMotion class="company-facts-route-truck-motion" begin="indefinite" dur="22s" repeatCount="1" fill="freeze" rotate="auto" calcMode="linear" keyPoints="0.07;0.07;0.91" keyTimes="0;0.04;1" path="M22 286C104 342 176 332 238 286C302 238 358 252 407 298C434 323 462 317 496 278"></animateMotion>
+            </g>
+          </svg>
+          <p class="context-line">Ответственность в работе</p>
+          <h2 id="company-facts-title">Перевозка как единый процесс</h2>
+        </header>
+        <div class="company-facts-grid">
+          <article class="company-fact reveal"><strong>Маршрут и документы</strong><span>Заранее согласуем схему доставки, сроки и зоны ответственности.</span></article>
+          <article class="company-fact reveal"><strong>Координация участников</strong><span>Объединяем транспорт, погрузку, страхование и сопровождение.</span></article>
+          <article class="company-fact reveal"><strong>Контроль до выгрузки</strong><span>Сообщаем статус и следующую контрольную точку до завершения перевозки.</span></article>
+        </div>
+        <a class="registry-proof reveal" href="goslog/" aria-label="Открыть официальную выписку АЕТ Транс из реестра транспортно-экспедиционной деятельности">
+          <span class="registry-proof-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" focusable="false"><path d="M12 6h17l7 7v29H12z"></path><path d="M29 6v8h7M18 20h12M18 26h12"></path><path class="registry-proof-check" d="m18 35 3 3 7-8"></path></svg>
+          </span>
+          <span class="registry-proof-copy">
+            <small>Документы и реестры</small>
+            <strong>Выписка из реестра транспортно-экспедиционной деятельности</strong>
+            <span>Официальный PDF Ространснадзора · 3 страницы</span>
+          </span>
+          <span class="registry-proof-action">Открыть документ <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"></path></svg></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section proof-preview home-proof" id="clients">
+      <div class="container">
+        <header class="trusted-heading reveal">
+          <div>
+            <p class="context-line">Нам доверяют</p>
+            <h2>Клиенты и партнёры</h2>
+          </div>
+          <p>Промышленные и энергетические компании, с которыми АЕТ Транс реализует логистические проекты.</p>
+        </header>
+        <div class="trusted-carousel reveal" role="region" aria-label="Карусель клиентов и партнёров АЕТ Транс" aria-live="off">
+          <div class="trusted-logo-viewport">
+            <div class="trusted-logo-track">
+              <div class="trusted-logo-set">
+                <div class="trusted-logo trusted-logo--wide"><img src="assets/client-logos/atomstroyexport.svg" width="156" height="58" alt="Атомстройэкспорт" decoding="async"></div>
+                <div class="trusted-logo trusted-logo--wide"><img src="assets/client-logos/izhora-official.svg" width="158" height="52" alt="Ижорские заводы" decoding="async"></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/itz.webp" type="image/webp"><img src="assets/client-logos/itz.png" width="156" height="58" alt="Ижорский трубный завод" decoding="async"></picture></div>
+                <div class="trusted-logo trusted-logo--wide trusted-logo--rosatom trusted-logo--rosatom-aem"><img src="assets/client-logos/aem-division-official.svg" width="156" height="58" alt="Машиностроительный дивизион Росатома" decoding="async"></div>
+                <div class="trusted-logo trusted-logo--rosatom trusted-logo--rosatom-ckbm"><picture><source srcset="assets/client-logos/ckbm.webp" type="image/webp"><img src="assets/client-logos/ckbm.png" width="156" height="58" alt="ЦКБМ" decoding="async"></picture></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/niaep.webp" type="image/webp"><img src="assets/client-logos/niaep.png" width="156" height="58" alt="НИАЭП" decoding="async"></picture></div>
+                <div class="trusted-logo trusted-logo--wide trusted-logo--rosatom trusted-logo--rosatom-atomproekt"><img src="assets/client-logos/atomenergoproekt-official.png" width="156" height="58" alt="Атомэнергопроект" decoding="async"></div>
+                <div class="trusted-logo trusted-logo--wide"><img src="assets/client-logos/iz-kartex-official.svg" width="158" height="52" alt="ИЗ-КАРТЭКС" decoding="async"></div>
+                <div class="trusted-logo trusted-logo--dark"><img src="assets/client-logos/ckba-official.png" width="96" height="64" alt="ЦКБА" decoding="async"></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/specstal.webp" type="image/webp"><img src="assets/client-logos/specstal.png" width="156" height="58" alt="ОМЗ-Спецсталь" decoding="async"></picture></div>
+                <div class="trusted-logo trusted-logo--vnipiet"><picture><source srcset="assets/client-logos/vnipiet.webp" type="image/webp"><img src="assets/client-logos/vnipiet.png" width="156" height="58" alt="ВНИПИЭТ" decoding="async"></picture><span class="vnipiet-wordmark" aria-hidden="true">ОАО "ВНИПИЭТ"</span></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/truck-service.webp" type="image/webp"><img src="assets/client-logos/truck-service.png" width="156" height="58" alt="Трак-Сервис" decoding="async"></picture></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/keenmark.webp" type="image/webp"><img src="assets/client-logos/keenmark.png" width="156" height="58" alt="Кинмарк" decoding="async"></picture></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/mbm-trans.webp" type="image/webp"><img src="assets/client-logos/mbm-trans.png" width="156" height="58" alt="МБМ-Транс" decoding="async"></picture></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/port-bronka.webp" type="image/webp"><img src="assets/client-logos/port-bronka.png" width="156" height="58" alt="Порт Бронка" decoding="async"></picture></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/transy.webp" type="image/webp"><img src="assets/client-logos/transy.png" width="156" height="58" alt="ТРАНСИ" decoding="async"></picture></div>
+                <div class="trusted-logo trusted-logo--wide trusted-logo--rosatom trusted-logo--rosatom-zio"><img src="assets/client-logos/zio-podolsk-official.svg" width="156" height="58" alt="ЗиО-Подольск" decoding="async"></div>
+                <div class="trusted-logo trusted-logo--light"><img src="assets/client-logos/rtl-official.svg" width="156" height="65" alt="РТЛ" decoding="async"></div>
+              </div>
+              <div class="trusted-logo-set" aria-hidden="true">
+                <div class="trusted-logo trusted-logo--wide"><img src="assets/client-logos/atomstroyexport.svg" width="156" height="58" alt="" decoding="async"></div>
+                <div class="trusted-logo trusted-logo--wide"><img src="assets/client-logos/izhora-official.svg" width="158" height="52" alt="" decoding="async"></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/itz.webp" type="image/webp"><img src="assets/client-logos/itz.png" width="156" height="58" alt="" decoding="async"></picture></div>
+                <div class="trusted-logo trusted-logo--wide trusted-logo--rosatom trusted-logo--rosatom-aem"><img src="assets/client-logos/aem-division-official.svg" width="156" height="58" alt="" decoding="async"></div>
+                <div class="trusted-logo trusted-logo--rosatom trusted-logo--rosatom-ckbm"><picture><source srcset="assets/client-logos/ckbm.webp" type="image/webp"><img src="assets/client-logos/ckbm.png" width="156" height="58" alt="" decoding="async"></picture></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/niaep.webp" type="image/webp"><img src="assets/client-logos/niaep.png" width="156" height="58" alt="" decoding="async"></picture></div>
+                <div class="trusted-logo trusted-logo--wide trusted-logo--rosatom trusted-logo--rosatom-atomproekt"><img src="assets/client-logos/atomenergoproekt-official.png" width="156" height="58" alt="" decoding="async"></div>
+                <div class="trusted-logo trusted-logo--wide"><img src="assets/client-logos/iz-kartex-official.svg" width="158" height="52" alt="" decoding="async"></div>
+                <div class="trusted-logo trusted-logo--dark"><img src="assets/client-logos/ckba-official.png" width="96" height="64" alt="" decoding="async"></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/specstal.webp" type="image/webp"><img src="assets/client-logos/specstal.png" width="156" height="58" alt="" decoding="async"></picture></div>
+                <div class="trusted-logo trusted-logo--vnipiet"><picture><source srcset="assets/client-logos/vnipiet.webp" type="image/webp"><img src="assets/client-logos/vnipiet.png" width="156" height="58" alt="" decoding="async"></picture><span class="vnipiet-wordmark" aria-hidden="true">ОАО "ВНИПИЭТ"</span></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/truck-service.webp" type="image/webp"><img src="assets/client-logos/truck-service.png" width="156" height="58" alt="" decoding="async"></picture></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/keenmark.webp" type="image/webp"><img src="assets/client-logos/keenmark.png" width="156" height="58" alt="" decoding="async"></picture></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/mbm-trans.webp" type="image/webp"><img src="assets/client-logos/mbm-trans.png" width="156" height="58" alt="" decoding="async"></picture></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/port-bronka.webp" type="image/webp"><img src="assets/client-logos/port-bronka.png" width="156" height="58" alt="" decoding="async"></picture></div>
+                <div class="trusted-logo"><picture><source srcset="assets/client-logos/transy.webp" type="image/webp"><img src="assets/client-logos/transy.png" width="156" height="58" alt="" decoding="async"></picture></div>
+                <div class="trusted-logo trusted-logo--wide trusted-logo--rosatom trusted-logo--rosatom-zio"><img src="assets/client-logos/zio-podolsk-official.svg" width="156" height="58" alt="" decoding="async"></div>
+                <div class="trusted-logo trusted-logo--light"><img src="assets/client-logos/rtl-official.svg" width="156" height="65" alt="" decoding="async"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section news" id="news">
+      <div class="container news-grid">
+        <header class="news-heading reveal">
+          <h2>Новости и проекты</h2>
+          <p>Перевозки, отраслевые события, партнерские проекты и важные этапы работы АЕТ Транс.</p>
+          <a class="news-all-link" href="novosti/">Все новости <span aria-hidden="true">→</span></a>
+        </header>
+        <div class="news-list">
+          <!-- HOME_NEWS_START -->
+          <a class="news-item reveal" href="2026/05/20/uchastie-v-konferencii-proektnaya-logistika-dlya-promyshlennosti-i-infrastruktury/"><time datetime="2026-05-20">20 мая 2026 г.</time><h3>Участие в конференции «Проектная логистика для промышленности и инфраструктуры»</h3><span aria-hidden="true">→</span></a>
+          <a class="news-item reveal" href="2026/04/17/prodolzhaem-sotrudnichestvo-s-predpriyatiyami-rosatoma/"><time datetime="2026-04-17">17 апреля 2026 г.</time><h3>Продолжаем сотрудничество с предприятиями Росатома.</h3><span aria-hidden="true">→</span></a>
+          <a class="news-item reveal" href="2026/04/13/my-v-sporte/"><time datetime="2026-04-13">13 апреля 2026 г.</time><h3>Мы в спорте.</h3><span aria-hidden="true">→</span></a>
+          <!-- HOME_NEWS_END -->
+        </div>
+      </div>
+    </section>
+
+    <section class="request" id="request">
+      <div class="container request-grid">
+        <div class="request-copy reveal">
+          <p class="context-line">Обсудить задачу</p>
+          <h2>Оставьте заявку на перевозку</h2>
+          <p>Укажите контакты и коротко опишите груз или маршрут. Мы свяжемся с вами, чтобы уточнить детали.</p>
+          <div class="request-direct">
+            <span>Можно связаться напрямую</span>
+            <div class="request-direct-links">
+              <a class="request-phone" href="tel:+78123094625">+7 (812) 309-46-25</a>
+              <a href="mailto:info@aet-trans.ru">info@aet-trans.ru</a>
+            </div>
+          </div>
+        </div>
+        <form class="request-form simple-request-form reveal" id="requestForm">
+          <label>
+            <span>Как к вам обращаться</span>
+            <input type="text" name="name" autocomplete="name" required>
+          </label>
+          <label class="simple-contact-field">
+            <span>Телефон или почта</span>
+            <input type="text" name="contact" autocomplete="tel" inputmode="text" autocapitalize="none" spellcheck="false" aria-describedby="requestContactError" required>
+            <small class="simple-field-error" id="requestContactError" data-contact-error aria-live="polite"></small>
+          </label>
+          <label class="simple-request-message">
+            <span>Задача</span>
+            <textarea name="message" rows="4" placeholder="Груз, маршрут, сроки"></textarea>
+          </label>
+          <label class="simple-request-consent">
+            <input type="checkbox" name="consent" required>
+            <span>Я согласен с <a href="privacy/">политикой обработки данных</a></span>
+          </label>
+          <button class="button button-primary" type="submit">Отправить заявку</button>
+          <p class="request-note">Тестовая версия формы — данные никуда не отправляются.</p>
+          <p class="form-status" id="requestStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="section contacts" id="contacts">
+      <div class="container contacts-grid">
+        <div class="contacts-copy reveal">
+          <h2>Свяжитесь с нами</h2>
+          <div class="contact-list">
+            <div class="contact-primary-row">
+              <a class="contact-phone" href="tel:+78123094625"><span>Телефон</span><strong>+7 (812) 309-46-25</strong></a>
+              <a href="mailto:info@aet-trans.ru"><span>Электронная почта</span><strong>info@aet-trans.ru</strong></a>
+            </div>
+            <div><span>Офис</span><strong>198035, Россия, г. Санкт-Петербург, вн. тер. г. муниципальный округ Морские ворота, ул. Межевой Канал, д. 5, литера АХ, помещ. 3-Н, офис 406</strong></div>
+          </div>
+        </div>
+        <div class="office-map reveal">
+          <iframe title="Офис АЕТ Транс на карте" src="https://yandex.ru/map-widget/v1/?ll=30.249529%2C59.911572&amp;z=17&amp;pt=30.249529%2C59.911572,pm2blm" loading="lazy" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <a class="footer-brand" href="./" aria-label="АЕТ Транс, на главную"><img src="../assets/logo-wordmark-light.svg" alt="АЕТ Транс"></a>
+      <nav class="footer-nav" aria-label="Навигация в подвале">
+        <a href="#services">Услуги</a><a href="novosti/">Новости</a><a href="#contacts">Контакты</a><a href="en/" lang="en" hreflang="en">English</a>
+      </nav>
+    </div>
+    <div class="container footer-bottom">
+      <span>&copy; 2004-<span id="currentYear"></span> ООО «АЕТ Транс»</span>
+      <a href="privacy/">Политика обработки данных</a>
+      <a href="mailto:info@aet-trans.ru">info@aet-trans.ru</a>
+    </div>
+  </footer>
+
+  <script src="vendor/lenis.min.js?v=1"></script>
+  <script src="script.js?v=20260814-v9-02"></script>
+</body>
+</html>
