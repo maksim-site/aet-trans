@@ -11,7 +11,7 @@
   <link rel="alternate" hreflang="en" href="https://aet-trans.ru/en/goslog/">
   <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../styles.min.css?v=20260812-v8-24">
-  <link rel="stylesheet" href="../v7.css?v=20260814-v9-03">
+  <link rel="stylesheet" href="../v7.css?v=20260815-v9-12">
 </head>
 <body class="theme-blue-v3 theme-v4 theme-v5 theme-v6 theme-v7 registry-page">
   <header class="site-header has-offset" id="siteHeader">
@@ -41,28 +41,25 @@
   <main class="registry-main">
     <section class="registry-hero">
       <div class="container">
-        <a class="registry-back" href="../"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16 10H5M9 5l-5 5 5 5"></path></svg> На главную</a>
         <div class="registry-hero-grid">
           <div class="registry-hero-copy">
-            <span class="registry-draft-label">Официальный документ</span>
-            <h1>Выписка из реестра транспортно-экспедиционной деятельности</h1>
-            <p>Выписка Ространснадзора подтверждает действующую запись ООО «АЕТ Транс» в реестре. Оригинал документа можно открыть или скачать в формате PDF.</p>
+            <a class="registry-back" href="../"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16 10H5M9 5l-5 5 5 5"></path></svg> На главную</a>
+            <div class="registry-copy-body">
+              <h1>Выписка из реестра транспортно-экспедиционной деятельности</h1>
+              <p>Выписка Ространснадзора подтверждает действующую запись ООО «АЕТ Транс» в реестре. Все три страницы можно открыть и пролистать прямо на сайте.</p>
+            </div>
             <div class="registry-status" aria-label="Основные сведения из выписки">
               <span><small>Статус</small><strong>Действующая</strong></span>
               <span><small>Номер записи</small><strong>GL-B044-00112-00/00034778</strong></span>
             </div>
           </div>
           <div class="registry-document" aria-label="Официальная выписка АЕТ Транс">
-            <a class="registry-document-preview" href="../assets/aet-trans-rostransnadzor-registry-extract.pdf" target="_blank" rel="noopener" aria-label="Открыть официальную выписку в PDF">
+            <button class="registry-document-preview" type="button" data-registry-viewer-open aria-label="Открыть официальную выписку и посмотреть три страницы">
               <img src="../assets/aet-trans-rostransnadzor-registry-extract-preview.webp" width="993" height="1404" alt="Первая страница выписки Ространснадзора для ООО «АЕТ Транс»">
-            </a>
+            </button>
             <div class="registry-document-details">
-              <span>PDF · 3 страницы · 185 КБ</span>
-              <strong>Официальная выписка Ространснадзора</strong>
-              <p>Документ содержит сведения о записи компании и видах транспортно-экспедиционной деятельности.</p>
               <div class="registry-document-actions">
-                <a class="button button-primary" href="../assets/aet-trans-rostransnadzor-registry-extract.pdf" target="_blank" rel="noopener">Открыть PDF</a>
-                <a class="registry-download" href="../assets/aet-trans-rostransnadzor-registry-extract.pdf" download>Скачать PDF</a>
+                <button class="button button-primary" type="button" data-registry-viewer-open>Открыть и посмотреть</button>
               </div>
             </div>
           </div>
@@ -71,6 +68,44 @@
     </section>
   </main>
 
+  <dialog class="registry-viewer" data-registry-viewer aria-labelledby="registryViewerTitle">
+    <div class="registry-viewer-shell">
+      <header class="registry-viewer-bar">
+        <button class="registry-viewer-close" type="button" data-registry-viewer-close aria-label="Закрыть документ и вернуться на страницу">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16 10H5M9 5l-5 5 5 5"></path></svg>
+          <span>Назад</span>
+        </button>
+        <div class="registry-viewer-heading">
+          <strong id="registryViewerTitle">Выписка Ространснадзора</strong>
+          <span>3 страницы</span>
+        </div>
+        <div class="registry-viewer-zoom" role="group" aria-label="Масштаб документа">
+          <button type="button" data-registry-zoom-out aria-label="Уменьшить документ">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="M12.5 12.5l4 4M6 8.5h5"></path></svg>
+          </button>
+          <span data-registry-zoom-value aria-live="polite">100%</span>
+          <button type="button" data-registry-zoom-in aria-label="Увеличить документ">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="M12.5 12.5l4 4M6 8.5h5M8.5 6v5"></path></svg>
+          </button>
+        </div>
+      </header>
+      <div class="registry-viewer-pages" data-registry-viewer-pages>
+        <figure class="registry-viewer-page">
+          <figcaption>Страница 1 из 3</figcaption>
+          <img src="../assets/aet-trans-rostransnadzor-registry-extract-page-1.png" width="1406" height="1988" alt="Первая страница выписки Ространснадзора для ООО «АЕТ Транс»">
+        </figure>
+        <figure class="registry-viewer-page">
+          <figcaption>Страница 2 из 3</figcaption>
+          <img src="../assets/aet-trans-rostransnadzor-registry-extract-page-2.png" width="1406" height="1988" loading="lazy" alt="Вторая страница выписки Ространснадзора с перечнем видов деятельности">
+        </figure>
+        <figure class="registry-viewer-page">
+          <figcaption>Страница 3 из 3</figcaption>
+          <img src="../assets/aet-trans-rostransnadzor-registry-extract-page-3.png" width="1406" height="1988" loading="lazy" alt="Третья страница выписки Ространснадзора с электронной подписью">
+        </figure>
+      </div>
+    </div>
+  </dialog>
+
   <footer class="site-footer">
     <div class="container footer-main">
       <a class="footer-brand" href="../" aria-label="АЕТ Транс, на главную"><img src="../../assets/logo-wordmark-light.svg" alt="АЕТ Транс"></a>
@@ -78,6 +113,6 @@
     </div>
     <div class="container footer-bottom"><span>&copy; 2004-<span id="currentYear"></span> ООО «АЕТ Транс»</span><a href="../privacy/">Политика обработки данных</a><a href="mailto:info@aet-trans.ru">info@aet-trans.ru</a></div>
   </footer>
-  <script src="../script.js?v=20260814-v9-02"></script>
+  <script src="../script.js?v=20260814-v9-05"></script>
 </body>
 </html>
