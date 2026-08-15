@@ -8,31 +8,21 @@ const finePointer = window.matchMedia("(pointer: fine)").matches;
 const heroMedia = document.querySelector(".hero-media");
 const heroImage = heroMedia?.querySelector("img");
 
+let pageScroller = null;
+
 if (!reduceMotion && finePointer && typeof window.Lenis === "function") {
-  const lenis = new window.Lenis({
+  pageScroller = new window.Lenis({
     duration: 1.05,
     smoothWheel: true,
     wheelMultiplier: 0.9,
   });
 
   const runLenis = (time) => {
-    lenis.raf(time);
+    pageScroller.raf(time);
     requestAnimationFrame(runLenis);
   };
 
   requestAnimationFrame(runLenis);
-
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
-    const href = link.getAttribute("href");
-    if (!href || href === "#") return;
-
-    link.addEventListener("click", (event) => {
-      const target = document.querySelector(href);
-      if (!target) return;
-      event.preventDefault();
-      lenis.scrollTo(target, { offset: -88 });
-    });
-  });
 }
 
 if (reduceMotion) {
@@ -187,6 +177,35 @@ const closeMenu = () => {
   menuBackdrop.setAttribute("aria-hidden", "true");
   document.body.classList.remove("menu-open");
 };
+
+document.querySelectorAll('a[href^="#"]').forEach((link) => {
+  const href = link.getAttribute("href");
+  if (!href || href === "#") return;
+
+  link.addEventListener("click", (event) => {
+    const target = document.querySelector(href);
+    if (!target) return;
+
+    event.preventDefault();
+    const requestedOffset = Number(link.dataset.scrollOffset ?? -88);
+    const offset = Number.isFinite(requestedOffset) ? requestedOffset : -88;
+    const menuWasOpen = mobileMenu.classList.contains("is-open");
+    if (menuWasOpen) closeMenu();
+
+    const scroll = () => {
+      if (pageScroller) {
+        pageScroller.scrollTo(target, { offset });
+        return;
+      }
+
+      const top = target.getBoundingClientRect().top + window.scrollY + offset;
+      window.scrollTo({ top, behavior: reduceMotion ? "auto" : "smooth" });
+    };
+
+    if (menuWasOpen) requestAnimationFrame(scroll);
+    else scroll();
+  });
+});
 
 menuToggle.addEventListener("click", () => {
   const willOpen = menuToggle.getAttribute("aria-expanded") !== "true";

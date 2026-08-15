@@ -145,6 +145,18 @@ body.theme-v7.menu-open .site-header .menu-toggle[aria-expanded="true"] span {
   background: #ffffff;
 }
 
+@media (max-width: 1220px) {
+  .theme-v7 .mobile-menu .mobile-menu-inner > a.mobile-menu-language {
+    min-height: 46px;
+    margin-top: 16px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    border-bottom: 0;
+    color: rgba(235, 244, 249, 0.72);
+    font-size: 14px;
+  }
+}
+
 @media (min-width: 1360px) {
   .theme-v7 .header-inner {
     width: min(calc(100% - 56px), 1360px);
